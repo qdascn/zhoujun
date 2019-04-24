@@ -44,4 +44,8 @@ public class DetailDatasController {
 		}
 		return list;
 	}
+	@RequestMapping("/chartDemo")
+	public String initChartDemoPage() {
+		return "case1/chartDemo";
+	}
 }
