@@ -17,8 +17,8 @@ public class logUtils {
 		OutputStreamWriter osw = null;
 		BufferedWriter write = null;
 		try {
-			//pro=PropertiesUtils.readProperties(System.getProperty("user.dir")+"/setting.properties");
-			pro=PropertiesUtils.readProperties(System.getProperty("user.dir")+"/src\\main\\java\\cn\\qdas/setting.properties");
+			pro=PropertiesUtils.readProperties(System.getProperty("user.dir")+"/setting.properties");
+			//pro=PropertiesUtils.readProperties(System.getProperty("user.dir")+"/src\\main\\java\\cn\\qdas/setting.properties");
 			File logFile=new File(pro.getProperty("logPath")+"/q-das-server.log");
 			if(!logFile.exists()) {
 				logFile.createNewFile();
