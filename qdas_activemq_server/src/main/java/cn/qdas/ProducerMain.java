@@ -1,34 +1,36 @@
 package cn.qdas;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
-import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.apache.commons.io.monitor.FileAlterationMonitor;
 import org.apache.commons.io.monitor.FileAlterationObserver;
+import org.ini4j.InvalidFileFormatException;
+import org.ini4j.Wini;
 
 public class ProducerMain {
 	private static List<File> fileList;
 	public static void main(String[] args) {
+		System.out.println("----------------------------------服务开启中----------------------------------");
 		ExecutorService threadPool=Executors.newCachedThreadPool();
-		Properties pro = null;
+		Wini ini = null;
 		try {
-			pro=PropertiesUtils.readProperties(System.getProperty("user.dir")+"/setting.properties");
-			//pro=PropertiesUtils.readProperties(System.getProperty("user.dir")+"/src\\main\\java\\cn\\qdas/setting.properties");
-		} catch (FileNotFoundException e1) {
-			logUtils.writeLog("打开配置文件失败，未找到配置文件");
+			//ini=new Wini(new File(System.getProperty("user.dir")+"/config.ini"));
+			ini=new Wini(new File(System.getProperty("user.dir")+"/src\\main\\java\\cn\\qdas/config.ini"));
+		} catch (InvalidFileFormatException e1) {
+			logUtils.writeLog("读取配置文件失败");
 			e1.printStackTrace();
 		} catch (IOException e1) {
 			logUtils.writeLog("读取配置文件失败");
 			e1.printStackTrace();
 		}
-		Producer producer=new Producer(pro.getProperty("userName"),pro.getProperty("password"),pro.getProperty("url"),pro.getProperty("city"));
-		FileChangeListener fcl=new FileChangeListener(pro,producer);
-		String[] folders=pro.getProperty("folder").split(",");
+		
+		Producer producer=new Producer(ini.get("connect","userName"),ini.get("connect","password"),ini.get("connect","url"),ini.get("param","city"));
+		FileChangeListener fcl=new FileChangeListener(ini,producer);
+		String[] folders=ini.get("param","folder").split(",");
 		//第一次启动程序
 		List<File> fileList=FileScanner.getInitFiles(folders);
 		for(int i=0;i<fileList.size();i++) {
@@ -40,7 +42,7 @@ public class ProducerMain {
 					}
 				}
 				String zipath=fileList.get(i).getPath().substring(proPath.length(), fileList.get(i).getPath().indexOf(fileList.get(i).getName())-1);
-			producer.sendMessage("file", fileList.get(i), zipath, pro.getProperty("ifBackup"), pro.getProperty("backupPath"));
+			producer.sendMessage("file", fileList.get(i), zipath, ini.get("param","ifBackup"), ini.get("param","backupPath"));
 		}
 		
 		threadPool.execute(new Runnable() {

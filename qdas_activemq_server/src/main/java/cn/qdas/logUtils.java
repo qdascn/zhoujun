@@ -7,19 +7,20 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Properties;
+
+import org.ini4j.Wini;
 
 
 public class logUtils {
 	public static void writeLog(String logStr){
-		Properties pro = null;
+		Wini ini = null;
 		FileOutputStream fos = null;
 		OutputStreamWriter osw = null;
 		BufferedWriter write = null;
 		try {
-			pro=PropertiesUtils.readProperties(System.getProperty("user.dir")+"/setting.properties");
-			//pro=PropertiesUtils.readProperties(System.getProperty("user.dir")+"/src\\main\\java\\cn\\qdas/setting.properties");
-			File logFile=new File(pro.getProperty("logPath")+"/q-das-server.log");
+			//ini=new Wini(new File(System.getProperty("user.dir")+"/config.ini"));
+			ini=new Wini(new File(System.getProperty("user.dir")+"/src\\main\\java\\cn\\qdas/config.ini"));
+			File logFile=new File(ini.get("param","logPath")+"/q-das-sender.log");
 			if(!logFile.exists()) {
 				logFile.createNewFile();
 			}

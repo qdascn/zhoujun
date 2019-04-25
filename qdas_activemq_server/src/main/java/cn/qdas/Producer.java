@@ -62,7 +62,7 @@ public class Producer {
             connection.start();
             //创建一个事务（这里通过参数可以设置事务的级别）
             session=(ActiveMQSession) connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-            System.out.println("-----------------服务已开启-----------------");
+            System.out.println("----------------------------------服务已开启完毕----------------------------------");
         } catch (JMSException e) {
         	logUtils.writeLog("初始化连接出现异常,请检查网络连接,确认网络正常后请重新打开程序");
         	System.out.println("初始化连接出现异常,请检查网络连接,确认网络正常后请重新打开程序");

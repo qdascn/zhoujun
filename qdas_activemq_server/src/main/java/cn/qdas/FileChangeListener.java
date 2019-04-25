@@ -9,13 +9,14 @@ import java.util.concurrent.Executors;
 
 import org.apache.commons.io.monitor.FileAlterationListener;
 import org.apache.commons.io.monitor.FileAlterationObserver;
+import org.ini4j.Wini;
 
 public class FileChangeListener implements FileAlterationListener{
-	Properties properties;
+	Wini ini;
 	Producer producer;
-	public FileChangeListener(Properties properties,Producer producer) {
+	public FileChangeListener(Wini ini,Producer producer) {
 		this.producer=producer;
-		this.properties=properties;
+		this.ini=ini;
 	}
 	ExecutorService threadPool=Executors.newCachedThreadPool();
 	
@@ -38,7 +39,7 @@ public class FileChangeListener implements FileAlterationListener{
 		 threadPool.execute(new Runnable() {
  			@Override
  			public void run() {
- 				String [] proPaths=properties.getProperty("folder").split(",");
+ 				String [] proPaths=ini.get("param","folder").split(",");
  				String proPath="";
  				for(int i=0;i<proPaths.length;i++) {
  					if(file.getPath().indexOf(proPaths[i])!=-1) {
@@ -47,7 +48,7 @@ public class FileChangeListener implements FileAlterationListener{
  					}
  				}
  				String zipath=file.getPath().substring(proPath.length(), file.getPath().indexOf(file.getName())-1);
- 				producer.sendMessage("file", new File(file.getPath()),zipath,properties.getProperty("ifBackup"),properties.getProperty("backupPath"));
+ 				producer.sendMessage("file", new File(file.getPath()),zipath,ini.get("param","ifBackup"),ini.get("param","backupPath"));
  			}
  		});
     }

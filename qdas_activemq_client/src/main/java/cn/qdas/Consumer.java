@@ -34,7 +34,7 @@ public class Consumer {
 	            connection.start();
 	            //创建事务
 	            session = connection.createSession(false,Session.AUTO_ACKNOWLEDGE);
-	            System.out.println("-----------------服务已开启-----------------");
+	            System.out.println("----------------------------------服务启动完毕----------------------------------");
 	        } catch (JMSException e) {
 	        	logUtils.writeLog("初始化连接出现异常,请检查网络连接,确认网络正常后请重新打开程序");
 	        	System.out.println("初始化连接出现异常,请检查网络连接,确认网络正常后请重新打开程序");
