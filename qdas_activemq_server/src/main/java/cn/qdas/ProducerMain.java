@@ -18,8 +18,8 @@ public class ProducerMain {
 		ExecutorService threadPool=Executors.newCachedThreadPool();
 		Wini ini = null;
 		try {
-			//ini=new Wini(new File(System.getProperty("user.dir")+"/config.ini"));
-			ini=new Wini(new File(System.getProperty("user.dir")+"/src\\main\\java\\cn\\qdas/config.ini"));
+			ini=new Wini(new File(System.getProperty("user.dir")+"/config.ini"));
+			//ini=new Wini(new File(System.getProperty("user.dir")+"/src\\main\\java\\cn\\qdas/config.ini"));
 		} catch (InvalidFileFormatException e1) {
 			logUtils.writeLog("读取配置文件失败");
 			e1.printStackTrace();
