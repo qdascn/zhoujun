@@ -39,12 +39,13 @@ public class FileChangeListener implements FileAlterationListener{
  				String [] proPaths=ini.get("param","folder").split(",");
  				String proPath="";
  				for(int i=0;i<proPaths.length;i++) {
- 					if(file.getPath().indexOf(proPaths[i])!=-1) {
+ 					if(file.getPath().indexOf(proPaths[i]+"\\")!=-1) {
  						proPath=proPaths[i];
  						break;
  					}
  				}
  				String zipath=file.getPath().substring(proPath.length(), file.getPath().indexOf(file.getName())-1);
+ 				System.out.println("==============="+zipath);
  				producer.sendMessage("file", new File(file.getPath()),zipath,ini.get("param","ifBackup"),ini.get("param","backupPath"));
  			}
  		});

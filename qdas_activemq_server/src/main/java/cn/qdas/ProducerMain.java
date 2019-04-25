@@ -36,7 +36,7 @@ public class ProducerMain {
 		for(int i=0;i<fileList.size();i++) {
 			String proPath="";
 				for(int j=0;j<folders.length;j++) {
-					if(fileList.get(i).getPath().indexOf(folders[j])!=-1) {
+					if(fileList.get(i).getPath().indexOf(folders[j]+"\\")!=-1) {
 						proPath=folders[j];
 						break;
 					}
