@@ -66,14 +66,8 @@
 				</li>
 				<li>
 					<div class="header">
-						<cite></cite> <a href="right.html" target="rightFrame">数据列表</a> <i></i>
+						<cite></cite> <a href="<%=basePath%>case1/chartDemo" target="rightFrame">案例3</a> <i></i>
 					</div>
-					<ul class="sub-menus">
-						<li><a href="javascript:;">文件数据</a></li>
-						<li><a href="javascript:;">学生数据列表</a></li>
-						<li><a href="javascript:;">我的数据列表</a></li>
-						<li><a href="javascript:;">自定义</a></li>
-					</ul>
 				</li>
 
 				<li><cite></cite><a href="right.html"
