@@ -45,7 +45,6 @@ public class FileChangeListener implements FileAlterationListener{
  					}
  				}
  				String zipath=file.getPath().substring(proPath.length(), file.getPath().indexOf(file.getName())-1);
- 				System.out.println("==============="+zipath);
  				producer.sendMessage("file", new File(file.getPath()),zipath,ini.get("param","ifBackup"),ini.get("param","backupPath"));
  			}
  		});
