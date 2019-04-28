@@ -33,7 +33,7 @@ public class FileChangeListener implements FileAlterationListener{
     }
 	public void onFileCreate(final File file) {
 		//System.out.println(file.getPath()+"======onFileCreate");
-		 threadPool.execute(new Runnable() {
+		 /*threadPool.execute(new Runnable() {
  			@Override
  			public void run() {
  				String [] proPaths=ini.get("param","folder").split(",");
@@ -47,7 +47,22 @@ public class FileChangeListener implements FileAlterationListener{
  				String zipath=file.getPath().substring(proPath.length(), file.getPath().indexOf(file.getName())-1);
  				producer.sendMessage("file", new File(file.getPath()),zipath,ini.get("param","ifBackup"),ini.get("param","backupPath"));
  			}
- 		});
+ 		});*/
+		String [] proPaths=ini.get("param","folder").split(",");
+			String proPath="";
+			for(int i=0;i<proPaths.length;i++) {
+				if(file.getPath().indexOf(proPaths[i]+"\\")!=-1) {
+					proPath=proPaths[i];
+					break;
+				}
+			}
+			try {
+				Thread.sleep((long) (Double.parseDouble(ini.get("param","sendInterval"))*1000));
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			String zipath=file.getPath().substring(proPath.length(), file.getPath().indexOf(file.getName())-1);
+			producer.sendMessage("file", new File(file.getPath()),zipath,ini.get("param","ifBackup"),ini.get("param","backupPath"));
     }
 	public void onFileChange(final File file) {
 		//System.out.println(file.getName()+"======onFileChange");

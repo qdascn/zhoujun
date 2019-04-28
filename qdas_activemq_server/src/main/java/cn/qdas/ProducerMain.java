@@ -42,6 +42,11 @@ public class ProducerMain {
 					}
 				}
 				String zipath=fileList.get(i).getPath().substring(proPath.length(), fileList.get(i).getPath().indexOf(fileList.get(i).getName())-1);
+				try {
+					Thread.sleep((long) (Double.parseDouble(ini.get("param","sendInterval"))*1000));
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			producer.sendMessage("file", fileList.get(i), zipath, ini.get("param","ifBackup"), ini.get("param","backupPath"));
 		}
 		
