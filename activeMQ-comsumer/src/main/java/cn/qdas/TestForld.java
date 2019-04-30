@@ -1,6 +1,7 @@
 package cn.qdas;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.apache.commons.io.monitor.FileAlterationMonitor;
 import org.apache.commons.io.monitor.FileAlterationObserver;
@@ -8,19 +9,11 @@ import org.apache.commons.io.monitor.FileAlterationObserver;
 public class TestForld {
 
 	public static void main(String[] args) {
-		/*FileChangeListener fcl=new FileChangeListener();
-		FileAlterationObserver observer=new FileAlterationObserver("F:\\from");
-		observer.addListener(fcl);
-		FileAlterationMonitor monitor=new FileAlterationMonitor(1000);
-		monitor.addObserver(observer);
-		try {
-			monitor.start();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-		File file=new File("F:\\from\\Testbeispiel 5_201942_215734.PDF");
-		file.renameTo(new File("F:\\sink\\Testbeispiel 5_201942_215734.PDF"));
+		String dest="F:\\backup\\001532++F01R10P878++高压燃油分配管++02++WXP2QMP2++WXP2.DFQ";
+		String src="F:\\from";
+		File file=new File(dest);
+		System.out.println(file.getPath());
+		System.out.println(file.getPath().substring(0,file.getPath().lastIndexOf(".")));
 	}
 
 }

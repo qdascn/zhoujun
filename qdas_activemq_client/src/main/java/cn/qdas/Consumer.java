@@ -1,5 +1,8 @@
 package cn.qdas;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
@@ -14,6 +17,7 @@ public class Consumer {
 	    private String PASSWORD;
 	    private String BROKEN_URL;
 	    private String folder;
+	    SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	public Consumer(String userName,String password,String url,String folder) {
 		this.USERNAME=userName;
 		this.PASSWORD=password;
@@ -34,10 +38,10 @@ public class Consumer {
 	            connection.start();
 	            //创建事务
 	            session = connection.createSession(false,Session.AUTO_ACKNOWLEDGE);
-	            System.out.println("----------------------------------服务启动完毕----------------------------------");
+	            System.out.println(sdf.format(new Date())+"----------------------------------服务启动完毕----------------------------------");
 	        } catch (JMSException e) {
 	        	logUtils.writeLog("初始化连接出现异常,请检查网络连接,确认网络正常后请重新打开程序");
-	        	System.out.println("初始化连接出现异常,请检查网络连接,确认网络正常后请重新打开程序");
+	        	System.out.println(sdf.format(new Date())+"-----初始化连接出现异常,请检查网络连接,确认网络正常后请重新打开程序");
 	            e.printStackTrace();
 	        }
 	    }
@@ -63,7 +67,7 @@ public class Consumer {
 		        }
 			} catch (JMSException e) {
 				logUtils.writeLog("消息传输失败,确认网络正常后请重新打开程序");
-				System.out.println("消息传输失败,确认网络正常后请重新打开程序");
+				System.out.println(sdf.format(new Date())+"-----消息传输失败,确认网络正常后请重新打开程序");
 				e.printStackTrace();
 			}
 	        

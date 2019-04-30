@@ -1,6 +1,5 @@
 package cn.qdas.case1.controller;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,7 +9,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+
 import cn.qdas.case1.service.IDetailDataService;
+import cn.qdas.core.bean.Filter;
 
 
 @Controller
@@ -31,14 +32,14 @@ public class DetailDatasController {
 	}
 	@ResponseBody
 	@RequestMapping("/getParamById")
-	public List getParamById(String detailId) {
-		List list=dds.getParamById(detailId);
-		return list;
+	public Map getParamById(Filter filter) {
+		Map map=dds.getParamById(filter);
+		return map;
 	}
 	@ResponseBody
 	@RequestMapping("/getSizeById")
-	public List getSizeById(String detailId,String paramId) {
-		List<Map> list=dds.getSizeById(detailId,paramId);
+	public List getSizeById(Filter filter) {
+		List<Map> list=dds.getSizeById(filter);
 		for(int i=0;i<list.size();i++) {
 			list.get(i).put("WVDATZEIT", String.valueOf(list.get(i).get("WVDATZEIT")));
 		}

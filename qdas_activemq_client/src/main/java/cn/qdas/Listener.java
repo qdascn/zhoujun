@@ -6,6 +6,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -21,6 +23,7 @@ import javax.jms.TextMessage;
 public class Listener implements MessageListener{
 	 private Session session;
 	 private String folder;
+	 SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	    public Listener(Session session,String folder){
 	        this.session=session;
 	        this.folder=folder;
@@ -37,8 +40,9 @@ public class Listener implements MessageListener{
 	                String fileName="";
 	                String filePath="";
 	                FileOutputStream out=null;
-	                FileChannel fc;
-	                FileLock fl = null;
+	                String zipFilePath = "";
+	               // FileChannel fc;
+	               // FileLock fl = null;
 	                try {
 	                    if (message instanceof BytesMessage) {
 	                        BytesMessage bytesMessage= (BytesMessage) message;
@@ -51,14 +55,18 @@ public class Listener implements MessageListener{
 	                        	}
 	                        }
 	                        out=new FileOutputStream(folder+filePath+"\\"+fileName);
-	                        fc=out.getChannel();
-	                        fl=fc.tryLock();
+	                       // fc=out.getChannel();
+	                       // fl=fc.tryLock();
 	                        byte[] bytes=new byte[1024];
 	                        int len=0;
 	                        while ((len=bytesMessage.readBytes(bytes))!=-1){
 	                            out.write(bytes,0,len);
 	                        }
-	                        System.out.println(folder+filePath+"\\"+fileName+"接收成功！");
+	                        if("zip".equals(fileName.substring(fileName.lastIndexOf(".")+1))) {
+	                        	ZipUtils.unzip(folder+filePath+"\\"+fileName, folder+filePath);
+	                        	zipFilePath=folder+filePath+"\\"+fileName.subSequence(0, fileName.lastIndexOf("."))+".zip";
+	                        }
+	                        System.out.println(sdf.format(new Date())+"-----"+folder+filePath+"\\"+fileName+"接收成功！");
 	                        //logUtils.writeLog(folder+filePath+"/"+fileName+"接收成功！");
 	                        //获得回执地址
 	                        Destination recall_destination = message.getJMSReplyTo();
@@ -75,18 +83,22 @@ public class Listener implements MessageListener{
 	                    }
 	                    else{
 	                    	logUtils.writeLog(fileName+"文件传输失败，有可能是文件过大！");
-	                        System.out.println(fileName+"文件传输失败，有可能是文件过大！");
+	                        System.out.println(sdf.format(new Date())+"-----"+fileName+"文件传输失败，有可能是文件过大！");
 	                    }
 	                } catch (FileNotFoundException e) {
 	                	logUtils.writeLog("未找到对应目录");
 	                    e.printStackTrace();
 	                } catch (IOException e) {
 	                	logUtils.writeLog(fileName+"传输失败！可能存储路径配置错误");
-	                    System.out.println(fileName+"传输失败！");
+	                    System.out.println(sdf.format(new Date())+"-----"+fileName+"传输失败！");
 	                }finally {
 	                    try {
-	                    	fl.release();
+	                    	//fl.release();
 	                        out.close();
+	                        File zipFile=new File(zipFilePath);
+	                        if (zipFile.exists()&&zipFile.isFile()){
+            	            	zipFile.delete();
+            	            }
 	                    } catch (IOException e) {
 	                        e.printStackTrace();
 	                    }

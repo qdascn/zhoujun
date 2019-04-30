@@ -9,7 +9,7 @@
 			$('#paramTable').datagrid({
 				url:'<%=basePath%>case1/getParamById',
 				border : false,
-				pagination : false,
+				pagination : true,
 				fit : true,
 				rownumbers : true,
 				fitColumns : true,
@@ -30,7 +30,7 @@
 				onSelect:function(rowIndex, rowData){
 					var row1=$('#detailTable').datagrid('getSelected');
 					var row2=$('#paramTable').datagrid('getSelected');
-					$('#sizeTable').datagrid('reload',{detailId:row1.TETEIL,paramId:row2.MEMERKMAL});
+					$('#sizeTable').datagrid('reload',{'filter[detailId]':row1.TETEIL,'filter[paramId]':row2.MEMERKMAL});
 					/* var xV=[]; var yV=[];
 					var sizeRows=$('#sizeTable').datagrid('getData').rows;
 					for(var i=0;i<sizeRows.length;i++){
@@ -63,12 +63,13 @@
 				},
 				onSelect:function(rowIndex, rowData){
 					var row=$('#detailTable').datagrid('getSelected');
-					$('#paramTable').datagrid('reload',{detailId:row.TETEIL});
+					$('#paramTable').datagrid('reload',{'filter[detailId]':row.TETEIL});
 				}
 			})
 			
 			$('#sizeTable').datagrid({
 				url:'<%=basePath%>case1/getSizeById',
+				toolbar:'#sizeTb',
 				border : false,
 				pagination : false,
 				fit : true,
@@ -95,6 +96,23 @@
 					}
 					reloadPointChart(pointChart,xV,yV,row2.MEOGW,row2.MEUGW);
 				}
+			})
+			$('#searchBtn').click(function(){
+				var startTime=$("#startTime").datebox('getValue');
+				var endTime=$("#endTime").datebox('getValue');
+				if((startTime==''|startTime==null)&(endTime==''|endTime==null)){
+					$ .messager.alert('错误','查询条件不能为空！','info');
+				}
+				if(startTime!=''&startTime!=null&endTime!=''&endTime!=null&startTime>endTime){
+					$ .messager.alert('错误','起始时间必须结束时间之前！','info');
+				}
+				var row1=$('#detailTable').datagrid('getSelected');
+				var row2=$('#paramTable').datagrid('getSelected');
+				$('#sizeTable').datagrid('reload',{
+												'filter[detailId]':row1.TETEIL,
+												'filter[paramId]':row2.MEMERKMAL,
+												'filter[startTime]':startTime,
+												'filter[endTime]':endTime});
 			})
 		})
 		function initPointChart(divId){
@@ -127,6 +145,12 @@
 		}
 		function reloadPointChart(chartName,x,y,upLimitData,downLimitData){
    					 // 填入数据
+   				if(upLimitData==null|upLimitData==''){
+   					upLimitData=0
+   				}
+   				if(downLimitData==null|downLimitData==''){
+   					downLimitData=0
+   				}
 			    chartName.setOption({
 			        xAxis: {
 			            data: x
@@ -205,7 +229,7 @@
   
   <body class="easyui-layout">
     <div class="easyui-layout" data-options="region:'north',split:false,collapsible:false" style="height:30%;">
-    	<div data-options="region:'center',title:'零件',split:false,collapsible:false" style="width:40%;height: 100%">
+    	<div data-options="region:'center',title:'零件',split:false,collapsible:false" style="width:40%;height: 100%;">
     		<table id="detailTable">
 	    		<thead>
 	    			<tr>
@@ -253,6 +277,10 @@
     <div id="charts" data-options="region:'south',title:'尺寸数据',split:false,collapsible:false" style="height:40%;">
     	
     </div>
-   
+    <div id='sizeTb'>
+    	查询从<input class ="easyui-datetimebox" name ="startTime" id="startTime"  style ="width ：150px "> 
+    	到<input class ="easyui-datetimebox" name ="endTime" id="endTime"  style ="width ：150px ">的信息
+    	<a id="searchBtn" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a>
+    </div>
   </body>
 </html>

@@ -8,6 +8,12 @@
 		select METEIL,MEMERKMAL,MEMERKNR,MEMERKBEZ,MENENNMAS,MEUGW,MEOGW from MERKMAL where METEIL=#{id}
 	</select>
 	<select id="getSizeById" parameterType="java.lang.String" resultType="map">
-		select WVTEIL,WVMERKMAL,WVUNTERS,WVWERTNR,WVWERT,WVATTRIBUT,WVPRUEFER,WVPRUEFMIT,WVMASCHINE,WVNEST,WVDATZEIT from WERTEVAR where WVMERKMAL=#{paramId} and WVTEIL=#{detailId}
+		select WVTEIL,WVMERKMAL,WVUNTERS,WVWERTNR,WVWERT,WVATTRIBUT,WVPRUEFER,WVPRUEFMIT,WVMASCHINE,WVNEST,WVDATZEIT from WERTEVAR where WVMERKMAL=#{filter.paramId} and WVTEIL=#{filter.detailId}
+		<if test="filter.startTime !='' and filter.startTime!=null">
+			and WVDATZEIT &gt; #{filter.startTime}
+		</if>
+		<if test="filter.endTime !='' and filter.endTime!=null">
+			and WVDATZEIT &lt; #{filter.endTime}
+		</if>
 	</select>
 </mapper>

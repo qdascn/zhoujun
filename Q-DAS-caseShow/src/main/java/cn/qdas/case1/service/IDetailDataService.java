@@ -1,9 +1,12 @@
 package cn.qdas.case1.service;
 
 import java.util.List;
+import java.util.Map;
+
+import cn.qdas.core.bean.Filter;
 
 public interface IDetailDataService {
 	List getAllDetailData();
-	List getParamById(String id);
-	List getSizeById(String detailId,String paramId);
+	Map getParamById(Filter filter);
+	List getSizeById(Filter filter);
 }

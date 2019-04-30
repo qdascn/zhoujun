@@ -2,6 +2,8 @@ package cn.qdas;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -11,7 +13,8 @@ import org.ini4j.Wini;
 public class ConsumerMain {
 
 	public static void main(String[] args) {
-		System.out.println("----------------------------------服务开启中----------------------------------");
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		System.out.println(sdf.format(new Date())+"----------------------------------服务开启中----------------------------------");
 		ExecutorService threadPool=Executors.newCachedThreadPool();
 		Wini ini = null;
 		try {

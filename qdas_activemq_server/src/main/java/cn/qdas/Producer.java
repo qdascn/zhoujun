@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -40,6 +42,7 @@ public class Producer {
 		this.init();
 		this.getReback();
 	}
+    SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     //链接工厂
     ConnectionFactory connectionFactory;
     //链接对象
@@ -62,10 +65,10 @@ public class Producer {
             connection.start();
             //创建一个事务（这里通过参数可以设置事务的级别）
             session=(ActiveMQSession) connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-            System.out.println("----------------------------------服务已开启完毕----------------------------------");
+            System.out.println(sdf.format(new Date())+"----------------------------------服务已开启完毕----------------------------------");
         } catch (JMSException e) {
         	logUtils.writeLog("初始化连接出现异常,请检查网络连接,确认网络正常后请重新打开程序");
-        	System.out.println("初始化连接出现异常,请检查网络连接,确认网络正常后请重新打开程序");
+        	System.out.println(sdf.format(new Date())+"-----"+"初始化连接出现异常,请检查网络连接,确认网络正常后请重新打开程序");
             e.printStackTrace();
         } 
     }
@@ -113,24 +116,12 @@ public class Producer {
             bytesMessage.setStringProperty("ziPath","\\"+cityName+ziPath);
             producer.send(bytesMessage);
             is.close();
-            //是否备份文件
-            if("1".equals(ifbackup)) {
-            	File backFile=new File(backupPath+ziPath);
-            	if(!backFile.exists()) {
-            		backFile.mkdirs();
-            	}
-            	file.renameTo(new File(backupPath+ziPath+"\\"+file.getName()));
-            }
-            //删除文件
-            if (file.exists()&&file.isFile()){
-                file.delete();
-            }
            // logUtils.writeLog(file.getName()+"发送消息成功！");
-            System.out.println(file.getName()+"发送消息成功！");
+            System.out.println(sdf.format(new Date())+"-----"+file.getName()+"发送消息成功！");
 
         } catch (JMSException e) {
         	logUtils.writeLog("初始化连接出现异常,请检查网络连接,确认网络正常后请重新打开程序");
-        	System.out.println("初始化连接出现异常,请检查网络连接,确认网络正常后请重新打开程序");
+        	System.out.println(sdf.format(new Date())+"-----"+"初始化连接出现异常,请检查网络连接,确认网络正常后请重新打开程序");
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -166,7 +157,7 @@ public class Producer {
                     TextMessage tx= (TextMessage) message;
                     try {
                     	//logUtils.writeLog(tx.getText());
-                        System.out.println(tx.getText()+"----");
+                        System.out.println(sdf.format(new Date())+"-----"+tx.getText()+"----");
                     } catch (JMSException e) {
                         e.printStackTrace();
                     }
