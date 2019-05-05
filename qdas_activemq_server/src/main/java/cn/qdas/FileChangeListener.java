@@ -70,6 +70,7 @@ public class FileChangeListener implements FileAlterationListener{
 			}
 			String zipath=file.getPath().substring(proPath.length(), file.getPath().indexOf(file.getName())-1);
 			if("1".equals(ini.get("param","ifZip"))) {
+				//if("1".equals(ini.get("param","ifZip"))&&!("zip".equals(file.getName().substring(file.getName().lastIndexOf(".")+1)))) {
 				File zipFile = null;
 				try {
 					zipFile=ZipUtils.zipFile(file.getPath());
