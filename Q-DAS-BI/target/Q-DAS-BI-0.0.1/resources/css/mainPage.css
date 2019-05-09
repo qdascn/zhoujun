@@ -1,0 +1,19 @@
+.navbar-inner {
+	border: 0;
+	-webkit-border-radius: 0;
+	-webkit-background-clip: padding-box;
+	-moz-border-radius: 0;
+	-moz-background-clip: padding;
+	border-radius: 0;
+	background-clip: padding-box;
+	margin: 0;
+	padding-left: 0;
+	padding-right: 0;
+	position: relative;
+	background: #2dc3e8
+}
+
+.navbar-inner .navbar-container {
+	padding-left: 10px
+}
+
