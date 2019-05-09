@@ -20,7 +20,7 @@
 			title="系统首页" /></a>
 	</div>
 
-	<ul class="nav">
+	<ul class="nav" style="margin-left: 100px">
 		<li><a href="default.html" target="rightFrame" class="selected"><img
 				src="<%=basePath%>resources/blueThemes/images/icon01.png" title="工作台" />
 			<h2>工作台</h2></a></li>

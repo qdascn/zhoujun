@@ -84,9 +84,10 @@ public class ZipUtils {
 		zos.closeEntry();
 		zos.close();
 	}
-	public static File zipFile(String src) throws IOException {
+	public static File zipFile(String src,String dsrc) throws IOException {
 		File file=file=new File(src);
-		File destination=new File(file.getPath().substring(0, file.getPath().lastIndexOf("."))+".zip");
+		//File destination=new File(file.getPath().substring(0, file.getPath().lastIndexOf("."))+".zip");
+		File destination=new File(dsrc);
 		OutputStream os=new FileOutputStream(destination);
 		BufferedOutputStream bos=new BufferedOutputStream(os);
 		ZipOutputStream zos=new ZipOutputStream(bos);

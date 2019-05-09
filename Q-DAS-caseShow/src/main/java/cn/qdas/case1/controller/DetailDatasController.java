@@ -1,11 +1,13 @@
 package cn.qdas.case1.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -21,7 +23,6 @@ public class DetailDatasController {
 	IDetailDataService  dds;
 	@RequestMapping("/initPage")
 	public String initPage() {
-		
 		return "case1/detailDatas";
 	}
 	@ResponseBody

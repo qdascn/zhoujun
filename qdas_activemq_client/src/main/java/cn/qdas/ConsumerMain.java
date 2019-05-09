@@ -16,10 +16,9 @@ public class ConsumerMain {
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		System.out.println(sdf.format(new Date())+"----------------------------------服务开启中----------------------------------");
 		ExecutorService threadPool=Executors.newCachedThreadPool();
-		Wini ini = null;
+		Wini ini = null ;
 		try {
-			//ini=new Wini(new File(System.getProperty("user.dir")+"/config.ini"));
-			ini=new Wini(new File(System.getProperty("user.dir")+"/src\\main\\java\\cn\\qdas/config.ini"));
+			ini=new Wini(new File(Globals.INI_PATH));
 		} catch (InvalidFileFormatException e1) {
 			logUtils.writeLog("读取配置文件失败");
 			e1.printStackTrace();

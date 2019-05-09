@@ -11,6 +11,7 @@ import javax.jms.MessageConsumer;
 import javax.jms.Session;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.ini4j.Wini;
 
 public class Consumer {
 	 private String USERNAME;

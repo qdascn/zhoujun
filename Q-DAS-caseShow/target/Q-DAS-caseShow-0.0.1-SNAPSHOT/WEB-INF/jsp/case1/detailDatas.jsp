@@ -114,6 +114,24 @@
 												'filter[startTime]':startTime,
 												'filter[endTime]':endTime});
 			})
+			$('#timeBtn').click(function(){
+				var days=$('#timecc').combobox('getValue');
+				if(days==0|days==""|days==null){
+					return false;
+				}
+				var now=new Date();
+				var searchTime=now.getTime()-(days*86400000);
+				var ago=new Date(searchTime);
+				var startDate=ago.getFullYear()+"-"+(ago.getMonth()+1)+"-"+ago.getDate()+" "+ago.getHours()+":"+ago.getMinutes()+":"+ago.getSeconds();
+				var endDate=now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate()+" "+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
+				var row1=$('#detailTable').datagrid('getSelected');
+				var row2=$('#paramTable').datagrid('getSelected');
+				$('#sizeTable').datagrid('reload',{
+												'filter[detailId]':row1.TETEIL,
+												'filter[paramId]':row2.MEMERKMAL,
+												'filter[startTime]':startDate,
+												'filter[endTime]':endDate});
+			})
 		})
 		function initPointChart(divId){
 			var pointChart=echarts.init(document.getElementById(divId));
@@ -229,7 +247,7 @@
   
   <body class="easyui-layout">
     <div class="easyui-layout" data-options="region:'north',split:false,collapsible:false" style="height:30%;">
-    	<div data-options="region:'center',title:'零件',split:false,collapsible:false" style="width:40%;height: 100%">
+    	<div data-options="region:'center',title:'零件',split:false,collapsible:false" style="width:40%;height: 100%;">
     		<table id="detailTable">
 	    		<thead>
 	    			<tr>
@@ -281,6 +299,17 @@
     	查询从<input class ="easyui-datetimebox" name ="startTime" id="startTime"  style ="width ：150px "> 
     	到<input class ="easyui-datetimebox" name ="endTime" id="endTime"  style ="width ：150px ">的信息
     	<a id="searchBtn" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a>
+    	<select id="timecc" class="easyui-combobox" name="dept" style="width:150px;">
+		    <option value="0">--选择日期查询--</option>
+		    <option value="1">一天</option>
+		    <option value="2">两天</option>
+		    <option value="3">三天</option>
+		    <option value="7">一周</option>
+		    <option value="30">一月</option>
+		    <option value="180">半年</option>
+		    <option value="365">一年</option>
+		</select>
+		<a id="timeBtn" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a>
     </div>
   </body>
 </html>

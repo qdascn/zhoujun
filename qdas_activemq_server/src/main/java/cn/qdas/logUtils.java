@@ -18,8 +18,7 @@ public class logUtils {
 		OutputStreamWriter osw = null;
 		BufferedWriter write = null;
 		try {
-			//ini=new Wini(new File(System.getProperty("user.dir")+"/config.ini"));
-			ini=new Wini(new File(System.getProperty("user.dir")+"/src\\main\\java\\cn\\qdas/config.ini"));
+			ini=new Wini(new File(Globals.INI_PATH));
 			File logFile=new File(ini.get("param","logPath")+"/q-das-sender.log");
 			if(!logFile.exists()) {
 				logFile.createNewFile();

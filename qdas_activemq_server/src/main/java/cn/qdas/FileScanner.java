@@ -15,7 +15,7 @@ public class FileScanner {
 	}
 	
 	public static void findFiles(File file,List fileList,int fileSize) {
-		if(!file.isDirectory()&&file.length()<fileSize*1048576) {
+		if(!file.isDirectory()&&file.length()<fileSize*1048576&&!"zip".equals(file.getName().substring(file.getName().lastIndexOf(".")+1))) {
 			fileList.add(file);
 		}
 		if(file.isDirectory()) {

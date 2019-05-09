@@ -54,7 +54,7 @@ public class FileChangeListener implements FileAlterationListener{
  		});*/
 		if(file.length()>(Integer.parseInt(ini.get("param","maxFileSize"))*1048576)) {
 			System.out.println(sdf.format(new Date())+"-----"+file.getName()+"----------文件过大无法发送");
-		}else {
+		}else if(!"zip".equals(file.getName().substring(file.getName().lastIndexOf(".")+1))) {
 			String [] proPaths=ini.get("param","folder").split(",");
 			String proPath="";
 			for(int i=0;i<proPaths.length;i++) {
@@ -73,7 +73,21 @@ public class FileChangeListener implements FileAlterationListener{
 				//if("1".equals(ini.get("param","ifZip"))&&!("zip".equals(file.getName().substring(file.getName().lastIndexOf(".")+1)))) {
 				File zipFile = null;
 				try {
-					zipFile=ZipUtils.zipFile(file.getPath());
+					String zipIndex=ini.get("param","zipFolder").trim();
+					String zipPath;
+					if("".equals(zipIndex)||zipIndex==null) {
+						File tempFile=new File(proPath+"\\temp");
+						if(!tempFile.exists()) {
+							tempFile.mkdirs();
+						}
+						zipFile=ZipUtils.zipFile(file.getPath(),proPath+"\\temp\\"+file.getName().substring(0, file.getName().lastIndexOf("."))+".zip");
+					}else {
+						File tempFile=new File(zipIndex);
+						if(!tempFile.exists()) {
+							tempFile.mkdirs();
+						}
+						zipFile=ZipUtils.zipFile(file.getPath(),zipIndex+"\\"+file.getName().substring(0, file.getName().lastIndexOf("."))+".zip");
+					}
 				} catch (IOException e) {
 					logUtils.writeLog(file.getPath()+"-----压缩文件失败");
 					System.out.println(sdf.format(new Date())+"-----"+file.getPath()+"-----压缩文件失败");

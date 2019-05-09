@@ -21,8 +21,7 @@ public class ProducerMain {
 		ExecutorService threadPool=Executors.newCachedThreadPool();
 		Wini ini = null;
 		try {
-			//ini=new Wini(new File(System.getProperty("user.dir")+"/config.ini"));
-			ini=new Wini(new File(System.getProperty("user.dir")+"/src\\main\\java\\cn\\qdas/config.ini"));
+			ini=new Wini(new File(Globals.INI_PATH));
 		} catch (InvalidFileFormatException e1) {
 			logUtils.writeLog("读取配置文件失败");
 			e1.printStackTrace();
@@ -70,7 +69,22 @@ public class ProducerMain {
 				if("1".equals(ini.get("param","ifZip"))) {
 					File zipFile = null;
 					try {
-						zipFile=ZipUtils.zipFile(fileList.get(i).getPath());
+						String zipIndex=ini.get("param","zipFolder").trim();
+						String zipPath;
+						if("".equals(zipIndex)||zipIndex==null) {
+							File tempFile=new File(proPath+"\\temp");
+							if(!tempFile.exists()) {
+								tempFile.mkdirs();
+							}
+							zipFile=ZipUtils.zipFile(fileList.get(i).getPath(),proPath+"\\temp\\"+fileList.get(i).getName().substring(0, fileList.get(i).getName().lastIndexOf("."))+".zip");
+						}else {
+							File tempFile=new File(zipIndex);
+							if(!tempFile.exists()) {
+								tempFile.mkdirs();
+							}
+							zipFile=ZipUtils.zipFile(fileList.get(i).getPath(),zipIndex+"\\"+fileList.get(i).getName().substring(0, fileList.get(i).getName().lastIndexOf("."))+".zip");
+						}
+						//zipFile=ZipUtils.zipFile(fileList.get(i).getPath());
 					} catch (IOException e) {
 						logUtils.writeLog(fileList.get(i)+"-----压缩文件失败");
 						System.out.println(sdf.format(new Date())+"-----"+fileList.get(i)+"-----压缩文件失败");
