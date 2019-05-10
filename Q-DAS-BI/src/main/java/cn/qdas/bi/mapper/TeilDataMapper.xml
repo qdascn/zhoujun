@@ -20,8 +20,12 @@
 		</if>
 	</select>
 	<select id="getAllWertevar" parameterType="cn.qdas.bi.bean.Teil" resultType="map">
-		select w.WVTEIL,w.WVMERKMAL,w.WVUNTERS,w.WVWERTNR,w.WVWERT,w.WVATTRIBUT,w.WVPRUEFER,w.WVPRUEFMIT,w.WVMASCHINE,w.WVNEST,w.WVDATZEIT,p.PRVORNAME 
-		from WERTEVAR w LEFT JOIN PRUEFER p ON CONCAT(w.WVPRUEFER,'')=p.PRNAME 
+		select w.WVTEIL,w.WVMERKMAL,w.WVWERTNR,w.WVWERT,w.WVPRUEFER,w.WVPRUEFMIT,w.WVMASCHINE,w.WVNEST,w.WVDATZEIT,
+		p.PRVORNAME,
+		r.PMNR,r.PMBEZ
+		from WERTEVAR w 
+		LEFT JOIN PRUEFER p ON CONCAT(w.WVPRUEFER,'')=p.PRNAME 
+		LEFT JOIN PRUEFMIT r ON w.WVPRUEFMIT = r.PMPRUEFMIT
 		where WVMERKMAL=#{merkmalId} and WVTEIL=#{teilId}
 		<if test="startTime !='' and startTime!=null">
 			and WVDATZEIT &gt; #{startTime}

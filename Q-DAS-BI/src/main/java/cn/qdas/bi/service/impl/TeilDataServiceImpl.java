@@ -21,18 +21,18 @@ public class TeilDataServiceImpl implements ITeilDataService{
 	@Override
 	public Map getAllTeil(Teil teil) {
 		Map map=new HashMap<String,Object>();
-		Page page = PageHelper.startPage(teil.getPage(), teil.getRows(), true);
+		//Page page = PageHelper.startPage(teil.getPage(), teil.getRows(), true);
 		List list=teilDataMapper.getAllTeil(teil);
-		map.put("total",page.getTotal());
+		//map.put("total",page.getTotal());
 		map.put("rows", list);
 		return map;
 	}
 	@Override
 	public Map getAllMerkmal(Teil teil) {
 		Map map=new HashMap<String,Object>();
-		Page page = PageHelper.startPage(teil.getPage(), teil.getRows(), true);
+		//Page page = PageHelper.startPage(teil.getPage(), teil.getRows(), true);
 		List list=teilDataMapper.getAllMerkmal(teil);
-		map.put("total",page.getTotal());
+		//map.put("total",page.getTotal());
 		map.put("rows", list);
 		return map;
 	}
