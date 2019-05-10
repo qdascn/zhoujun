@@ -7,12 +7,18 @@
 <link rel="shortcut icon" href="<%=basePath%>resources/images/favicon.ico" type="image/x-icon">
 	<script type="text/javascript">
 		$(function(){
-			//var pointChart=initPointChart('charts');
+			var lineChart;
+			window.onresize=function(){
+				if(lineChart!=null&lineChart!=''){
+					lineChart.resize();
+				}
+			}
+					
 			$('#teilTable').datagrid({
 				url:'<%=basePath%>teil/getTeilData',
 				toolbar:'#teilTb',
 				border : false,
-				pagination : true,
+				pagination : false,
 				fit : true,
 				rownumbers : true,
 				fitColumns : true,
@@ -40,7 +46,7 @@
 				url:'<%=basePath%>teil/getMerkmalData',
 				toolbar:'#merkmalTb',
 				border : false,
-				pagination : true,
+				pagination : false,
 				fit : true,
 				rownumbers : true,
 				fitColumns : true,
@@ -94,7 +100,17 @@
 							xV.push(sizeRows[i].WVDATZEIT);
 							yV.push(sizeRows[i].WVWERT);
 						}
-						initLineChart('charts',xV,yV,row2.MEOGW,row2.MEUGW);
+						lineChart=initLineChart('charts',xV,yV,row2.MEOGW,row2.MEUGW);
+					}
+				},
+				rowStyler: function(index,row){
+					var mrow=$('#merkmalTable').datagrid('getSelected');
+					if(mrow!=null&mrow!=''){
+						if(mrow.MEUGW!=null&mrow.MEUGW!=''&mrow.MEOGW!=null&mrow.MEOGW!=''){
+							if(row.WVWERT<mrow.MEUGW|row.WVWERT>mrow.MEOGW){
+								return 'background-color:#FF69B4;color:#0000CD;';
+							}
+						}
 					}
 				}
 			})
@@ -181,6 +197,8 @@
 					teilNum:$('#teilNum').textbox('getValue'),
 					teilName:$('#teilName').textbox('getValue')
 				});
+				$('#merkmalTable').datagrid('loadData', { total: 0, rows: [] });
+				$('#wertevarTable').datagrid('loadData', { total: 0, rows: [] });
 			})
 			$('#cancelMerkmalSearch').click(function(){
 				var row=$('#teilTable').datagrid('getSelected');
@@ -189,6 +207,8 @@
 					merkmalName:$('#merkmalName').textbox('getValue'),
 					teilId:row.TETEIL
 				})
+				$('#teilAcc').accordion('select',0);
+				$('#wertevarTable').datagrid('loadData', { total: 0, rows: [] });
 			})
 			$('#cancelWertevarSearch').click(function(){
 				$('#startTime').datebox('setValue','');
@@ -201,6 +221,7 @@
 												merkmalId:row2.MEMERKMAL,
 												startTime:'',
 												endTime:''});
+				$('#teilAcc').accordion('select',0);
 			})
 		})
 	</script>
@@ -212,7 +233,7 @@
 		</div>
 	    <div data-options="region:'center',border:false" style="overflow: hidden;">
 	    	<!-- <iframe src="teil/initTeilPage" name="mainFrame" id="mainFrame" scrolling="No" frameborder="0" width="100%" height="100%"></iframe> -->
-	    	<div id="teilAcc" class="easyui-accordion" data-options="multiple:false,fit:true,halign:'left'" style="width:100%;height:100%;">
+	    	<div id="teilAcc" class="easyui-accordion" data-options="multiple:false,fit:true" style="width:100%;height:100%;">
 		        <div title="零件" style="overflow:auto;">
 		            <table id="teilTable">
 						<thead>
@@ -257,16 +278,13 @@
 				        	<table id="wertevarTable">
 					    		<thead>
 					    			<tr>
-					    				<th data-options="field:'WVMERKMAL',width:50,align:'center'">WVMERKMAL</th>
-					    				<th data-options="field:'WVUNTERS',width:50,align:'center'">WVUNTERS</th>
-					    				<th data-options="field:'WVWERTNR',width:50,align:'center'">WVWERTNR</th>
 					    				<th data-options="field:'WVWERT',width:80,align:'center',sortable:true">WVWERT</th>
-					    				<th data-options="field:'WVATTRIBUT',width:50,align:'center'">WVATTRIBUT</th>
 					    				<th data-options="field:'PRVORNAME',width:50,align:'center'">PRVORNAME</th>
-					    				<th data-options="field:'WVPRUEFMIT',width:50,align:'center'">WVPRUEFMIT</th>
+					    				<th data-options="field:'PMNR',width:100,align:'center'">PMNR</th>
+					    				<th data-options="field:'PMBEZ',width:100,align:'center'">PMBEZ</th>
 					    				<th data-options="field:'WVMASCHINE',width:50,align:'center'">WVMASCHINE</th>
 					    				<th data-options="field:'WVNEST',width:50,align:'center'">WVNEST</th>
-					    				<th data-options="field:'WVDATZEIT',width:150,align:'center',sortable:true">WVDATZEIT</th>
+					    				<th data-options="field:'WVDATZEIT',width:120,align:'center',sortable:true">WVDATZEIT</th>
 					    			</tr>
 					    		</thead>
 					    	</table>
@@ -288,8 +306,7 @@
 								<a id="cancelWertevarSearch" class="easyui-linkbutton" data-options="iconCls:'icon-back'" style="float: right">取消查询</a>
 						    </div>
 				        </div>
-				        <div id="faDiv" data-options="region:'south',title:'数据图表',split:true" style="height:40%;">
-				        	<div id="charts" style="height: 270px;width: 1800px"></div>
+				        <div id="charts" data-options="region:'east',title:'数据图表',split:true" style="width:50%;">
 				        
 				        </div>
 					</div>
