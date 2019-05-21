@@ -20,10 +20,6 @@ public class TeilDataController {
 	public String initTeilPage() {
 		return "bi/teilData";
 	}
-	@RequestMapping("initWertevar")
-	public String initWertevarPage() {
-		return "bi/wertevar";
-	}
 	@RequestMapping("getTeilData")
 	@ResponseBody
 	public Map getTeilData(Teil teil) {
