@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.qdas.bi.dao.QualityBoardMapper">
+	<select id="getProductLine" parameterType="cn.qdas.bi.bean.QualityBoard" resultType="map">
+		SELECT DISTINCT TEERZEUGNIS FROM TEIL
+	</select>
+	<select id="getTeilData" parameterType="cn.qdas.bi.bean.QualityBoard" resultType="map">
+		select TETEIL,TETEILNR,TEBEZEICH,TEWERKSTOFFNR from TEIL where 1=1 and TEERZEUGNIS = #{productLineName}
+		<if test="teilNum !='' and teilNum !=null">
+			and TETEILNR like concat ('%',#{teilNum},'%')
+		</if>
+	</select>
+	<select id="getMerkmalData" parameterType="cn.qdas.bi.bean.QualityBoard" resultType="map">
+		select METEIL,MEMERKMAL,MEMERKNR,MEMERKBEZ,MENENNMAS,MEUGW,MEOGW from MERKMAL where METEIL=#{teilId}
+		<if test="merkmalName !='' and merkmalName !=null">
+			and MEMERKBEZ like concat ('%',#{merkmalName},'%')
+		</if>
+	</select>
+</mapper>
