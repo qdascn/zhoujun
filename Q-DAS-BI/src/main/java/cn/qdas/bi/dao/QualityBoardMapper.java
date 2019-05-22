@@ -8,4 +8,5 @@ public interface QualityBoardMapper {
 	List getProductLine(QualityBoard qb);
 	List getTeilData(QualityBoard qb);
 	List getMerkmalData(QualityBoard qb);
+	List getWertevarChartData(QualityBoard qb);
 }

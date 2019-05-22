@@ -19,31 +19,37 @@ public class QualityBoardController {
 	@Resource
 	IQualityBoardService iqbs;
 	@RequestMapping("initQb")
-	public String initQbPage(Model model,QualityBoard qb) {
-		List<Map> list=iqbs.getProductLine(qb);
-		model.addAttribute("plList",list);
+	public String initQbPage() {
+		//List<Map> list=iqbs.getProductLine(qb);
+		//model.addAttribute("plList",list);
 		return "bi/qualityBoard";
 	}
 	
-	@RequestMapping("getTeilData")
-	@ResponseBody
-	public List getTeilData(QualityBoard qb) {
-		List <Map> list=iqbs.getTeilData(qb);
-		return list;
+	@RequestMapping("getProductLineData")
+	public String getProductLineData(Model model,QualityBoard qb) {
+		List<Map> list=iqbs.getProductLine(qb);
+		model.addAttribute("plList",list);
+		return "bi/qbProductLineData";
 	}
 	
 	@RequestMapping("initTeilData")
 	public String initTeilData(Model model,QualityBoard qb) {
 		List <Map> teilList=iqbs.getTeilData(qb);
+		model.addAttribute("plId", qb.getProductLineName());
 		model.addAttribute("teilList",teilList);
 		return "bi/qbTeilData";
 	}
 	@RequestMapping("initMerkmalData")
 	public String initMerkmalData(Model model,QualityBoard qb) {
-		System.out.println(qb.getTeilId());
 		List list=iqbs.getMerkmalData(qb);
-		System.out.println(list);
+		model.addAttribute("teilId", qb.getTeilId());
 		model.addAttribute("merkmalList", list);
 		return "bi/qbMerkmalData";
+	}
+	@RequestMapping("initWertevarChart")
+	@ResponseBody
+	public List getWertevarChartData(QualityBoard qb) {
+		List list=iqbs.getWertevarChartData(qb);
+		return list;
 	}
 }

@@ -38,5 +38,13 @@ public class QualityBoardServiceImpl implements IQualityBoardService{
 		List list=qbm.getMerkmalData(qb);
 		return list;
 	}
+	@Override
+	public List getWertevarChartData(QualityBoard qb) {
+		List<Map> list=qbm.getWertevarChartData(qb);
+		for(int i=0;i<list.size();i++) {
+			list.get(i).put("WVDATZEIT", String.valueOf(list.get(i).get("WVDATZEIT")).substring(0, 19));
+		}
+		return list;
+	}
 
 }
