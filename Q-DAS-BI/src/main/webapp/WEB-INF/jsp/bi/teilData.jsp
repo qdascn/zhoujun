@@ -162,9 +162,6 @@
 												startTime:startDate,
 												endTime:endDate});
 			})
-			$('#showChart').click(function(){
-				console.log($('#faDiv').height());
-			})
 			$('#teilAcc').accordion({
 				animate:false,
 				onSelect:function(title,index){
