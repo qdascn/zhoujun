@@ -19,9 +19,7 @@
 				<a id="merkmal${map.MEMERKMAL }" class="easyui-linkbutton c1" data-options="size:'large'" style="width:300px;height: 100px;margin-top: 5px" onclick="showChart('${map.MEMERKMAL }','${map.METEIL }','${map.MEMERKBEZ }');"><font size="4">${map.MEMERKBEZ }</font></a>
 			</c:forEach>						
 		</div> 
-		<div id="charts" data-options="region:'east',split:true" style="padding:5px;background:#eee;width:50%;">
-					        
-		</div>
+		<div id="charts" data-options="region:'east',split:true" style="padding:5px;background:#eee;width:50%;"></div>
 	</div>
 	<div id="dataWin" class="easyui-dialog" data-options="title:'数据详情',resizable:true,maximizable:true,modal:true,closed:true">
 		<table id="wertevarTable" style="width: 100%;height: 100%">
