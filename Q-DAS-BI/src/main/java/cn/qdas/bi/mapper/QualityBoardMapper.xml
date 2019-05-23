@@ -28,4 +28,25 @@
 		LEFT JOIN MERKMAL m ON w.WVTEIL=m.METEIL AND w.WVMERKMAL=m.MEMERKMAL
 		where WVMERKMAL=#{merkmalId} and WVTEIL=#{teilId}
 	</select>
+	
+	<select id="getWertevarDate" parameterType="cn.qdas.bi.bean.QualityBoard" resultType="map">
+		select w.WVTEIL,w.WVMERKMAL,w.WVWERTNR,w.WVWERT,w.WVPRUEFER,w.WVPRUEFMIT,w.WVMASCHINE,w.WVNEST,w.WVDATZEIT,
+		p.PRVORNAME,
+		r.PMNR,r.PMBEZ,
+		m.MEUGW,m.MEOGW
+		from WERTEVAR w 
+		LEFT JOIN PRUEFER p ON CONCAT(w.WVPRUEFER,'')=p.PRNAME 
+		LEFT JOIN PRUEFMIT r ON w.WVPRUEFMIT = r.PMPRUEFMIT
+		LEFT JOIN MERKMAL m ON W.WVTEIL=m.METEIL AND w.WVMERKMAL=m.MEMERKMAL
+		where WVMERKMAL=#{merkmalId} and WVTEIL=#{teilId}
+		<if test="startTime !='' and startTime!=null">
+			and WVDATZEIT &gt; #{startTime}
+		</if>
+		<if test="endTime !='' and endTime!=null">
+			and WVDATZEIT &lt; #{endTime}
+		</if>
+		<if test="sort !='' and sort!=null">
+			order by ${sort} ${order}
+		</if>
+	</select>
 </mapper>

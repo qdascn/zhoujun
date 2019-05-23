@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.qdas.bi.bean.QualityBoard;
+import cn.qdas.bi.bean.Teil;
 import cn.qdas.bi.service.IQualityBoardService;
 
 @Controller
@@ -50,6 +51,12 @@ public class QualityBoardController {
 	@ResponseBody
 	public List getWertevarChartData(QualityBoard qb) {
 		List list=iqbs.getWertevarChartData(qb);
+		return list;
+	}
+	@RequestMapping("getWertevarData")
+	@ResponseBody
+	public List getWertevarData(QualityBoard qb) {
+		List list = iqbs.getWertevarDate(qb);
 		return list;
 	}
 }

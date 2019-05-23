@@ -28,6 +28,8 @@
 			<thead>
 				<tr>
 					<th data-options="field:'WVWERT',width:80,align:'center',sortable:true">WVWERT</th>
+					<th data-options="field:'MEUGW',width:50,align:'center'">MEUGW</th>
+					<th data-options="field:'MEOGW',width:50,align:'center'">MEOGW</th>
 					<th data-options="field:'PRVORNAME',width:50,align:'center'">PRVORNAME</th>
 					<th data-options="field:'PMNR',width:100,align:'center'">PMNR</th>
 					<th data-options="field:'PMBEZ',width:100,align:'center'">PMBEZ</th>
@@ -63,7 +65,7 @@
 			$('#dataWin').height(window.innerHeight-200);
 			$('#dataWin').width(window.innerWidth-200);
 			$('#wertevarTable').datagrid({
-				url:'<%=basePath%>teil/getWertevarData',
+				url:'<%=basePath%>qb/getWertevarData',
 				toolbar:'#wertevarTb',
 				border : false,
 				pagination : false,

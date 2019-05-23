@@ -9,4 +9,5 @@ public interface QualityBoardMapper {
 	List getTeilData(QualityBoard qb);
 	List getMerkmalData(QualityBoard qb);
 	List getWertevarChartData(QualityBoard qb);
+	List getWertevarDate(QualityBoard qb);
 }

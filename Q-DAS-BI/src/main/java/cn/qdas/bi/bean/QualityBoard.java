@@ -1,6 +1,8 @@
 package cn.qdas.bi.bean;
 
-public class QualityBoard {
+import cn.qdas.core.bean.BaseBean;
+
+public class QualityBoard extends BaseBean{
 	private String productLineName;
 	private String teilNum;
 	private String teilId;
