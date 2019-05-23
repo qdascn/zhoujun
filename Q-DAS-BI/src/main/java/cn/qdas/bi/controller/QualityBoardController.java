@@ -23,14 +23,14 @@ public class QualityBoardController {
 	public String initQbPage() {
 		//List<Map> list=iqbs.getProductLine(qb);
 		//model.addAttribute("plList",list);
-		return "bi/qualityBoard";
+		return "bi/qb/qualityBoard";
 	}
 	
 	@RequestMapping("getProductLineData")
 	public String getProductLineData(Model model,QualityBoard qb) {
 		List<Map> list=iqbs.getProductLine(qb);
 		model.addAttribute("plList",list);
-		return "bi/qbProductLineData";
+		return "bi/qb/qbProductLineData";
 	}
 	
 	@RequestMapping("initTeilData")
@@ -38,14 +38,14 @@ public class QualityBoardController {
 		List <Map> teilList=iqbs.getTeilData(qb);
 		model.addAttribute("plId", qb.getProductLineName());
 		model.addAttribute("teilList",teilList);
-		return "bi/qbTeilData";
+		return "bi/qb/qbTeilData";
 	}
 	@RequestMapping("initMerkmalData")
 	public String initMerkmalData(Model model,QualityBoard qb) {
 		List list=iqbs.getMerkmalData(qb);
 		model.addAttribute("teilId", qb.getTeilId());
 		model.addAttribute("merkmalList", list);
-		return "bi/qbMerkmalData";
+		return "bi/qb/qbMerkmalData";
 	}
 	@RequestMapping("initWertevarChart")
 	@ResponseBody
