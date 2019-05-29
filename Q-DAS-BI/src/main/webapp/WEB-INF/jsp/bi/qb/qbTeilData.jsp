@@ -11,18 +11,33 @@
 		<div data-options="region:'north',split:false,collapsible:false" style="height:42px;background:#eee;padding: 5px">
 			零件号：<input id="teilNum" name="teilNum" class="easyui-textbox" data-options="" style="width:200px">
 			零件名：<input id="teilName" name="teilName" class="easyui-textbox" data-options="" style="width:200px">
-			<a id="teilSearchbtn" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="searchTeil('${plId }');">查询</a>
+			<a id="teilSearchbtn" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="searchTeil('${paramMap.plId }');">查询</a>
+			<input type="hidden" id="elTeilSearchStartTime" name="elTeilSearchStartTime" value="${paramMap.startTime}">
+			<input type="hidden" id="elTeilSearchEndTime" name="elTeilSearchEndTime" value="${paramMap.endTime}">
 		</div>
 		<div id="teilbox" data-options="region:'center'" style="padding:5px;background:#eee;">
-			<c:forEach items="${teilList}" var="map">
-				<a id="teil${map.TETEIL }" class="easyui-linkbutton c1" data-options="size:'large'" style="width:300px;height: 100px;margin-top: 5px" onclick="getMerkmal('${map.TETEIL }','${map.TETEILNR }','${map.TEBEZEICH }');"><font size="4" style="line-height: 100%">零件号：${map.TETEILNR }<br>零件名称：${map.TEBEZEICH }</font></a>
+			<c:forEach items="${paramMap.teilList}" var="map">
+				<c:choose>
+					<c:when test="${map.qualityLevel==\"0\"}">
+						<a id="teil${map.TETEIL }" class="easyui-linkbutton c1" data-options="size:'large'" style="width:300px;height: 100px;margin-top: 5px" onclick="getMerkmal('${map.TETEIL }','${map.TETEILNR }','${map.TEBEZEICH }');"><font size="4" style="line-height: 100%">零件号：${map.TETEILNR }<br>零件名称：${map.TEBEZEICH }</font></a>
+					</c:when>
+					<c:when test="${map.qualityLevel==\"1\"}">
+						<a id="teil${map.TETEIL }" class="easyui-linkbutton c7" data-options="size:'large'" style="width:300px;height: 100px;margin-top: 5px" onclick="getMerkmal('${map.TETEIL }','${map.TETEILNR }','${map.TEBEZEICH }');"><font size="4" style="line-height: 100%">零件号：${map.TETEILNR }<br>零件名称：${map.TEBEZEICH }</font></a>
+					</c:when>
+					<c:when test="${map.qualityLevel==\"2\"}">
+						<a id="teil${map.TETEIL }" class="easyui-linkbutton c5" data-options="size:'large'" style="width:300px;height: 100px;margin-top: 5px" onclick="getMerkmal('${map.TETEIL }','${map.TETEILNR }','${map.TEBEZEICH }');"><font size="4" style="line-height: 100%">零件号：${map.TETEILNR }<br>零件名称：${map.TEBEZEICH }</font></a>
+					</c:when>
+					<c:when test="${map.qualityLevel==\"3\"}">
+						<a id="teil${map.TETEIL }" class="easyui-linkbutton c6" data-options="size:'large'" style="width:300px;height: 100px;margin-top: 5px" onclick="getMerkmal('${map.TETEIL }','${map.TETEILNR }','${map.TEBEZEICH }');"><font size="4" style="line-height: 100%">零件号：${map.TETEILNR }<br>零件名称：${map.TEBEZEICH }</font></a>
+					</c:when>
+				</c:choose>
 			</c:forEach>						
 		</div> 
 	</div>
 	<script type="text/javascript">
 		function searchTeil(plId){
 			$('#teilAcc').panel({
-				href:'<%=basePath%>qb/initTeilData?productLineName='+plId+'&teilNum='+$('#teilNum').textbox('getValue')+'&teilName='+$('#teilName').textbox('getValue')
+				href:'<%=basePath%>qb/initTeilData?productLineName='+plId+'&teilNum='+$('#teilNum').textbox('getValue')+'&teilName='+$('#teilName').textbox('getValue')+'&startTime='+$('#elTeilSearchStartTime').val()+'&endTime='+$('#elTeilSearchEndTime').val()
 			});
 		}
 		function getMerkmal(teilId,teilNum,teilName){
@@ -33,7 +48,7 @@
 			    iconCls: 'icon-large-gou'
 			});
 			$('#merkmalAcc').panel({
-				href:'<%=basePath%>qb/initMerkmalData?teilId='+teilId
+				href:'<%=basePath%>qb/initMerkmalData?teilId='+teilId+'&startTime='+$('#elTeilSearchStartTime').val()+'&endTime='+$('#elTeilSearchEndTime').val()
 			});
 			var accSelected = $('#qbAcc').accordion('getPanel',1);
 			accSelected.panel('setTitle', '零件(零件号：'+teilNum+' / 零件名：'+teilName+')');

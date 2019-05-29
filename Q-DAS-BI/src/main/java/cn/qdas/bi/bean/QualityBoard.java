@@ -4,6 +4,7 @@ import cn.qdas.core.bean.BaseBean;
 
 public class QualityBoard extends BaseBean{
 	private String productLineName;
+	private String qualityLevel;
 	private String teilNum;
 	private String teilId;
 	private String teilName;
@@ -73,6 +74,14 @@ public class QualityBoard extends BaseBean{
 
 	public void setEndTime(String endTime) {
 		this.endTime = endTime;
+	}
+
+	public String getQualityLevel() {
+		return qualityLevel;
+	}
+
+	public void setQualityLevel(String qualityLevel) {
+		this.qualityLevel = qualityLevel;
 	}
 	
 }

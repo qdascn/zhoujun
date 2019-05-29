@@ -9,14 +9,29 @@
   <body>
     <div class="easyui-layout" fit="true" style="width: 100%;height: 100%">
 		<div data-options="region:'north',split:false,collapsible:false" style="height:42px;background:#eee;padding: 5px">
-			<input id="teilIdVal" type="hidden" value="${teilId }">
+			<input id="teilIdVal" type="hidden" value="${paramMap.teilId }">
 			参数名：<input id="merkmalName" name="merkmalName" class="easyui-textbox" data-options="" style="width:200px">
 			<a id="merkmalSearchbtn" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a>
 			<a id="showDetailsBtn" class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="float: right;">查看详情</a>
+			<input type="hidden" id="elmSearchStartTime" name="elmSearchStartTime" value="${paramMap.startTime}">
+			<input type="hidden" id="elmSearchEndTime" name="elmSearchEndTime" value="${paramMap.endTime}">
 		</div>
 		<div id="merkmalbox" data-options="region:'center'" style="padding:5px;background:#eee;">
-			<c:forEach items="${merkmalList}" var="map">
-				<a id="merkmal${map.MEMERKMAL }" class="easyui-linkbutton c1" data-options="size:'large'" style="width:300px;height: 100px;margin-top: 5px" onclick="showChart('${map.MEMERKMAL }','${map.METEIL }','${map.MEMERKBEZ }');"><font size="4">${map.MEMERKBEZ }</font></a>
+			<c:forEach items="${paramMap.merkmalList}" var="map">
+				<c:choose>
+					<c:when test="${map.qualityLevel==\"0\"}">
+						<a id="merkmal${map.MEMERKMAL }" class="easyui-linkbutton c1" data-options="size:'large'" style="width:300px;height: 100px;margin-top: 5px" onclick="showChart('${map.MEMERKMAL }','${map.METEIL }','${map.MEMERKBEZ }');"><font size="4">${map.MEMERKBEZ }</font></a>
+					</c:when>
+					<c:when test="${map.qualityLevel==\"1\"}">
+						<a id="merkmal${map.MEMERKMAL }" class="easyui-linkbutton c7" data-options="size:'large'" style="width:300px;height: 100px;margin-top: 5px" onclick="showChart('${map.MEMERKMAL }','${map.METEIL }','${map.MEMERKBEZ }');"><font size="4">${map.MEMERKBEZ }</font></a>
+					</c:when>
+					<c:when test="${map.qualityLevel==\"2\"}">
+						<a id="merkmal${map.MEMERKMAL }" class="easyui-linkbutton c5" data-options="size:'large'" style="width:300px;height: 100px;margin-top: 5px" onclick="showChart('${map.MEMERKMAL }','${map.METEIL }','${map.MEMERKBEZ }');"><font size="4">${map.MEMERKBEZ }</font></a>
+					</c:when>
+					<c:when test="${map.qualityLevel==\"3\"}">
+						<a id="merkmal${map.MEMERKMAL }" class="easyui-linkbutton c6" data-options="size:'large'" style="width:300px;height: 100px;margin-top: 5px" onclick="showChart('${map.MEMERKMAL }','${map.METEIL }','${map.MEMERKBEZ }');"><font size="4">${map.MEMERKBEZ }</font></a>
+					</c:when>
+				</c:choose>
 			</c:forEach>						
 		</div> 
 		<div id="charts" data-options="region:'east',split:true" style="padding:5px;background:#eee;width:50%;"></div>
@@ -94,9 +109,9 @@
 					href:"<%=basePath%>qb/initMerkmalData?teilId="+$('#teilIdVal').val()+"&merkmalName="+$('#merkmalName').textbox('getValue')
 				});
 			});
-			teilId='${merkmalList[0].METEIL}';
-			merkmalId='${merkmalList[0].MEMERKMAL}';
-			getChartData('${merkmalList[0].MEMERKMAL}','${merkmalList[0].METEIL}');
+			teilId='${paramMap.merkmalList[0].METEIL}';
+			merkmalId='${paramMap.merkmalList[0].MEMERKMAL}';
+			getChartData('${paramMap.merkmalList[0].MEMERKMAL}','${paramMap.merkmalList[0].METEIL}');
 			$('#showDetailsBtn').click(function(){
 				$('#wertevarTable').datagrid('reload',{
 						teilId:teilId,
@@ -156,7 +171,9 @@
 				url:'<%=basePath%>qb/initWertevarChart',
 				data:{
 					teilId:tId,
-					merkmalId:mId
+					merkmalId:mId,
+					startTime:$('#elmSearchStartTime').val(),
+					endTime:$('#elmSearchEndTime').val()
 				},
 				success:function(data){
 					var upLimit=data[0].MEOGW;

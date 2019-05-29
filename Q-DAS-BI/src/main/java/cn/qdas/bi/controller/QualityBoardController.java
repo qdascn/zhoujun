@@ -1,5 +1,6 @@
 package cn.qdas.bi.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,22 +30,35 @@ public class QualityBoardController {
 	@RequestMapping("getProductLineData")
 	public String getProductLineData(Model model,QualityBoard qb) {
 		List<Map> list=iqbs.getProductLine(qb);
-		model.addAttribute("plList",list);
+		Map map=new HashMap<String, String>();
+		map.put("startTime", qb.getStartTime());
+		map.put("endTime", qb.getEndTime());
+		map.put("plName", qb.getProductLineName());
+		map.put("plList", list);
+		model.addAttribute("paramMap", map);
 		return "bi/qb/qbProductLineData";
 	}
 	
 	@RequestMapping("initTeilData")
 	public String initTeilData(Model model,QualityBoard qb) {
 		List <Map> teilList=iqbs.getTeilData(qb);
-		model.addAttribute("plId", qb.getProductLineName());
-		model.addAttribute("teilList",teilList);
+		Map map=new HashMap<String, String>();
+		map.put("plId", qb.getProductLineName());
+		map.put("teilList",teilList);
+		map.put("startTime", qb.getStartTime());
+		map.put("endTime", qb.getEndTime());
+		model.addAttribute("paramMap", map);
 		return "bi/qb/qbTeilData";
 	}
 	@RequestMapping("initMerkmalData")
 	public String initMerkmalData(Model model,QualityBoard qb) {
 		List list=iqbs.getMerkmalData(qb);
-		model.addAttribute("teilId", qb.getTeilId());
-		model.addAttribute("merkmalList", list);
+		Map map=new HashMap<String, String>();
+		map.put("startTime", qb.getStartTime());
+		map.put("endTime", qb.getEndTime());
+		map.put("teilId", qb.getTeilId());
+		map.put("merkmalList", list);
+		model.addAttribute("paramMap", map);
 		return "bi/qb/qbMerkmalData";
 	}
 	@RequestMapping("initWertevarChart")

@@ -6,6 +6,7 @@ import cn.qdas.bi.bean.QualityBoard;
 
 public interface QualityBoardMapper {
 	List getProductLine(QualityBoard qb);
+	List getProductLineWithColor(QualityBoard qb);
 	List getTeilData(QualityBoard qb);
 	List getMerkmalData(QualityBoard qb);
 	List getWertevarChartData(QualityBoard qb);

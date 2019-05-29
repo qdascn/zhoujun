@@ -7,19 +7,49 @@
 			and TEERZEUGNIS like concat ('%',#{productLineName},'%')
 		</if>
 	</select>
+	<select id="getProductLineWithColor" parameterType="cn.qdas.bi.bean.QualityBoard" resultType="map">
+		SELECT t.TETEIL,t.TEERZEUGNIS,a.ALARM_EW,a.ALARM_DATETIME FROM TEIL t 
+		LEFT JOIN ALARM_VALUES a ON t.TETEIL= a.K1000 
+		where 1=1
+		<if test="productLineName !='' and productLineName !=null">
+			and TEERZEUGNIS like concat ('%',#{productLineName},'%')
+		</if>
+		<if test="startTime !='' and startTime!=null">
+			and a.ALARM_DATETIME &gt; #{startTime}
+		</if>
+		<if test="endTime !='' and endTime!=null">
+			and a.ALARM_DATETIME &lt; #{endTime}
+		</if>
+	</select>
 	<select id="getTeilData" parameterType="cn.qdas.bi.bean.QualityBoard" resultType="map">
-		select TETEIL,TETEILNR,TEBEZEICH,TEWERKSTOFFNR from TEIL where 1=1 and TEERZEUGNIS = #{productLineName}
+		select t.TETEIL,t.TETEILNR,t.TEBEZEICH,a.ALARM_EW,a.ALARM_DATETIME from TEIL t
+		LEFT JOIN ALARM_VALUES a ON t.TETEIL= a.K1000 
+		where 1=1 and TEERZEUGNIS = #{productLineName}
 		<if test="teilNum !='' and teilNum !=null">
 			and TETEILNR like concat ('%',#{teilNum},'%')
 		</if>
 		<if test="teilName !='' and teilName !=null">
 			and TEBEZEICH like concat ('%',#{teilName},'%')
 		</if>
+		<if test="startTime !='' and startTime!=null">
+			and a.ALARM_DATETIME &gt; #{startTime}
+		</if>
+		<if test="endTime !='' and endTime!=null">
+			and a.ALARM_DATETIME &lt; #{endTime}
+		</if>
 	</select>
 	<select id="getMerkmalData" parameterType="cn.qdas.bi.bean.QualityBoard" resultType="map">
-		select METEIL,MEMERKMAL,MEMERKNR,MEMERKBEZ,MENENNMAS,MEUGW,MEOGW from MERKMAL where METEIL=#{teilId}
+		SELECT m.METEIL,m.MEMERKMAL,m.MEMERKBEZ,a.ALARM_EW,a.ALARM_DATETIME FROM MERKMAL m
+		LEFT JOIN ALARM_VALUES a ON m.METEIL= a.K1000 
+		where m.METEIL=#{teilId}
 		<if test="merkmalName !='' and merkmalName !=null">
 			and MEMERKBEZ like concat ('%',#{merkmalName},'%')
+		</if>
+		<if test="startTime !='' and startTime!=null">
+			and a.ALARM_DATETIME &gt; #{startTime}
+		</if>
+		<if test="endTime !='' and endTime!=null">
+			and a.ALARM_DATETIME &lt; #{endTime}
 		</if>
 	</select>
 	<select id="getWertevarChartData" parameterType="cn.qdas.bi.bean.QualityBoard" resultType="map">
@@ -27,6 +57,12 @@
 		FROM WERTEVAR w
 		LEFT JOIN MERKMAL m ON w.WVTEIL=m.METEIL AND w.WVMERKMAL=m.MEMERKMAL
 		where WVMERKMAL=#{merkmalId} and WVTEIL=#{teilId}
+		<if test="startTime !='' and startTime!=null">
+			and w.WVDATZEIT &gt; #{startTime}
+		</if>
+		<if test="endTime !='' and endTime!=null">
+			and w.WVDATZEIT &lt; #{endTime}
+		</if>
 	</select>
 	
 	<select id="getWertevarDate" parameterType="cn.qdas.bi.bean.QualityBoard" resultType="map">
