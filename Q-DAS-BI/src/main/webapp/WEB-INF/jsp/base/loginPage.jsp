@@ -1,14 +1,37 @@
 ﻿<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@ include file="../base/meta.jsp"%>
+<%@ include file="meta.jsp"%>
 <head>
 <title>bi Page</title>
 <link rel="shortcut icon" href="<%=basePath%>resources/images/favicon.ico" type="image/x-icon">
 <link href="<%=basePath %>resources/blueThemes/css/style.css" rel="stylesheet" type="text/css" />
 <script language="javascript">
 	$(function(){
-    $('.loginbox').css({'position':'absolute','left':($(window).width()-692)/2});
-	$(window).resize(function(){  
-    $('.loginbox').css({'position':'absolute','left':($(window).width()-692)/2});
+	 $('#loginBtn').click(function(){
+	   	 $.messager.progress();
+			$('#loginForm').form('submit', {
+				url: '<%=basePath%>main/doLogin',
+				onSubmit: function(){
+					var isValid = $(this).form('validate');
+					if (!isValid){
+						$.messager.progress('close');
+					}
+					return isValid;
+				},
+				success:function(data){
+					$.messager.progress('close');
+					var result=JSON.parse(data);
+					if(result.message==0){
+						window.location.href="<%=basePath%>main/mainPage";
+					}else{
+						console.log(result.message)
+						$('#errorText').html(result.message);
+					}
+				}
+			});
+	    })
+	    $('.loginbox').css({'position':'absolute','left':($(window).width()-692)/2});
+		$(window).resize(function(){  
+	    $('.loginbox').css({'position':'absolute','left':($(window).width()-692)/2});
     })  
 });  
 </script> 
@@ -33,11 +56,16 @@
     <span class="systemlogo"></span> 
        
     <div class="loginbox">
-	    <ul>
-		    <li><input name="" type="text" class="loginuser" value="admin" onclick="JavaScript:this.value=''"/></li>
-		    <li><input name="" type="text" class="loginpwd" value="密码" onclick="JavaScript:this.value=''"/></li>
-		    <li><input name="" type="button" class="loginbtn" value="登录"  onclick="javascript:window.location='<%=basePath%>main/mainPage'"  /><label><input name="" type="checkbox" value="" checked="checked" />记住密码</label><label><a href="#">忘记密码？</a></label></li>
-	    </ul>
+    	<form id="loginForm" method="post">
+    		<ul>
+			    <!-- <li><input id="userName" name="userName" type="text" class="loginuser" onclick="JavaScript:this.value=''"/></li>
+			    <li><input id="password" name="password" type="password" class="loginpwd" onclick="JavaScript:this.value=''"/></li> -->
+			    <li><input class="easyui-textbox" id="userAccount" name="userAccount" style="width:80%;height:50px;padding:10px" data-options="required:true,validType:{length:[5,20]},prompt:'Username',iconCls:'icon-man',iconWidth:38"></li>
+			    <li><input class="easyui-textbox" id="password" name="password" type="password" style="width:80%;height:50px;padding:10px" data-options="required:true,validType:{length:[5,20]},prompt:'Password',iconCls:'icon-lock',iconWidth:38"></li>
+			    <!-- <li><input id="loginBtn" name="" type="button" class="loginbtn" value="登录" /></li> -->
+			    <li><a id="loginBtn" class="easyui-linkbutton c6" data-options="size:'large'" style="width:120px">登录</a><span><font id="errorText" size='5' color='red'></font></span></li>
+		    </ul>
+    	</form>
     </div>
     </div>
     

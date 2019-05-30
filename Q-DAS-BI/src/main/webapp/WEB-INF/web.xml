@@ -30,6 +30,27 @@
 		<servlet-name>springmvc</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
+	
+	
+	<filter>
+	    <filter-name>loginFilter</filter-name>
+	    <filter-class>cn.qdas.core.filter.LoginFilter</filter-class>
+	    <init-param>
+	        <param-name>loginStrings</param-name>
+	        <param-value>index.jsp;main/loginPage;main/doLogin;resources</param-value>
+	    </init-param>
+	    <init-param>
+	        <param-name>redirectPath</param-name>
+	        <param-value>/index.jsp</param-value>
+	    </init-param>
+	</filter>
+	<filter-mapping>
+	    <filter-name>loginFilter</filter-name>
+	    <url-pattern>/*</url-pattern>
+	</filter-mapping>
+		
+	
+	
 	<filter>
 		<filter-name>encodingFilter</filter-name>
 		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
