@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.qdas.core.dao.MainPageMapper">
+	<resultMap type="cn.qdas.core.bean.User" id="userMap">
+		<id property="userId" column="user_id"/>
+		<result property="userName" column="user_name"/>
+		<result property="password" column="password"/>
+		<result property="userAccount" column="user_account"/>
+		<result property="locked" column="locked"/>
+	</resultMap>
+	<resultMap type="cn.qdas.core.bean.Role" id="roleMap">
+		<id property="roleId" column="role_id"/>
+		<result property="roleName" column="role_name"/>
+		<result property="available" column="available"/>
+	</resultMap>
+	<resultMap type="cn.qdas.core.bean.Permission" id="permissionMap">
+		<id property="permissionId" column="permission_id"/>
+		<result property="permissionName" column="permission_name"/>
+		<result property="type" column="type"/>
+		<result property="url" column="url"/>
+		<result property="parentId" column="parentId"/>
+		<result property="available" column="available"/>
+		<result property="icon" column="icon"/>
+	</resultMap>
+	<resultMap type="cn.qdas.core.bean.User" id="userRoleListMap" extends="userMap">
+		<collection property="roleList"  resultMap="rolePermissionListMap" />
+	</resultMap>
+	<resultMap type="cn.qdas.core.bean.Role" id="rolePermissionListMap" extends="roleMap">
+		<collection property="permissionList" resultMap="permissionMap"/>
+	</resultMap>
+	
+	
+	<select id="checkLogin" parameterType="cn.qdas.core.bean.User" resultType="cn.qdas.core.bean.User">
+		select user_name,user_account,password,locked from [system_user]
+		where user_account=#{userAccount}
+	</select>
+	
+	<select id="getUserRole" parameterType="cn.qdas.core.bean.User" resultMap="userRoleListMap">
+		select u.user_id,u.user_name,u.user_account,u.password,u.locked,
+		r.role_id,r.role_name,r.available,
+		p.permission_id,p.permission_name,p.type,p.url,p.parentId,p.available,p.icon
+		from [system_user] u
+		inner join system_user_role ur on u.user_id = ur.user_id 
+		inner join system_role r on ur.role_id=r.role_id
+		inner join system_role_permission rp on r.role_id=rp.role_id
+		inner join system_permission p on rp.permission_id=p.permission_id
+		where u.user_account=#{userAccount} 
+		and r.available='0' and p.available='0'
+		
+	</select>
+	
+</mapper>

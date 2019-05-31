@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.qdas.core.dao.SystemSetupMapper">
+	<resultMap type="cn.qdas.core.bean.User" id="userMap">
+		<id property="userId" column="user_id"/>
+		<result property="userName" column="user_name"/>
+		<result property="password" column="password"/>
+		<result property="userAccount" column="user_account"/>
+		<result property="locked" column="locked"/>
+	</resultMap>
+	<resultMap type="cn.qdas.core.bean.Role" id="roleMap">
+		<id property="roleId" column="role_id"/>
+		<result property="roleName" column="role_name"/>
+		<result property="available" column="available"/>
+	</resultMap>
+	<resultMap type="cn.qdas.core.bean.Permission" id="permissionMap">
+		<id property="permissionId" column="permission_id"/>
+		<result property="permissionName" column="permission_name"/>
+		<result property="type" column="type"/>
+		<result property="url" column="url"/>
+		<result property="parentId" column="parentId"/>
+		<result property="available" column="available"/>
+		<result property="icon" column="icon"/>
+	</resultMap>
+	<resultMap type="cn.qdas.core.bean.User" id="userRoleListMap" extends="userMap">
+		<collection property="roleList"  resultMap="rolePermissionListMap" />
+	</resultMap>
+	<resultMap type="cn.qdas.core.bean.Role" id="rolePermissionListMap" extends="roleMap">
+		<collection property="permissionList" resultMap="permissionMap"/>
+	</resultMap>
+	
+	
+	
+	<select id="getAllUser" resultMap="userRoleListMap">
+		select u.user_id,u.user_name,u.user_account,u.password,u.locked,
+		r.role_id,r.role_name,r.available
+		from [system_user] u
+		left join system_user_role ur on u.user_id = ur.user_id 
+		left join system_role r on ur.role_id=r.role_id
+		where 1=1
+	</select>
+	<select id="getAllProductLine" resultType="map">
+		select permission_id,permission_name,type,available from system_permission
+		where type='pl'
+	</select>
+	<insert id="addProductLine" parameterType="cn.qdas.core.bean.ProductLine">
+		insert into system_permission(
+			permission_name,type,available
+		)values(
+			#{productLineName},'pl',#{available}
+		)
+		<selectKey keyColumn="permission_id" resultType="int" order="AFTER">
+			SELECT SCOPE_IDENTITY()
+		</selectKey>
+	</insert>
+	<update id="updateProdectLine" parameterType="cn.qdas.core.bean.ProductLine">
+		update system_permission set 
+			permission_name=#{productLineName},
+			available=#{available}
+			where permission_id=#{id}
+	</update>
+	<delete id="delProductLine" parameterType="cn.qdas.core.bean.ProductLine">
+		delete from system_permission where permission_id=#{id}
+	</delete>
+</mapper>

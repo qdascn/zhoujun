@@ -1,4 +1,5 @@
 ﻿<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ include file="../base/meta.jsp"%>
 <head>
 <title>bi Page</title>
@@ -31,8 +32,15 @@
 	    <span class="systemlogo"></span> 
 	    <div class="loginbox0">
 		    <ul class="loginlist">
-			    <li><a href="<%=basePath%>teil/initTeil"><img src="<%=basePath%>resources/blueThemes/images/l01.png"  alt="测量数据展示"/><p>测量数据展示</p></a></li>
-			    <li><a href="<%=basePath%>qb/initQb"><img src="<%=basePath%>resources/blueThemes/images/l04.png"  alt="质量看板"/><p>质量看板</p></a></li>
+			   <%--  <li><a href="<%=basePath%>teil/initTeil"><img src="<%=basePath%>resources/blueThemes/images/l01.png" /><p>测量数据展示</p></a></li>
+			    <li><a href="<%=basePath%>qb/initQb"><img src="<%=basePath%>resources/blueThemes/images/l04.png" /><p>质量看板</p></a></li> --%>
+			    <c:forEach items="${user.roleList }" var="role">
+			    	<c:forEach items="${role.permissionList }" var="permission">
+						<c:if test="${permission.type=='menu' }">
+							<li><a href="<%=basePath%>${permission.url }"><img src="<%=basePath%>${permission.icon }" /><p>${permission.permissionName }</p></a></li>
+						</c:if>				    	
+			    	</c:forEach>
+			    </c:forEach>
 		    </ul>
 	    </div>
     </div>
