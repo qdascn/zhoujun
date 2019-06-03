@@ -11,7 +11,7 @@
 	        <tr>
 	            <th data-options="field:'permission_id',width:50,align:'center'">产线ID</th>
 	            <th data-options="field:'permission_name',width:80,align:'center'">产线名</th>
-	            <th data-options="field:'available',width:180,align:'center'">状态</th>
+	            <th data-options="field:'availableStr',width:180,align:'center'">状态</th>
 	        </tr>
 	    </thead>
 	</table>
@@ -36,7 +36,7 @@
 				}]"> 
 			<form id="plAddForm" method="post">
 				<div style="margin-bottom:10px">
-					<input class="easyui-textbox" name="productLineName" style="width:100%" data-options="label:'产线名',required:true">
+					<input class="easyui-textbox" id="productLineName" name="productLineName" style="width:100%" data-options="label:'产线名',required:true">
 				</div>
 				<div style="margin-bottom:10px">
 					<select id="cc" class="easyui-combobox" name="available" style="width:100%" data-options="label:'状态',required:true,panelHeight:100">
@@ -74,6 +74,10 @@
   					$.messager.alert('提示 信息','请选择一行数据进行编辑','info');
   					return false;
   				}
+  				$('#plAddForm').form('load',{
+  					productLineName:row.permission_name,
+  					available:row.available
+  				})
   			}
   			$('#plAddDig').dialog('open');
   			addoredit=index;
@@ -100,9 +104,19 @@
 					index:addoredit,
 					id:id
 				},
-				success: function(){
+				success: function(data){
 					$.messager.progress('close');
 					$('#plAddDig').dialog('close');
+					if(JSON.parse(data).success==0){
+		  						$.messager.show({
+									title:'提示信息',
+									msg:'操作成功',
+									timeout:3000,
+									showType:'slide'
+								});
+		  					}else if(JSON.parse(data).success==1){
+		  						$.messager.alert('提示信息','操作失败！！！  错误：'+data.error,'error');
+		  					}
 					$('#plTable').datagrid('reload');
 				}
 			});
@@ -120,9 +134,21 @@
 		  				url:'<%=basePath%>system/delProductLine',
 		  				data:{
 		  					id:row.permission_id
+		  				},
+		  				success:function(data){
+		  					if(data.success==0){
+		  						$.messager.show({
+									title:'提示信息',
+									msg:'操作成功',
+									timeout:3000,
+									showType:'slide'
+								});
+		  					}else if(data.success==1){
+		  						$.messager.alert('提示信息','操作失败！！！  错误：'+data.error,'error');
+		  					}
+		  					$('#plTable').datagrid('reload');
 		  				}
 		  			})
-		  			$('#plTable').datagrid('reload');
 				}
 			});
   		}

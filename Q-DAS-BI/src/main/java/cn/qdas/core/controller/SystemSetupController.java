@@ -1,14 +1,17 @@
 package cn.qdas.core.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.qdas.core.bean.ProductLine;
+import cn.qdas.core.bean.Role;
 import cn.qdas.core.service.SystemSetupService;
 
 @Controller
@@ -42,14 +45,73 @@ public class SystemSetupController {
 		return list;
 	}	
 	@RequestMapping("addProductLine")
-	public void addProductLine(ProductLine pl,String index,String id) {
+	@ResponseBody
+	public Map addProductLine(ProductLine pl,String index,String id) {
 		pl.setId(id);
-		sss.addProductLine(pl,index);
+		Map map=sss.addProductLine(pl,index);
+		return map;
 	}
 	@RequestMapping("delProductLine")
-	public void delProductLine(String id) {
+	@ResponseBody
+	public Map delProductLine(String id) {
 		ProductLine pl=new ProductLine();
 		pl.setId(id);
-		sss.delProductLine(pl);
+		Map map=sss.delProductLine(pl);
+		return map;
+	}
+	/**
+	 * 角色设置页面初始化
+	 * @return
+	 */
+	@RequestMapping("initRoleSetupPage")
+	public String initRoleSetupPage() {
+		return "systemSetup/roleSetup";
+	}
+	/**
+	 * 获取角色表所有信息
+	 * @return
+	 */
+	@RequestMapping("getAllRole")
+	@ResponseBody
+	public List getAllRole() {
+		List list=sss.getAllRole();
+		return list;
+	}
+	/**
+	 * 添加或编辑角色
+	 * @param role
+	 */
+	@RequestMapping("addRole")
+	@ResponseBody
+	public Map addRole(Role role,String addoredit) {
+		Map map=sss.addRole(role,addoredit);
+		return map;
+	}
+	/**
+	 * 删除角色
+	 * @param role
+	 */
+	@RequestMapping("delRole")
+	@ResponseBody
+	public Map delRole(Role role) {
+		Map map=sss.delRole(role);
+		return map;
+	}
+	/**
+	 * 获取权限tree数据
+	 * @param role
+	 * @return
+	 */
+	@RequestMapping("getPermissionByRoleId")
+	@ResponseBody
+	public List getPermissionByRoleId(Role role) {
+		List list=sss.getPermissionByRoleId(role);
+		return list;
+	}
+	@RequestMapping("addRolePermission")
+	@ResponseBody
+	public Map addRolePermission(String roleId,@RequestParam(value = "permissionIds[]")  Integer[]  permissionIds) {
+		Map map=sss.addRolePermission(roleId,permissionIds);
+		return map;
 	}
 }

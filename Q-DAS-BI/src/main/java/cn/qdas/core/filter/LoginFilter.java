@@ -27,8 +27,16 @@ public class LoginFilter implements Filter {
 		User user= (User) httpRequest.getSession().getAttribute("user");
 		String[] loginList=config.getInitParameter("loginStrings").split(";");
 		String redirectPath=httpRequest.getContextPath()+config.getInitParameter("redirectPath");
+		String refererUrl=httpRequest.getHeader("REFERER");
+		//System.out.println(httpRequest.getRequestURL()+"------refererUrl---------"+refererUrl);
+		
 		if(isContains(loginList,httpRequest.getRequestURL().toString())) {
 			chain.doFilter(request, response);
+			return;
+		}
+		if("".equals(refererUrl)||null==refererUrl) {
+			httpRequest.getSession().invalidate();
+			wrapper.sendRedirect(redirectPath);
 			return;
 		}
 		if(user!=null) {

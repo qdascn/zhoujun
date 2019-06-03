@@ -4,6 +4,7 @@ public class ProductLine {
 	private String id;
 	private String productLineName;
 	private String available;
+	private String availableStr;
 	public String getProductLineName() {
 		return productLineName;
 	}
@@ -21,6 +22,12 @@ public class ProductLine {
 	}
 	public void setId(String id) {
 		this.id = id;
+	}
+	public String getAvailableStr() {
+		return availableStr;
+	}
+	public void setAvailableStr(String availableStr) {
+		this.availableStr = availableStr;
 	}
 	
 }

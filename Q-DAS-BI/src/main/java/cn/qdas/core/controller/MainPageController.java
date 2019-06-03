@@ -1,6 +1,7 @@
 package cn.qdas.core.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -51,8 +52,8 @@ public class MainPageController {
 	@RequestMapping("mainPage")
 	public String initMainPage(Model model,HttpServletRequest req) {
 		User user=(User) req.getSession().getAttribute("user");
-		User dbUser=mps.getUserRole(user);
-		model.addAttribute("user", dbUser);
+		List list=mps.getPermissionByUser(user);
+		model.addAttribute("permissionList", list);
 		return "base/mainPage";
 	}
 }

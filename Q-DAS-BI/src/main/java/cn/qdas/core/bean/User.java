@@ -8,6 +8,7 @@ public class User {
 	private String password;
 	private String userAccount;
 	private String locked;
+	private String lockedStr;
 	private List<Role> roleList;
 	private String roleStr;
 	public String getUserName() {
@@ -51,6 +52,12 @@ public class User {
 	}
 	public void setRoleStr(String roleStr) {
 		this.roleStr = roleStr;
+	}
+	public String getLockedStr() {
+		return lockedStr;
+	}
+	public void setLockedStr(String lockedStr) {
+		this.lockedStr = lockedStr;
 	}
 	
 }

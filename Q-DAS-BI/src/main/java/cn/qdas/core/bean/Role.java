@@ -6,6 +6,7 @@ public class Role {
 	private String roleId;
 	private String roleName;
 	private String available;
+	private String availableStr;
 	private List<Permission> permissionList;
 	public String getRoleId() {
 		return roleId;
@@ -30,6 +31,12 @@ public class Role {
 	}
 	public void setPermissionList(List<Permission> permissionList) {
 		this.permissionList = permissionList;
+	}
+	public String getAvailableStr() {
+		return availableStr;
+	}
+	public void setAvailableStr(String availableStr) {
+		this.availableStr = availableStr;
 	}
 	
 }

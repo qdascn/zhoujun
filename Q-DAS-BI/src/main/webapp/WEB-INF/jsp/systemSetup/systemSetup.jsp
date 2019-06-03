@@ -13,23 +13,19 @@
 		            url:'<%=basePath%>system/initUserSetup'
 		            
 		        },{
-		        	text:'产线设置'
-		        
+		        	text:'角色设置',
+		        	url:'<%=basePath%>system/initRoleSetupPage'
+		        },{
+		        	text:'产线设置',
+		        	url:'<%=basePath%>system/initProductLineSetup'
 		        }]
 		    }];
 			$('#sm').sidemenu({
 				data:data,
 				onSelect:function(item){
-					console.log(item.text);
-					if(item.text=='用户设置'){
-						$('#centerDiv').panel({
-							href:'<%=basePath%>system/initUserSetup'
-						})
-					}else if(item.text=='产线设置'){
-						$('#centerDiv').panel({
-							href:'<%=basePath%>system/initProductLineSetup'
-						})
-					}
+					$('#centerDiv').panel({
+						href:item.url
+					})
 				}
 			});
 			$('#_easyui_tree_1').addClass('tree-node-selected');
