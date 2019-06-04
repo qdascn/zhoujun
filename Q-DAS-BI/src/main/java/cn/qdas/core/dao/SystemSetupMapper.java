@@ -12,7 +12,11 @@ import cn.qdas.core.bean.User;
 
 public interface SystemSetupMapper {
 	List<User> getAllUser();
-
+	void addUser(User user);
+	void editUser(User user);
+	void delUser(User user);
+	void delUserRole(String userId);
+	void addUserRole(@Param("roleIdArr")Integer[] roleIdArr,@Param("userId")String  userId);
 	List getAllProductLine();
 	int addProductLine(ProductLine pl);
 	int updateProdectLine(ProductLine pl);

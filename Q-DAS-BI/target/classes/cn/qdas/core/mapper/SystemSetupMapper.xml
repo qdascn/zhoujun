@@ -39,6 +39,31 @@
 		left join system_role r on ur.role_id=r.role_id
 		where 1=1
 	</select>
+	<insert id="addUser" parameterType="cn.qdas.core.bean.User">
+		insert into [system_user](
+			user_name,user_account,password,locked
+		)values(
+			#{userName},#{userAccount},#{password},#{locked}
+		)
+	</insert>
+	<update id="editUser" parameterType="cn.qdas.core.bean.User">
+		update [system_user] set
+			user_name=#{userName},user_account=#{userAccount},password=#{password},locked=#{locked}
+		where user_id=#{userId}
+	</update>
+	<delete id="delUser" parameterType="cn.qdas.core.bean.User">
+		delete from [system_user] where user_id=#{userId}
+	</delete>
+	<delete id="delUserRole" parameterType="java.lang.String">
+		delete from system_user_role
+		where user_id=#{userId}
+	</delete>
+	<insert id="addUserRole" parameterType="java.lang.String">
+		insert into system_user_role (user_id,role_id) values
+		<foreach collection="roleIdArr" index="index" item="item" separator=",">
+			(#{userId},${item})
+		</foreach>
+	</insert>
 	<select id="getAllProductLine" resultType="map">
 		select permission_id,permission_name,type,available from system_permission
 		where type='pl'

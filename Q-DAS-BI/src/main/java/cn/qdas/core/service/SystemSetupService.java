@@ -26,7 +26,11 @@ public class SystemSetupService {
 			List<Role> roleList=list.get(i).getRoleList();
 			if(roleList.size()!=0) {
 				for(int j=0;j<roleList.size();j++) {
-					roleStr += roleList.get(j).getRoleName()+",";
+					if(j==0) {
+						roleStr +=roleList.get(j).getRoleName();
+					}else {
+						roleStr +=","+roleList.get(j).getRoleName();
+					}
 				}
 			}
 			list.get(i).setRoleStr(roleStr);
@@ -37,6 +41,38 @@ public class SystemSetupService {
 			}
 		}
 		return list;
+	}
+	public Map addOrEditUser(User user,String addoredit) {
+		Map reMap=new HashMap<String, String>();
+		try {
+			if("1".equals(addoredit)) {
+				ssm.addUser(user);
+			}else {
+				ssm.editUser(user);
+			}
+			reMap.put("success", "0");
+		} catch (Exception e) {
+			reMap.put("success", "1");
+			reMap.put("error", e);
+		}
+		return reMap;
+	}
+	public void userAddRole(String userId,Integer[]  roleIdArr) {
+		ssm.delUserRole(userId);
+		ssm.addUserRole(roleIdArr, userId);
+		
+	}
+	public Map delUser(User user) {
+		Map reMap=new HashMap<String, String>();
+		try {
+			ssm.delUser(user);
+			ssm.delUserRole(user.getUserId());
+			reMap.put("success", "0");
+		} catch (Exception e) {
+			reMap.put("success", "1");
+			reMap.put("error", e);
+		}
+		return reMap;
 	}
 	public List getAllProductLine() {
 		List<Map<String, Object>> list=ssm.getAllProductLine();
@@ -105,6 +141,7 @@ public class SystemSetupService {
 	public Map delRole(Role role) {
 		Map reMap=new HashMap<String, String>();
 		try {
+			ssm.delPermissionByRoleId(role.getRoleId());
 			ssm.delRole(role);
 			reMap.put("success", "0");
 		} catch (Exception e) {
@@ -166,4 +203,5 @@ public class SystemSetupService {
 		}
 		return reMap;
 	}
+	
 }

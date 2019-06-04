@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.qdas.core.bean.ProductLine;
 import cn.qdas.core.bean.Role;
+import cn.qdas.core.bean.User;
 import cn.qdas.core.service.SystemSetupService;
 
 @Controller
@@ -33,6 +34,25 @@ public class SystemSetupController {
 	public List getAllUser() {
 		List list=sss.getAllUser();
 		return list;
+	}
+	@RequestMapping("addOrEditUser")
+	@ResponseBody
+	public Map addOrEditUser(User user,String addoredit) {
+		Map map=sss.addOrEditUser(user, addoredit);
+		return map;
+	}
+	@RequestMapping("delUser")
+	@ResponseBody
+	public Map delUser(User user) {
+		Map map=sss.delUser(user);
+		return map;
+	}
+	@RequestMapping("userAddRole")
+	@ResponseBody
+	public Map userAddRole(String userId,@RequestParam(value = "roleIdArr[]")  Integer[]  roleIdArr) {
+		sss.userAddRole(userId, roleIdArr);
+		
+		return null;
 	}
 	@RequestMapping("initProductLineSetup")
 	public String initProductLineSetup() {

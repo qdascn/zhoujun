@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import cn.qdas.bi.bean.QualityBoard;
 import cn.qdas.bi.bean.Teil;
 import cn.qdas.bi.service.IQualityBoardService;
+import cn.qdas.core.bean.User;
 
 @Controller
 @RequestMapping("/qb")
@@ -28,8 +31,11 @@ public class QualityBoardController {
 	}
 	
 	@RequestMapping("getProductLineData")
-	public String getProductLineData(Model model,QualityBoard qb) {
+	public String getProductLineData(HttpServletRequest request,Model model,QualityBoard qb) {
+		HttpSession session=request.getSession();
+		User user=(User) session.getAttribute("user");
 		List<Map> list=iqbs.getProductLine(qb);
+		iqbs.getProductLineByUser(user);
 		Map map=new HashMap<String, String>();
 		map.put("startTime", qb.getStartTime());
 		map.put("endTime", qb.getEndTime());

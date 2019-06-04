@@ -12,9 +12,14 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import cn.qdas.bi.bean.QbAlarmValues;
+import cn.qdas.bi.bean.QbProductLine;
+import cn.qdas.bi.bean.QbTeil;
 import cn.qdas.bi.bean.QualityBoard;
 import cn.qdas.bi.dao.QualityBoardMapper;
 import cn.qdas.bi.service.IQualityBoardService;
+import cn.qdas.core.bean.Role;
+import cn.qdas.core.bean.User;
 import cn.qdas.core.utils.Globals;
 @Service
 public class QualityBoardServiceImpl implements IQualityBoardService{
@@ -156,6 +161,41 @@ public class QualityBoardServiceImpl implements IQualityBoardService{
 			list.get(i).put("WVDATZEIT", String.valueOf(list.get(i).get("WVDATZEIT")).substring(0, 19));
 		}
 		return list;
+	}
+	@Override
+	public List<QbProductLine> getProductLineByUser(User user) {
+		User reUser=qbm.getProductLineByUser(user);
+		List<QbProductLine> plList=new ArrayList<QbProductLine>();
+		List<Role> roleList=reUser.getRoleList();
+		for(int i=0;i<roleList.size();i++) {
+			plList.addAll(roleList.get(i).getQbProductLineList());
+		}
+		HashSet plSet=new HashSet<QbProductLine>(plList);
+		plList.clear();
+		plList.addAll(plSet);
+		String[] plArr=new String[plList.size()];
+		for(int i=0;i<plList.size();i++) {
+			plArr[i]=plList.get(i).getProductLineName();
+		}
+		List<QbProductLine> alarmList=qbm.getAlarmValuesByProductLine(plArr);
+		System.out.println(alarmList.size()+"=====");
+		/*for(int i=0;i<plList.size();i++) {
+			String index=Globals.NO_ALARM;
+			List<QbTeil> teilList=plList.get(i).getQbTeilList();
+			for(int j=0;j<teilList.size();j++) {
+				List<QbAlarmValues> alarmList=teilList.get(j).getQbAlarmValuesList();
+				for(int k=0;k<alarmList.size();k++) {
+					if(Globals.UPPER_LIMIT.equals(alarmList.get(k).getAlarmEw())||Globals.DOWN_LIMIT.equals(alarmList.get(k).getAlarmEw())||Globals.DING_ALARM.equals(alarmList.get(k).getAlarmEw())) {
+						index="2";
+						break;
+					}else if(Globals.UPPER_ALARM.equals(alarmList.get(k).getAlarmEw())||Globals.DOWN_ALARM.equals(alarmList.get(k).getAlarmEw())) {
+						index="1";
+					}
+				}
+			}
+			plList.get(i).setAlarmLevel(index);
+		}*/
+		return null;
 	}
 
 }

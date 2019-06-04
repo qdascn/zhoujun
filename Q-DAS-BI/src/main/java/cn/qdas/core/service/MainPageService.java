@@ -38,7 +38,6 @@ public class MainPageService {
 		HashSet set=new HashSet(permissionList);
 		permissionList.clear();
 		permissionList.addAll(set);
-		System.out.println(permissionList);
 		return permissionList;
 	}
 }
