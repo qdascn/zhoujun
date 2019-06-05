@@ -1,6 +1,9 @@
 package cn.qdas.bi.dao;
 
 import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
 
 import cn.qdas.bi.bean.QbProductLine;
 import cn.qdas.bi.bean.QualityBoard;
@@ -20,5 +23,7 @@ public interface QualityBoardMapper {
 	 * @return
 	 */
 	User getProductLineByUser(User user);
-	List<QbProductLine> getAlarmValuesByProductLine(String[] productLineNames);
+	List getAlarmValuesByProductLine(@Param("productLineNames")String[] productLineNames,@Param("startTime")String startTime,@Param("endTime")String endTime);
+	
+	List<Map> getQbFormData(@Param("productLineNames")String[] productLineNames);
 }

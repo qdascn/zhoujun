@@ -34,13 +34,11 @@
 		    <ul class="loginlist">
 			   <%--  <li><a href="<%=basePath%>teil/initTeil"><img src="<%=basePath%>resources/blueThemes/images/l01.png" /><p>测量数据展示</p></a></li>
 			    <li><a href="<%=basePath%>qb/initQb"><img src="<%=basePath%>resources/blueThemes/images/l04.png" /><p>质量看板</p></a></li> --%>
-			    <c:forEach items="${user.roleList }" var="role">
-			    	<c:forEach items="${role.permissionList }" var="permission">
+			    	<c:forEach items="${permissionList }" var="permission">
 						<c:if test="${permission.type=='menu' }">
 							<li><a href="<%=basePath%>${permission.url }"><img src="<%=basePath%>${permission.icon }" /><p>${permission.permissionName }</p></a></li>
 						</c:if>				    	
 			    	</c:forEach>
-			    </c:forEach>
 		    </ul>
 	    </div>
     </div>

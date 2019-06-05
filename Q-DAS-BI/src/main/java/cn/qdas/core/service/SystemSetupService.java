@@ -57,10 +57,17 @@ public class SystemSetupService {
 		}
 		return reMap;
 	}
-	public void userAddRole(String userId,Integer[]  roleIdArr) {
-		ssm.delUserRole(userId);
-		ssm.addUserRole(roleIdArr, userId);
-		
+	public Map userAddRole(String userId,Integer[]  roleIdArr) {
+		Map reMap=new HashMap<String, String>();
+		try {
+			ssm.delUserRole(userId);
+			ssm.addUserRole(roleIdArr, userId);
+			reMap.put("success", "0");
+		} catch (Exception e) {
+			reMap.put("success", "1");
+			reMap.put("error", e);
+		}
+		return reMap;
 	}
 	public Map delUser(User user) {
 		Map reMap=new HashMap<String, String>();

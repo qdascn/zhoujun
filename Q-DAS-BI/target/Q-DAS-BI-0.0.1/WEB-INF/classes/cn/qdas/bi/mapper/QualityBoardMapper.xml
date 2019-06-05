@@ -85,4 +85,77 @@
 			order by ${sort} ${order}
 		</if>
 	</select>
+	
+	
+	<!-- NEW -->
+	<resultMap type="cn.qdas.core.bean.User" id="userMap">
+		<id property="userId" column="user_id"/>
+		<result property="userName" column="user_name"/>
+		<result property="password" column="password"/>
+		<result property="userAccount" column="user_account"/>
+		<result property="locked" column="locked"/>
+	</resultMap>
+	<resultMap type="cn.qdas.core.bean.Role" id="roleMap">
+		<id property="roleId" column="role_id"/>
+		<result property="roleName" column="role_name"/>
+		<result property="available" column="available"/>
+	</resultMap>
+	<resultMap type="cn.qdas.bi.bean.QbProductLine" id="productLineMap">
+		<id property="productLineId" column="permission_id"/>
+		<result property="productLineName" column="permission_name"/>
+	</resultMap>
+	<resultMap type="cn.qdas.bi.bean.QbTeil" id="qbTeilMap">
+		<id property="teilId" column="TETEIL"/>
+		<result property="teilNum" column="TETEILNR"/>
+		<result property="teilName" column="TEBEZEICH"/>
+	</resultMap>
+	<resultMap type="cn.qdas.bi.bean.QbAlarmValues" id="qbAlarmValuesMap">
+		<id property="alarmValuesId" column="ALARM_ID"/>
+		<result property="alarmEw" column="ALARM_EW"/>
+		<result property="alarmDate" column="ALARM_DATETIME"/>
+	</resultMap>
+	
+	<resultMap type="cn.qdas.core.bean.User" id="userRoleListMap" extends="userMap">
+		<collection property="roleList"  resultMap="rolePermissionListMap" />
+	</resultMap>
+	<resultMap type="cn.qdas.core.bean.Role" id="rolePermissionListMap" extends="roleMap">
+		<collection property="qbProductLineList" resultMap="productLineMap"/>
+	</resultMap>
+	<resultMap type="cn.qdas.bi.bean.QbProductLine" id="productLineTeilListMap" extends="productLineMap">
+		<collection property="qbTeilList" resultMap="teilAlarmsMap"></collection>
+	</resultMap>
+	<resultMap type="cn.qdas.bi.bean.QbTeil" id="teilAlarmsMap" extends="qbTeilMap">
+		<collection property="qbAlarmValuesList" resultMap="qbAlarmValuesMap"></collection>
+	</resultMap>
+	<select id="getProductLineByUser" parameterType="cn.qdas.core.bean.User" resultMap="userRoleListMap">
+		select u.user_id,u.user_name,u.user_account,u.password,u.locked,
+		r.role_id,r.role_name,r.available,
+		p.permission_id,p.permission_name,p.type
+		from [system_user] u
+		inner join system_user_role ur on u.user_id = ur.user_id 
+		inner join system_role r on ur.role_id=r.role_id
+		inner join system_role_permission rp on r.role_id=rp.role_id
+		inner join system_permission p on rp.permission_id=p.permission_id 
+		where u.user_account=#{userAccount}
+		and r.available='0' and p.available='0' and p.type='pl'
+	</select>
+	<select id="getAlarmValuesByProductLine" parameterType="java.lang.String" resultType="map">
+		select p.permission_id,p.permission_name,p.type,
+		t.TETEIL,t.TETEILNR,t.TEBEZEICH,t.TEERZEUGNIS,
+		a.ALARM_EW,a.ALARM_DATETIME
+		from system_permission p
+		LEFT JOIN Teil t ON t.TEERZEUGNIS=p.permission_name
+		LEFT JOIN ALARM_VALUES a ON t.TETEIL=a.K1000
+		where p.permission_name in
+		<foreach collection="productLineNames" open="(" close=")" separator="," item="item" index="i">
+					#{item}
+		</foreach>
+		and p.available='0' and p.type='pl'
+		<if test="startTime !='' and startTime!=null">
+			and a.ALARM_DATETIME &gt; #{startTime}
+		</if>
+		<if test="endTime !='' and endTime!=null">
+			and a.ALARM_DATETIME &lt; #{endTime}
+		</if>
+	</select>
 </mapper>

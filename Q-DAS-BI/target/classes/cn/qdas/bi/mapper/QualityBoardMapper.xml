@@ -139,11 +139,11 @@
 		where u.user_account=#{userAccount}
 		and r.available='0' and p.available='0' and p.type='pl'
 	</select>
-	<select id="getAlarmValuesByProductLine" parameterType="java.lang.String" resultMap="productLineTeilListMap">
+	<select id="getAlarmValuesByProductLine" parameterType="java.lang.String" resultType="map">
 		select p.permission_id,p.permission_name,p.type,
 		t.TETEIL,t.TETEILNR,t.TEBEZEICH,t.TEERZEUGNIS,
 		a.ALARM_EW,a.ALARM_DATETIME
-		from system_permission
+		from system_permission p
 		LEFT JOIN Teil t ON t.TEERZEUGNIS=p.permission_name
 		LEFT JOIN ALARM_VALUES a ON t.TETEIL=a.K1000
 		where p.permission_name in
@@ -151,5 +151,23 @@
 					#{item}
 		</foreach>
 		and p.available='0' and p.type='pl'
+		<if test="startTime !='' and startTime!=null">
+			and a.ALARM_DATETIME &gt; #{startTime}
+		</if>
+		<if test="endTime !='' and endTime!=null">
+			and a.ALARM_DATETIME &lt; #{endTime}
+		</if>
+	</select>
+	<select id="getQbFormData" parameterType="java.lang.String" resultType="map">
+		SELECT t.TETEIL,t.TETEILNR,t.TEBEZEICH,t.TEERZEUGNIS,
+			m.MEMERKMAL,m.MEMERKBEZ,m.MENENNMAS,m.MEUGW,m.MEOGW
+			FROM TEIL t
+			LEFT JOIN MERKMAL m ON t.TETEIL=m.METEIL
+			WHERE t.TEERZEUGNIS IN 
+			<foreach collection="productLineNames" open="(" close=")" separator="," item="item" index="i">
+					#{item}
+			</foreach>
+			ORDER BY t.TEERZEUGNIS
+	
 	</select>
 </mapper>

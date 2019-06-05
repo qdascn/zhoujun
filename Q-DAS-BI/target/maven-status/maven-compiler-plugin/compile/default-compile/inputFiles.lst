@@ -6,10 +6,13 @@ D:\javaApp\gitRepository\q-das-project\Q-DAS-BI\src\main\java\cn\qdas\core\bean\
 D:\javaApp\gitRepository\q-das-project\Q-DAS-BI\src\main\java\cn\qdas\core\utils\StringUtils.java
 D:\javaApp\gitRepository\q-das-project\Q-DAS-BI\src\main\java\cn\qdas\core\bean\BaseBean.java
 D:\javaApp\gitRepository\q-das-project\Q-DAS-BI\src\main\java\cn\qdas\core\utils\Globals.java
+D:\javaApp\gitRepository\q-das-project\Q-DAS-BI\src\main\java\cn\qdas\bi\bean\QbTeil.java
 D:\javaApp\gitRepository\q-das-project\Q-DAS-BI\src\main\java\cn\qdas\core\bean\Role.java
 D:\javaApp\gitRepository\q-das-project\Q-DAS-BI\src\main\java\cn\qdas\bi\service\impl\TeilDataServiceImpl.java
+D:\javaApp\gitRepository\q-das-project\Q-DAS-BI\src\main\java\cn\qdas\bi\bean\QbAlarmValues.java
 D:\javaApp\gitRepository\q-das-project\Q-DAS-BI\src\main\java\cn\qdas\bi\bean\QualityBoard.java
 D:\javaApp\gitRepository\q-das-project\Q-DAS-BI\src\main\java\cn\qdas\bi\service\ITeilDataService.java
+D:\javaApp\gitRepository\q-das-project\Q-DAS-BI\src\main\java\cn\qdas\bi\bean\QbProductLine.java
 D:\javaApp\gitRepository\q-das-project\Q-DAS-BI\src\main\java\cn\qdas\bi\service\impl\QualityBoardServiceImpl.java
 D:\javaApp\gitRepository\q-das-project\Q-DAS-BI\src\main\java\cn\qdas\core\service\MainPageService.java
 D:\javaApp\gitRepository\q-das-project\Q-DAS-BI\src\main\java\cn\qdas\core\bean\ProductLine.java

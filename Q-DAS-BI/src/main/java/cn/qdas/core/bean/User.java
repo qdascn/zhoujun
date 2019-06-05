@@ -11,6 +11,7 @@ public class User {
 	private String lockedStr;
 	private List<Role> roleList;
 	private String roleStr;
+	private List<Permission> permissionList;
 	public String getUserName() {
 		return userName;
 	}
@@ -58,6 +59,12 @@ public class User {
 	}
 	public void setLockedStr(String lockedStr) {
 		this.lockedStr = lockedStr;
+	}
+	public List<Permission> getPermissionList() {
+		return permissionList;
+	}
+	public void setPermissionList(List<Permission> permissionList) {
+		this.permissionList = permissionList;
 	}
 	
 }

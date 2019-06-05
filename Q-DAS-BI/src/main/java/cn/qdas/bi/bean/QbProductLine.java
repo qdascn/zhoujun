@@ -7,6 +7,7 @@ public class QbProductLine {
 	private String productLineName;
 	private List<QbTeil> qbTeilList;
 	private String alarmLevel;
+	private String buttonId;
 	public String getProductLineId() {
 		return productLineId;
 	}
@@ -31,6 +32,13 @@ public class QbProductLine {
 	}
 	public void setAlarmLevel(String alarmLevel) {
 		this.alarmLevel = alarmLevel;
+	}
+	
+	public String getButtonId() {
+		return buttonId;
+	}
+	public void setButtonId(String buttonId) {
+		this.buttonId = buttonId;
 	}
 	@Override
 	public int hashCode() {

@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import cn.qdas.core.bean.Permission;
 import cn.qdas.core.bean.User;
 import cn.qdas.core.service.MainPageService;
 
@@ -51,8 +52,11 @@ public class MainPageController {
 	}
 	@RequestMapping("mainPage")
 	public String initMainPage(Model model,HttpServletRequest req) {
-		User user=(User) req.getSession().getAttribute("user");
-		List list=mps.getPermissionByUser(user);
+		HttpSession session=req.getSession();
+		User user=(User) session.getAttribute("user");
+		List<Permission> list=mps.getPermissionByUser(user);
+		user.setPermissionList(list);
+		session.setAttribute("user", user);
 		model.addAttribute("permissionList", list);
 		return "base/mainPage";
 	}

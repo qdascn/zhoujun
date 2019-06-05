@@ -44,7 +44,7 @@
 				<input class="easyui-textbox" id="userName" name="userName" style="width:100%" data-options="label:'用户名',required:true">
 			</div>
 			<div style="margin-bottom:10px">
-				<input class="easyui-textbox" id="userAccount" name="userAccount" style="width:100%" data-options="label:'用户账号',required:true,validType:{length:[5,20]},prompt:'5-20位长度'">
+				<input class="easyui-textbox" id="userAccount" name="userAccount" style="width:100%" data-options="label:'用户账号',required:true,validType:{length:[1,20]},prompt:'账户名不能为空'">
 			</div>
 			<div style="margin-bottom:10px">
 				<input class="easyui-textbox" id="password" name="password" style="width:100%" data-options="label:'密码',required:true,validType:{length:[5,20]},prompt:'5-20位长度'">
@@ -203,6 +203,18 @@
   				},
   				url:'<%=basePath%>system/userAddRole',
   				success:function(data){
+  				console.log(data.success);
+  					$('#userRoleDig').dialog('close')
+  					if(data.success==0){
+		  						$.messager.show({
+									title:'提示信息',
+									msg:'操作成功',
+									timeout:3000,
+									showType:'slide'
+								});
+		  					}else if(data.success==1){
+		  						$.messager.alert('提示信息','操作失败！！！  错误：'+data.error,'error');
+		  					}
   					$('#userTable').datagrid('reload');
   				}
   			})

@@ -18,6 +18,7 @@ import cn.qdas.bi.bean.QbTeil;
 import cn.qdas.bi.bean.QualityBoard;
 import cn.qdas.bi.dao.QualityBoardMapper;
 import cn.qdas.bi.service.IQualityBoardService;
+import cn.qdas.core.bean.Permission;
 import cn.qdas.core.bean.Role;
 import cn.qdas.core.bean.User;
 import cn.qdas.core.utils.Globals;
@@ -163,7 +164,7 @@ public class QualityBoardServiceImpl implements IQualityBoardService{
 		return list;
 	}
 	@Override
-	public List<QbProductLine> getProductLineByUser(User user) {
+	public List<QbProductLine> getProductLineByUser(User user,QualityBoard qb) {
 		User reUser=qbm.getProductLineByUser(user);
 		List<QbProductLine> plList=new ArrayList<QbProductLine>();
 		List<Role> roleList=reUser.getRoleList();
@@ -177,25 +178,48 @@ public class QualityBoardServiceImpl implements IQualityBoardService{
 		for(int i=0;i<plList.size();i++) {
 			plArr[i]=plList.get(i).getProductLineName();
 		}
-		List<QbProductLine> alarmList=qbm.getAlarmValuesByProductLine(plArr);
-		System.out.println(alarmList.size()+"=====");
-		/*for(int i=0;i<plList.size();i++) {
-			String index=Globals.NO_ALARM;
-			List<QbTeil> teilList=plList.get(i).getQbTeilList();
-			for(int j=0;j<teilList.size();j++) {
-				List<QbAlarmValues> alarmList=teilList.get(j).getQbAlarmValuesList();
-				for(int k=0;k<alarmList.size();k++) {
-					if(Globals.UPPER_LIMIT.equals(alarmList.get(k).getAlarmEw())||Globals.DOWN_LIMIT.equals(alarmList.get(k).getAlarmEw())||Globals.DING_ALARM.equals(alarmList.get(k).getAlarmEw())) {
-						index="2";
+		List<Map> alarmList=qbm.getAlarmValuesByProductLine(plArr,qb.getStartTime(),qb.getEndTime());
+		for(int i=0;i<plList.size();i++) {
+			boolean flag=false;
+			String qualityLevel=Globals.NO_ALARM;
+			for(int j=0;j<alarmList.size();j++) {
+				if(plList.get(i).getProductLineName().equals(alarmList.get(j).get("permission_name"))) {
+					flag=true;
+					if(Globals.UPPER_LIMIT.equals(String.valueOf(alarmList.get(j).get("ALARM_EW")))||Globals.DOWN_LIMIT.equals(String.valueOf(alarmList.get(j).get("ALARM_EW")))||Globals.DING_ALARM.equals(String.valueOf(alarmList.get(j).get("ALARM_EW")))) {
+						qualityLevel="2";
 						break;
-					}else if(Globals.UPPER_ALARM.equals(alarmList.get(k).getAlarmEw())||Globals.DOWN_ALARM.equals(alarmList.get(k).getAlarmEw())) {
-						index="1";
+					}else if(Globals.UPPER_ALARM.equals(String.valueOf(alarmList.get(j).get("ALARM_EW")))||Globals.DOWN_ALARM.equals(String.valueOf(alarmList.get(j).get("ALARM_EW")))) {
+						qualityLevel="1";
 					}
 				}
 			}
-			plList.get(i).setAlarmLevel(index);
-		}*/
-		return null;
+			plList.get(i).setButtonId("pl"+i);
+			if(flag) {
+				plList.get(i).setAlarmLevel(qualityLevel);
+			}else {
+				plList.get(i).setAlarmLevel("3");
+			}
+		}
+		return plList;
 	}
-
+	@Override
+	public Map getQbFormData(List<Permission> list,Integer arrIndex) {
+		for(int i=0;i<list.size();i++) {
+			if(!"pl".equals(list.get(i).getType())) {
+				list.remove(i);
+			}
+		}
+		String[] plArr=new String[list.size()];
+		for(int i=0;i<list.size();i++) {
+			plArr[i]=list.get(i).getPermissionName();
+		}
+		List<Map> formlist=qbm.getQbFormData(plArr);
+		if(arrIndex==(formlist.size()-1)) {
+			formlist.get(arrIndex).put("arrAlarm", "1");
+		}else {
+			formlist.get(arrIndex).put("arrAlarm", "0");
+		}
+		return formlist.get(arrIndex);
+	}
+	
 }

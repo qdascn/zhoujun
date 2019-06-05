@@ -50,9 +50,9 @@ public class SystemSetupController {
 	@RequestMapping("userAddRole")
 	@ResponseBody
 	public Map userAddRole(String userId,@RequestParam(value = "roleIdArr[]")  Integer[]  roleIdArr) {
-		sss.userAddRole(userId, roleIdArr);
+		Map map=sss.userAddRole(userId, roleIdArr);
 		
-		return null;
+		return map;
 	}
 	@RequestMapping("initProductLineSetup")
 	public String initProductLineSetup() {

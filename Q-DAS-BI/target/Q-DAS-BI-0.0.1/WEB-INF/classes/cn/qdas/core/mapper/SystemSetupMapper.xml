@@ -39,6 +39,31 @@
 		left join system_role r on ur.role_id=r.role_id
 		where 1=1
 	</select>
+	<insert id="addUser" parameterType="cn.qdas.core.bean.User">
+		insert into [system_user](
+			user_name,user_account,password,locked
+		)values(
+			#{userName},#{userAccount},#{password},#{locked}
+		)
+	</insert>
+	<update id="editUser" parameterType="cn.qdas.core.bean.User">
+		update [system_user] set
+			user_name=#{userName},user_account=#{userAccount},password=#{password},locked=#{locked}
+		where user_id=#{userId}
+	</update>
+	<delete id="delUser" parameterType="cn.qdas.core.bean.User">
+		delete from [system_user] where user_id=#{userId}
+	</delete>
+	<delete id="delUserRole" parameterType="java.lang.String">
+		delete from system_user_role
+		where user_id=#{userId}
+	</delete>
+	<insert id="addUserRole" parameterType="java.lang.String">
+		insert into system_user_role (user_id,role_id) values
+		<foreach collection="roleIdArr" index="index" item="item" separator=",">
+			(#{userId},${item})
+		</foreach>
+	</insert>
 	<select id="getAllProductLine" resultType="map">
 		select permission_id,permission_name,type,available from system_permission
 		where type='pl'
@@ -49,9 +74,6 @@
 		)values(
 			#{productLineName},'pl',#{available}
 		)
-		<selectKey keyColumn="permission_id" resultType="int" order="AFTER">
-			SELECT SCOPE_IDENTITY()
-		</selectKey>
 	</insert>
 	<update id="updateProdectLine" parameterType="cn.qdas.core.bean.ProductLine">
 		update system_permission set 
@@ -62,4 +84,47 @@
 	<delete id="delProductLine" parameterType="cn.qdas.core.bean.ProductLine">
 		delete from system_permission where permission_id=#{id}
 	</delete>
+	<select id="getAllRole" resultType="cn.qdas.core.bean.Role">
+		select role_id,role_name,available from system_role
+	</select>
+	<insert id="addRole" parameterType="cn.qdas.core.bean.Role">
+		insert into system_role(
+			role_name,available
+		)values(
+			#{roleName},#{available}
+		)
+	</insert>
+	<update id="editRole" parameterType="cn.qdas.core.bean.Role">
+		update system_role set 
+			role_name=#{roleName},
+			available=#{available}
+			where role_id=#{roleId}
+	</update>
+	<delete id="delRole" parameterType="cn.qdas.core.bean.Role">
+		delete from system_role where role_id=#{roleId}
+	</delete>
+	<select id="getAllPermission" resultType="cn.qdas.core.bean.Permission">
+		select permission_id,permission_name,type,available from system_permission
+		where available='0'
+	</select>
+	<select id="getPermissionByRoleId" parameterType="cn.qdas.core.bean.Role" resultMap="rolePermissionListMap">
+		select r.role_id,r.role_name,r.available,
+				p.permission_id,p.permission_name		
+		from system_role r
+		inner join system_role_permission rp on r.role_id=rp.role_id
+		inner join system_permission p on rp.permission_id=p.permission_id
+		where 1=1
+		and r.role_id=#{roleId}
+		and p.available='0'
+	</select>
+	<delete id="delPermissionByRoleId" parameterType="java.lang.String">
+		delete from system_role_permission
+		where role_id=#{roleId}
+	</delete>
+	<insert id="addPermissionById" parameterType="java.lang.String">
+		insert into system_role_permission (role_id,permission_id) values
+		<foreach collection="permissionIds" index="index" item="item" separator=",">
+			(#{roleId},${item})
+		</foreach>
+	</insert>
 </mapper>

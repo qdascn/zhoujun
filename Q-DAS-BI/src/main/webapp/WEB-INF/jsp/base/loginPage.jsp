@@ -60,7 +60,7 @@
     		<ul>
 			    <!-- <li><input id="userName" name="userName" type="text" class="loginuser" onclick="JavaScript:this.value=''"/></li>
 			    <li><input id="password" name="password" type="password" class="loginpwd" onclick="JavaScript:this.value=''"/></li> -->
-			    <li><input class="easyui-textbox" id="userAccount" name="userAccount" style="width:80%;height:50px;padding:10px" data-options="required:true,validType:{length:[5,20]},prompt:'Username',iconCls:'icon-man',iconWidth:38"></li>
+			    <li><input class="easyui-textbox" id="userAccount" name="userAccount" style="width:80%;height:50px;padding:10px" data-options="required:true,validType:{length:[1,20]},prompt:'Username',iconCls:'icon-man',iconWidth:38"></li>
 			    <li><input class="easyui-textbox" id="password" name="password" type="password" style="width:80%;height:50px;padding:10px" data-options="required:true,validType:{length:[5,20]},prompt:'Password',iconCls:'icon-lock',iconWidth:38"></li>
 			    <!-- <li><input id="loginBtn" name="" type="button" class="loginbtn" value="登录" /></li> -->
 			    <li><a id="loginBtn" class="easyui-linkbutton c6" data-options="size:'large'" style="width:120px">登录</a><span><font id="errorText" size='5' color='red'></font></span></li>

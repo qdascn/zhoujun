@@ -10,12 +10,15 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import cn.qdas.bi.bean.QbProductLine;
 import cn.qdas.bi.bean.QualityBoard;
 import cn.qdas.bi.bean.Teil;
 import cn.qdas.bi.service.IQualityBoardService;
+import cn.qdas.core.bean.Permission;
 import cn.qdas.core.bean.User;
 
 @Controller
@@ -34,8 +37,8 @@ public class QualityBoardController {
 	public String getProductLineData(HttpServletRequest request,Model model,QualityBoard qb) {
 		HttpSession session=request.getSession();
 		User user=(User) session.getAttribute("user");
-		List<Map> list=iqbs.getProductLine(qb);
-		iqbs.getProductLineByUser(user);
+		//List<Map> list=iqbs.getProductLine(qb);
+		List list =iqbs.getProductLineByUser(user,qb);
 		Map map=new HashMap<String, String>();
 		map.put("startTime", qb.getStartTime());
 		map.put("endTime", qb.getEndTime());
@@ -78,5 +81,18 @@ public class QualityBoardController {
 	public List getWertevarData(QualityBoard qb) {
 		List list = iqbs.getWertevarDate(qb);
 		return list;
+	}
+	@RequestMapping("initQbShow")
+	public String initQbShowPage() {
+		return "bi/qb/qbShow";
+	}
+	@RequestMapping("getQbForm")
+	@ResponseBody
+	public Map getQbFormData(HttpServletRequest request,Integer arrIndex) {
+		HttpSession session=request.getSession();
+		User user=(User) session.getAttribute("user");
+		List<Permission> list=user.getPermissionList();
+		Map map=iqbs.getQbFormData(list,arrIndex);
+		return map;
 	}
 }
