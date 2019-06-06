@@ -176,15 +176,45 @@
 					endTime:$('#elmSearchEndTime').val()
 				},
 				success:function(data){
-					var upLimit=data[0].MEOGW;
-					var downLimit=data[0].MEUGW;
-					var xValue=[];
-					var yValue=[];
-					for(var i=0;i<data.length;i++){
-						xValue.push(data[i].WVDATZEIT);
-						yValue.push(data[i].WVWERT)
+					if(data[0].MEARTOGW=='1'){
+						var upLimit=data[0].MEOGW;
+						var downLimit=data[0].MEUGW;
+						var xValue=[];
+						var yValue=[];
+						for(var i=0;i<data.length;i++){
+							xValue.push(data[i].WVDATZEIT);
+							yValue.push(data[i].WVWERT)
+						}
+						lineChart=initLineChart2('charts',xValue,yValue,upLimit,downLimit,data[0].MENENNMAS);
+					}else{
+						var xValues=new Array();
+						var yValues=new Array();
+						for(var i=0;i<data.length;i++){
+							xValues.push(data[i].WVWERT);
+						}
+						var pieObj={};
+						var pieArr=[];
+						var cc=[];
+						var xData=[];
+						for(var i=0; i<xValues.length; i++){
+						//通过把数组的val值赋给obj做为下标，通过下标来查找
+							if(!pieObj[xValues[i]]){
+								xData.push(xValues[i])
+								pieObj[xValues[i]]=1 //这里如果不给个值，那么obj还是为空。
+							}else{
+								pieObj[xValues[i]]++
+							}
+						}
+						for(var i=0;i<xData.length;i++){
+							var obj=new Object();
+							obj.name=xData[i];
+							obj.value=pieObj[xData[i]];
+							yValues[i]=pieObj[xData[i]];
+							pieArr.push(obj);
+						}
+						lineChart=initBarAndPie('charts',xData,yValues,pieArr);						
 					}
-					lineChart=initLineChart('charts',xValue,yValue,upLimit,downLimit);
+					
 				}
 			});
 		}

@@ -26,4 +26,5 @@ public interface QualityBoardMapper {
 	List getAlarmValuesByProductLine(@Param("productLineNames")String[] productLineNames,@Param("startTime")String startTime,@Param("endTime")String endTime);
 	
 	List<Map> getQbFormData(@Param("productLineNames")String[] productLineNames);
+	List<Map> getQbTableData(@Param("teilId")String teilId,@Param("merkmalId")String merkmalId);
 }

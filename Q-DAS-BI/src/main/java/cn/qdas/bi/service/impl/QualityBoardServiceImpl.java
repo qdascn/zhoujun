@@ -214,12 +214,19 @@ public class QualityBoardServiceImpl implements IQualityBoardService{
 			plArr[i]=list.get(i).getPermissionName();
 		}
 		List<Map> formlist=qbm.getQbFormData(plArr);
+		List<Map> tableList=qbm.getQbTableData(formlist.get(arrIndex).get("TETEIL").toString(), formlist.get(arrIndex).get("MEMERKMAL").toString());
+		Map reMap=new HashMap<String, Object>();
 		if(arrIndex==(formlist.size()-1)) {
-			formlist.get(arrIndex).put("arrAlarm", "1");
+			reMap.put("arrAlarm", "1");
 		}else {
-			formlist.get(arrIndex).put("arrAlarm", "0");
+			reMap.put("arrAlarm", "0");
 		}
-		return formlist.get(arrIndex);
+		for(int i=0;i<tableList.size();i++) {
+			tableList.get(i).put("WVDATZEIT", String.valueOf(tableList.get(i).get("WVDATZEIT")).substring(0, 19));
+		}
+		reMap.put("formList", formlist.get(arrIndex));
+		reMap.put("tableList", tableList);
+		return reMap;
 	}
 	
 }
