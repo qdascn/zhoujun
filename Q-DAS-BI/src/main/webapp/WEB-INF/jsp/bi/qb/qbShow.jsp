@@ -7,17 +7,24 @@
   
  <body>
     <div id="cc" class="easyui-layout" style="width:100%;height:100%;">
-	    <div data-options="region:'north',collapsible:false" style="height:5%;">
-	    	<span style="margin-left: 20px">轮播时间间隔：</span>
-	    	<select id="jgtime" style="width:150px;padding-left: 20px">
-			    <option value="1">1秒</option>
-			    <option value="10">10秒</option>
-			    <option value="20">20秒</option>
-			    <option value="30">30秒</option>
-			    <option value="60">1分钟</option>
-			</select>
+	    <div data-options="region:'north',collapsible:false" style="height:7%;padding: 0">
+	    	<div style="float: left;width: 30%;height: 80%">
+	    		<span style="margin-left: 20px">轮播间隔：</span>
+		    	<select id="jgtime" style="width:150px;padding-left: 20px">
+				    <option value="10">10秒</option>
+				    <option value="20">20秒</option>
+				    <option value="30">30秒</option>
+				    <option value="60">1分钟</option>
+				     <option value="1">1秒</option>
+				</select>
+	    	</div>
+			<form id="titleForm" style="float: left;width: 70%;height: 70%">
+				<input class="easyui-textbox" name="TEERZEUGNIS" style="width:30%;padding-left: 20px" data-options="label:'产线名:',editable:false">
+				<input class="easyui-textbox" name="TETEILNR" style="width:30%;padding-left: 20px" data-options="label:'零件号:',editable:false">
+				<input class="easyui-textbox" name="TEBEZEICH" style="width:30%;padding-left: 20px" data-options="label:'零件名:',editable:false">
+			</form>
 	    </div>
-	    <div  data-options="region:'south',collapsible:false" style="height:50%;">
+	    <div  data-options="region:'south',title:'测量值',collapsible:true" style="height:50%;">
 	    	<table id="wertevarTable">
 				<thead>
 					<tr>
@@ -34,7 +41,7 @@
 	    </div>
 	    <div data-options="region:'west',collapsible:false" style="width:30%;padding: 10px">
 	    	<form id="dataForm" method="post">
-	    		<div style="margin-top:15px">
+	    		<!-- <div style="margin-top:15px">
 	                <input class="easyui-textbox" name="TEERZEUGNIS" style="width:100%;padding-left: 20px" data-options="label:'产线名:',editable:false">
 	            </div>
 	            <div style="margin-top:15px">
@@ -42,7 +49,7 @@
 	            </div>
 	            <div style="margin-top:15px">
 	                <input class="easyui-textbox" name="TEBEZEICH" style="width:100%;padding-left: 20px" data-options="label:'零件名:',editable:false">
-	            </div>
+	            </div> -->
 	            <div style="margin-top:15px">
 	                <input class="easyui-textbox" name="MEMERKBEZ" style="width:100%;padding-left: 20px" data-options="label:'参数:',editable:false">
 	            </div>
@@ -58,7 +65,7 @@
 	            <input type="hidden" id="MEARTOGW" name="MEARTOGW">
 	        </form>
 	    </div>
-	    <div id="charts" data-options="region:'center'"></div>
+	    <div id="qbCharts" data-options="region:'center'"></div>
 	</div>
 	<script type="text/javascript" src="<%=basePath%>resources/js/echarts.min.js"></script>
 		<script type="text/javascript" src="<%=basePath%>resources/js/charts.js"></script>
@@ -67,6 +74,7 @@
 		var autotime;
 		var auto;
 		var qbShowCharts;
+		getFormData();
 		$(window).resize(function() {
 	        qbShowCharts.resize();
 	    });
@@ -115,12 +123,14 @@
 				url:'<%=basePath%>qb/getQbForm',
 				success:function(data){
 					$('#dataForm').form('clear');
+					$('#titleForm').form('clear');
 					if(data.arrAlarm==0){
 						index += 1;
 					}else{
 						index=0
 					}
 					$('#dataForm').form('load',data.formList);
+					$('#titleForm').form('load',data.formList);
 					$('#wertevarTable').datagrid('loadData',data.tableList);
 				}
 			})
@@ -137,7 +147,7 @@
 					xValue.push(rows[i].WVDATZEIT);
 					yValue.push(rows[i].WVWERT);
 				}
-				qbShowCharts=initLineChart2('charts',xValue,yValue,upLimit,downLimit,mData);
+				qbShowCharts=initLineChart2('qbCharts',xValue,yValue,upLimit,downLimit,mData);
 			}else if(lineBar=='0'){
 				var xValues=new Array();
 						var yValues=new Array();
@@ -164,7 +174,7 @@
 							yValues[i]=pieObj[xData[i]];
 							pieArr.push(obj);
 						}
-						qbShowCharts=initBarAndPie('charts',xData,yValues,pieArr);	
+						qbShowCharts=initBarAndPie('qbCharts',xData,yValues,pieArr);	
 			}
 		}
 	</script>

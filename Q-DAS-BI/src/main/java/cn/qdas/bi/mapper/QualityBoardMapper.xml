@@ -167,7 +167,7 @@
 			<foreach collection="productLineNames" open="(" close=")" separator="," item="item" index="i">
 					#{item}
 			</foreach>
-			ORDER BY t.TEERZEUGNIS
+			ORDER BY t.TEERZEUGNIS,t.TETEIL,m.MEMERKMAL
 	
 	</select>
 	<select id="getQbTableData" parameterType="java.lang.String" resultType="map">

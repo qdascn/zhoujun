@@ -94,7 +94,7 @@ function initLineChart(divId,xValues,yValues,upLimitData,downLimitData){
 			        }
 		    }]
 		};
-	lineChart.setOption(option);
+	lineChart.setOption(option,true);
 	return lineChart;
 }
 function initLineChart2(divId,xValues,yValues,upLimitData,downLimitData,mData){
@@ -213,19 +213,23 @@ function initLineChart2(divId,xValues,yValues,upLimitData,downLimitData,mData){
 			        }
 		    }]
 		};
-	lineChart.setOption(option);
+	lineChart.setOption(option,true);
+	lineChart.resize();
 	return lineChart;
 }
 function initBarAndPie(divId,xValues,yValues,pieData){
 	var chart=echarts.init(document.getElementById(divId));
 	option = {
 		     grid: [{
-		        top: 100,
+		        top: 10,
 		        width: '50%',
-		        bottom: 100,
+		        bottom: 10,
 		        left: 10,
 		        containLabel: true
 		    }],
+		    tooltip:{
+		    	trigger: 'item',
+		        formatter: "{a} <br/>{b} : {c} ({d}%)"},
 		    xAxis: {
 		        type: 'category',
 		        data: xValues
@@ -234,10 +238,11 @@ function initBarAndPie(divId,xValues,yValues,pieData){
 		        type: 'value'
 		    },
 		    series: [{
+		    	name:'个数',
 		        data: yValues,
 		        type: 'bar'
 		    },{       
-		            name: '访问来源',
+		    		name:'个数',
 		            type: 'pie',
 		            radius : '40%',
 		            center: ['75%', '50%'],
@@ -253,7 +258,8 @@ function initBarAndPie(divId,xValues,yValues,pieData){
 		    
 		    ]
 		};
-		chart.setOption(option);
+		chart.setOption(option,true);
+		chart.resize();
 		return chart;
 	
 }

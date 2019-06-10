@@ -37,7 +37,7 @@
 				<a id="cancelWertevarSearch" class="easyui-linkbutton" data-options="iconCls:'icon-back'" style="float: right">取消查询</a>
 			</div>
 		</div>
-		<div id="charts" data-options="region:'east',title:'数据图表',split:true" style="width:50%;"></div>
+		<div id="tdCharts" data-options="region:'east',title:'数据图表',split:true" style="width:50%;"></div>
 		<script type="text/javascript" src="<%=basePath%>resources/js/echarts.min.js"></script>
 		<script type="text/javascript" src="<%=basePath%>resources/js/charts.js"></script>
 		<script type="text/javascript">
@@ -76,7 +76,7 @@
 								xV.push(sizeRows[i].WVDATZEIT);
 								yV.push(sizeRows[i].WVWERT);
 							}
-							lineChart=initLineChart('charts',xV,yV,row2.MEOGW,row2.MEUGW);
+							lineChart=initLineChart('tdCharts',xV,yV,row2.MEOGW,row2.MEUGW);
 						}
 					},
 					rowStyler: function(index,row){

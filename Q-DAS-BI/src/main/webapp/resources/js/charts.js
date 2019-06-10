@@ -214,15 +214,16 @@ function initLineChart2(divId,xValues,yValues,upLimitData,downLimitData,mData){
 		    }]
 		};
 	lineChart.setOption(option,true);
+	lineChart.resize();
 	return lineChart;
 }
 function initBarAndPie(divId,xValues,yValues,pieData){
 	var chart=echarts.init(document.getElementById(divId));
 	option = {
 		     grid: [{
-		        top: 100,
+		        top: 10,
 		        width: '50%',
-		        bottom: 100,
+		        bottom: 10,
 		        left: 10,
 		        containLabel: true
 		    }],
@@ -258,6 +259,7 @@ function initBarAndPie(divId,xValues,yValues,pieData){
 		    ]
 		};
 		chart.setOption(option,true);
+		chart.resize();
 		return chart;
 	
 }
