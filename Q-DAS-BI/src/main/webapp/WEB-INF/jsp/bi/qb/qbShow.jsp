@@ -21,13 +21,13 @@
 	    	<table id="wertevarTable">
 				<thead>
 					<tr>
-						<th data-options="field:'WVWERT',width:80,align:'center',sortable:true">测量值</th>
+						<th data-options="field:'WVWERT',width:80,align:'center'">测量值</th>
 						<th data-options="field:'PRVORNAME',width:50,align:'center'">测量人员</th>
 						<th data-options="field:'PMNR',width:100,align:'center'">机台编号</th>
 						<th data-options="field:'PMBEZ',width:100,align:'center'">机台名</th>
 						<!-- <th data-options="field:'WVMASCHINE',width:50,align:'center'">WVMASCHINE</th>
 						<th data-options="field:'WVNEST',width:50,align:'center'">WVNEST</th> -->
-						<th data-options="field:'WVDATZEIT',width:120,align:'center',sortable:true">日期</th>
+						<th data-options="field:'WVDATZEIT',width:120,align:'center'">日期</th>
 					</tr>
 				</thead>
 			</table>
@@ -55,6 +55,7 @@
 	            <div style="margin-top:15px">
 	                <input class="easyui-textbox" id="MEUGW" name="MEUGW" style="width:100%;padding-left: 20px" data-options="label:'下公差上限:',editable:false">
 	            </div>
+	            <input type="hidden" id="MEARTOGW" name="MEARTOGW">
 	        </form>
 	    </div>
 	    <div id="charts" data-options="region:'center'"></div>
@@ -65,6 +66,10 @@
 		var index=0;
 		var autotime;
 		var auto;
+		var qbShowCharts;
+		$(window).resize(function() {
+	        qbShowCharts.resize();
+	    });
 		$("#jgtime").combobox({
 			editable:false,
 			onSelect:function(record){
@@ -90,7 +95,7 @@
 					enableRowContextMenu : false,
 					rowTooltip : false,
 					onLoadSuccess:function(data){
-						initChart(data);
+						initChart(data,$('#MEARTOGW').val());
 					},
 					rowStyler: function(index,row){
 						if(row.ALARM_EW=='1'|row.ALARM_EW=='2'|row.ALARM_EW=='65536'){
@@ -120,18 +125,47 @@
 				}
 			})
 		}
-		function initChart(data){
+		function initChart(data,lineBar){
 			var rows=data.rows;
-			var upLimit=$('#MEOGW').textbox('getValue');
-			var downLimit=$('#MEUGW').textbox('getValue');
-			var mData=$('#MENENNMAS').textbox('getValue');
-			var xValue=[];
-			var yValue=[];
-			for(var i=0;i<rows.length;i++){
-				xValue.push(rows[i].WVDATZEIT);
-				yValue.push(rows[i].WVWERT);
+			if(lineBar=='1'){
+				var upLimit=$('#MEOGW').textbox('getValue');
+				var downLimit=$('#MEUGW').textbox('getValue');
+				var mData=$('#MENENNMAS').textbox('getValue');
+				var xValue=[];
+				var yValue=[];
+				for(var i=0;i<rows.length;i++){
+					xValue.push(rows[i].WVDATZEIT);
+					yValue.push(rows[i].WVWERT);
+				}
+				qbShowCharts=initLineChart2('charts',xValue,yValue,upLimit,downLimit,mData);
+			}else if(lineBar=='0'){
+				var xValues=new Array();
+						var yValues=new Array();
+						for(var i=0;i<rows.length;i++){
+							xValues.push(rows[i].WVWERT);
+						}
+						var pieObj={};
+						var pieArr=[];
+						var cc=[];
+						var xData=[];
+						for(var i=0; i<xValues.length; i++){
+						//通过把数组的val值赋给obj做为下标，通过下标来查找
+							if(!pieObj[xValues[i]]){
+								xData.push(xValues[i])
+								pieObj[xValues[i]]=1 //这里如果不给个值，那么obj还是为空。
+							}else{
+								pieObj[xValues[i]]++
+							}
+						}
+						for(var i=0;i<xData.length;i++){
+							var obj=new Object();
+							obj.name=xData[i];
+							obj.value=pieObj[xData[i]];
+							yValues[i]=pieObj[xData[i]];
+							pieArr.push(obj);
+						}
+						qbShowCharts=initBarAndPie('charts',xData,yValues,pieArr);	
 			}
-			lineChart=initLineChart2('charts',xValue,yValue,upLimit,downLimit,mData);
 		}
 	</script>
 </body>

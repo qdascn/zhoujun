@@ -203,6 +203,18 @@
   				},
   				url:'<%=basePath%>system/userAddRole',
   				success:function(data){
+  				console.log(data.success);
+  					$('#userRoleDig').dialog('close')
+  					if(data.success==0){
+		  						$.messager.show({
+									title:'提示信息',
+									msg:'操作成功',
+									timeout:3000,
+									showType:'slide'
+								});
+		  					}else if(data.success==1){
+		  						$.messager.alert('提示信息','操作失败！！！  错误：'+data.error,'error');
+		  					}
   					$('#userTable').datagrid('reload');
   				}
   			})

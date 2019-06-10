@@ -19,6 +19,10 @@ import cn.qdas.core.dao.SystemSetupMapper;
 public class SystemSetupService {
 	@Resource
 	SystemSetupMapper ssm;
+	/**
+	 * 获取所有用户列表
+	 * @return
+	 */
 	public List getAllUser() {
 		List<User> list=ssm.getAllUser();
 		for(int i=0;i<list.size();i++) {
@@ -42,6 +46,12 @@ public class SystemSetupService {
 		}
 		return list;
 	}
+	/**
+	 * 添加或者修改用户信息
+	 * @param user
+	 * @param addoredit 1：添加  2：修改
+	 * @return
+	 */
 	public Map addOrEditUser(User user,String addoredit) {
 		Map reMap=new HashMap<String, String>();
 		try {
@@ -57,6 +67,12 @@ public class SystemSetupService {
 		}
 		return reMap;
 	}
+	/**
+	 * 给用户授予角色
+	 * @param userId
+	 * @param roleIdArr
+	 * @return
+	 */
 	public Map userAddRole(String userId,Integer[]  roleIdArr) {
 		Map reMap=new HashMap<String, String>();
 		try {
@@ -69,6 +85,11 @@ public class SystemSetupService {
 		}
 		return reMap;
 	}
+	/**
+	 * 删除用户，同时删除用户-角色中间表中对应的信息
+	 * @param user
+	 * @return
+	 */
 	public Map delUser(User user) {
 		Map reMap=new HashMap<String, String>();
 		try {
@@ -81,6 +102,10 @@ public class SystemSetupService {
 		}
 		return reMap;
 	}
+	/**
+	 * 获取所有产线权限
+	 * @return
+	 */
 	public List getAllProductLine() {
 		List<Map<String, Object>> list=ssm.getAllProductLine();
 		for(int i=0;i<list.size();i++) {
@@ -92,6 +117,12 @@ public class SystemSetupService {
 		}
 		return list;
 	}
+	/**
+	 * 添加或修改产线信息
+	 * @param pl
+	 * @param index 1：添加  2：修改
+	 * @return
+	 */
 	public Map addProductLine(ProductLine pl,String index) {
 		Map reMap=new HashMap<String, String>();
 		try {
@@ -107,10 +138,16 @@ public class SystemSetupService {
 		}
 		return reMap;
 	}
+	/**
+	 * 删除产线权限，同时删除角色-权限中间表中对应的信息
+	 * @param pl
+	 * @return
+	 */
 	public Map delProductLine(ProductLine pl) {
 		Map reMap=new HashMap<String, String>();
 		try {
 			ssm.delProductLine(pl);
+			ssm.delPlRole(pl);
 			reMap.put("success", "0");
 		} catch (Exception e) {
 			reMap.put("success", "1");
@@ -118,6 +155,10 @@ public class SystemSetupService {
 		}
 		return reMap;
 	}
+	/**
+	 * 获取所有角色列表
+	 * @return
+	 */
 	public List getAllRole() {
 		List<Role> list=ssm.getAllRole();
 		for(int i=0;i<list.size();i++) {
@@ -129,6 +170,12 @@ public class SystemSetupService {
 		}
 		return list;
 	}
+	/**
+	 * 添加或者修改角色 
+	 * @param role
+	 * @param addoredit 1：添加  2：修改
+	 * @return
+	 */
 	public Map addRole(Role role,String addoredit) {
 		Map reMap=new HashMap<String, String>();
 		try {
@@ -145,11 +192,17 @@ public class SystemSetupService {
 		return reMap;
 		
 	}
+	/**
+	 * 删除角色，同时删除用户-角色和角色-权限中间表对应的信息
+	 * @param role
+	 * @return
+	 */
 	public Map delRole(Role role) {
 		Map reMap=new HashMap<String, String>();
 		try {
 			ssm.delPermissionByRoleId(role.getRoleId());
 			ssm.delRole(role);
+			ssm.delUserRoleByRoleId(role.getRoleId());
 			reMap.put("success", "0");
 		} catch (Exception e) {
 			reMap.put("success", "1");
@@ -157,9 +210,14 @@ public class SystemSetupService {
 		}
 		return reMap;
 	}
+	/**
+	 * 根据权限ID获取权限，授权tree中的数据打勾
+	 * @param role
+	 * @return
+	 */
 	public List getPermissionByRoleId(Role role) {
-		List<Role> roleList=ssm.getPermissionByRoleId(role);
-		List<Permission> plist=ssm.getAllPermission();
+		List<Role> roleList=ssm.getPermissionByRoleId(role);//先获取角色已有的权限
+		List<Permission> plist=ssm.getAllPermission();//获取所有的权限
 		List treeList=new ArrayList<Map>();
 		Map menuMap=new HashMap<String, Object>();
 		List menuList=new ArrayList<Map>();
@@ -198,6 +256,12 @@ public class SystemSetupService {
 		System.out.println(treeList);
 		return treeList;
 	}
+	/**
+	 * 给角色授权
+	 * @param roleId
+	 * @param permissionIds
+	 * @return
+	 */
 	public Map addRolePermission(String roleId, Integer[] permissionIds) {
 		Map reMap=new HashMap<String, String>();
 		try {

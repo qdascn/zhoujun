@@ -84,6 +84,9 @@
 	<delete id="delProductLine" parameterType="cn.qdas.core.bean.ProductLine">
 		delete from system_permission where permission_id=#{id}
 	</delete>
+	<delete id="delPlRole" parameterType="cn.qdas.core.bean.ProductLine">
+		delete from system_role_permission where permission_id=#{id}
+	</delete>
 	<select id="getAllRole" resultType="cn.qdas.core.bean.Role">
 		select role_id,role_name,available from system_role
 	</select>
@@ -119,6 +122,10 @@
 	</select>
 	<delete id="delPermissionByRoleId" parameterType="java.lang.String">
 		delete from system_role_permission
+		where role_id=#{roleId}
+	</delete>
+	<delete id="delUserRoleByRoleId" parameterType="java.lang.String">
+		delete from system_user_role
 		where role_id=#{roleId}
 	</delete>
 	<insert id="addPermissionById" parameterType="java.lang.String">

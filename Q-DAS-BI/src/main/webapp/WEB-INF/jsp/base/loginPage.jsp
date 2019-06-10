@@ -29,11 +29,18 @@
 				}
 			});
 	    })
+	    
 	    $('.loginbox').css({'position':'absolute','left':($(window).width()-692)/2});
 		$(window).resize(function(){  
 	    $('.loginbox').css({'position':'absolute','left':($(window).width()-692)/2});
     })  
 });  
+	document.onkeydown=function(){
+			if(window.event&&window.event.keyCode==13){
+				 $('#loginBtn').click();
+				return false;
+			}
+		}
 </script> 
 
 </head>
@@ -73,7 +80,6 @@
     
     <div class="loginbm">版权所有  2019  <a href="http://www.q-das.cn">q-das.cn</a></div>
 	
-    
 </body>
 
 </html>

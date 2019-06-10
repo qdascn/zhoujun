@@ -19,6 +19,8 @@
 									</select>
 							<input type="hidden" id="elSearchStartTime" name="elSearchStartTime" value="${paramMap.startTime}">
 							<input type="hidden" id="elSearchEndTime" name="elSearchEndTime" value="${paramMap.endTime}">
+							<input type="hidden" id="productLineList" name="productLineList" value="${paramMap.plList}">
+							<a id="openQb" class="easyui-linkbutton c3" data-options="iconCls:'icon-search'" style="float: right">打开轮播看板</a>
 		        		</div>
 						<div id="centerbox" data-options="region:'center'" style="padding:5px;background:#eee;">
 							<c:forEach items="${paramMap.plList}" var="prodectLine">
@@ -39,8 +41,12 @@
 							</c:forEach>
 						</div>
 		        	</div>
+	<div id="qbDig" class="easyui-dialog" data-options="title:'质量看板',resizable:true,maximizable:true,modal:true,closed:true,onClose:function(){clearInterval(auto)}">
+	</div>
 	<script type="text/javascript">
 	$(function(){
+		$('#qbDig').height(window.innerHeight-200);
+			$('#qbDig').width(window.innerWidth-200);
 		$('#timecc').combobox({
 			editable:false,
 			onSelect:function(record){
@@ -68,6 +74,20 @@
 					});
 				}
 			}
+		})
+		$('#openQb').click(function(){
+			$('#qbDig').panel({
+						href:'<%=basePath%>qb/initQbShow'
+					});
+			$('#qbDig').dialog('open');
+			<%-- $.ajax({
+				type:'post',
+				data:{
+					plList:JSON.stringify($("#productLineList").val())
+				},
+				url:'<%=basePath%>qb/getOpenQb'
+			}) --%>
+			//console.log($("#productLineList").val());
 		})
 	})
 	function getTeil(plId,plName){
