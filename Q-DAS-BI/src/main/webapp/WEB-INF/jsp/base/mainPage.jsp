@@ -7,11 +7,18 @@
 <link href="<%=basePath %>resources/blueThemes/css/style.css" rel="stylesheet" type="text/css" />
 <script language="javascript">
 	$(function(){
-    $('.loginbox0').css({'position':'absolute','left':($(window).width()-810)/2});
-	$(window).resize(function(){  
-    $('.loginbox0').css({'position':'absolute','left':($(window).width()-810)/2});
-    })  
-});  
+	    $('.loginbox0').css({'position':'absolute','left':($(window).width()-810)/2});
+		$(window).resize(function(){  
+	    $('.loginbox0').css({'position':'absolute','left':($(window).width()-810)/2});
+	    })  
+	});  
+	function logout(){
+		$.messager.confirm('提示信息', '确定登出用户？', function(r){
+			if (r){
+				window.location.href='<%=basePath%>main/logout';
+			}
+		});
+	}
 </script> 
 
 </head>
@@ -19,14 +26,12 @@
 <body background="<%=basePath%>resources/blueThemes/images/mainbg.png" style=" background-repeat:no-repeat ; background-size:100% 100%;  background-attachment: fixed;" >
 
 
-	<!-- <div class="logintop">    
-	    <span>欢迎进入信息管理系统</span>    
-	    <ul>
-	    <li><a href="#">回首页</a></li>
-	    <li><a href="#">帮助</a></li>
-	    <li><a href="#">关于</a></li>
-	    </ul>    
-    </div> -->
+	<div class="logintop">    
+	    					<div class="user">
+							    <span>${user.userName }</span>
+							    <i><a onclick="logout()" style="cursor:pointer">退出登录</a></i>
+						    </div>        
+    </div>
     
     <div class="loginbody1">
 	    <span class="systemlogo"></span> 

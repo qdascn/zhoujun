@@ -40,10 +40,10 @@
 		<table id="wertevarTable" style="width: 100%;height: 100%">
 			<thead>
 				<tr>
-					<th data-options="field:'WVWERT',width:80,align:'center',sortable:true">WVWERT</th>
-					<th data-options="field:'MEUGW',width:50,align:'center'">MEUGW</th>
-					<th data-options="field:'MEOGW',width:50,align:'center'">MEOGW</th>
-					<th data-options="field:'PRVORNAME',width:50,align:'center'">PRVORNAME</th>
+					<th data-options="field:'WVWERT',width:80,align:'center',sortable:true">测量值</th>
+					<th data-options="field:'MEUGW',width:50,align:'center'">上公差</th>
+					<th data-options="field:'MEOGW',width:50,align:'center'">下公差</th>
+					<th data-options="field:'PRVORNAME',width:50,align:'center'">测量人员</th>
 					<th data-options="field:'PMNR',width:100,align:'center'">PMNR</th>
 					<th data-options="field:'PMBEZ',width:100,align:'center'">PMBEZ</th>
 					<th data-options="field:'WVMASCHINE',width:50,align:'center'">WVMASCHINE</th>
@@ -176,7 +176,7 @@
 					endTime:$('#elmSearchEndTime').val()
 				},
 				success:function(data){
-					if(data[0].MEARTOGW=='1'){
+					if(data[0].MEMERKART=='0'){
 						var upLimit=data[0].MEOGW;
 						var downLimit=data[0].MEUGW;
 						var xValue=[];

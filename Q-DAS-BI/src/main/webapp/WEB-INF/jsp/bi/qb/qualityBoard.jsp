@@ -4,12 +4,20 @@
 <html>
   <head>
   <link rel="shortcut icon" href="<%=basePath%>resources/images/favicon.ico" type="image/x-icon">
+  <link href="<%=basePath %>resources/blueThemes/css/bi.css" rel="stylesheet" type="text/css" />
   	<script type="text/javascript">
   		$(function(){
 			$('#plAcc').panel({
 				href:'<%=basePath%>qb/getProductLineData'
 			});
 		})
+		function logout(){
+			$.messager.confirm('提示信息', '确定登出用户？', function(r){
+				if (r){
+					window.location.href='<%=basePath%>main/logout';
+				}
+			});
+		}
   	</script>
   </head>
   
@@ -17,6 +25,10 @@
 	<div class="easyui-layout" fit="true" style="width: 100%;height: 100%">
 		<div data-options="region:'north',split:false,collapsible:false,border:false" style="background-color: #2dc3e8;height: 60px" >
 			<div style="float: left;margin-left: 20px;height: 100%"><small> <img src="<%=basePath%>resources/images/qdas-logo.png" alt="" /></small></div>
+							<div class="user">
+							    <span>${user.userName }</span>
+							    <i><a onclick="logout()" style="cursor:pointer">退出登录</a></i>
+						    </div>    
 		</div>
 	    <div data-options="region:'center',border:false" style="overflow: hidden;">
 	    	<div id="qbAcc" class="easyui-accordion" data-options="multiple:false,fit:true,animate:true" style="width:100%;height:100%;">

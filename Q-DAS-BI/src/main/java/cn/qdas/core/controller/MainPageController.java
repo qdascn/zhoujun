@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import cn.qdas.core.bean.Permission;
 import cn.qdas.core.bean.User;
@@ -59,5 +60,15 @@ public class MainPageController {
 		session.setAttribute("user", user);
 		model.addAttribute("permissionList", list);
 		return "base/mainPage";
+	}
+	@RequestMapping("loginError")
+	public String initLoginErrorPage() {
+		return "base/loginError";
+	}
+	@RequestMapping("logout")
+	public ModelAndView logout(HttpServletRequest req) {
+		HttpSession session=req.getSession();
+		session.removeAttribute("user");
+		return new ModelAndView("redirect:/main/loginPage");
 	}
 }

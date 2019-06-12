@@ -9,14 +9,15 @@
   <body>
   					<div class="easyui-layout" fit="true" style="width: 100%;height: 100%">
 		        		<div data-options="region:'north',split:false,collapsible:false" style="height:42px;background:#eee;padding: 5px">
-		        			选择时间：<select id="timecc" name="searchDate" style="width:200px;">
-		        						<option>---选择日期---</option>
+		        			选择时间：<select class="easyui-combobox" id="timecc" name="searchDate" style="width:200px;" 
+		        			data-options="editable:false,onSelect:function(record){searchByTime(record);}">
+		        						<option>---选择时间---</option>
 									    <option value="0">显示全部数据</option>
 									    <option value="1h">显示最后一小时的数据</option>
 									    <option value="1">显示最后一天的数据</option>
 									    <option value="7">显示最后一周的数据</option>
 									    <option value="30">显示最后一个月(30)的数据</option>
-									</select>
+									</select >
 							<input type="hidden" id="elSearchStartTime" name="elSearchStartTime" value="${paramMap.startTime}">
 							<input type="hidden" id="elSearchEndTime" name="elSearchEndTime" value="${paramMap.endTime}">
 							<input type="hidden" id="productLineList" name="productLineList" value="${paramMap.plList}">
@@ -47,47 +48,14 @@
 	$(function(){
 		$('#qbDig').height(window.innerHeight-200);
 			$('#qbDig').width(window.innerWidth-200);
-		$('#timecc').combobox({
-			editable:false,
-			onSelect:function(record){
-				var days=record.value;
-				var now=new Date();
-				if(days==0){
-					$('#plAcc').panel({
-						href:'<%=basePath%>qb/getProductLineData'
-					});
-				}else if(days=='1h'){
-					var searchTime=now.getTime()-3600000;
-					var ago=new Date(searchTime);
-					var startDate=ago.getFullYear()+"-"+(ago.getMonth()+1)+"-"+ago.getDate()+" "+ago.getHours()+":"+ago.getMinutes()+":"+ago.getSeconds();
-					var endDate=now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate()+" "+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
-					$('#plAcc').panel({
-						href:'<%=basePath%>qb/getProductLineData?startTime='+startDate+'&endTime='+endDate
-					});
-				}else if(days=='1'|days=='7'|days=='30'){
-					var searchTime=now.getTime()-(days*86400000);
-					var ago=new Date(searchTime);
-					var startDate=ago.getFullYear()+"-"+(ago.getMonth()+1)+"-"+ago.getDate()+" "+ago.getHours()+":"+ago.getMinutes()+":"+ago.getSeconds();
-					var endDate=now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate()+" "+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
-					$('#plAcc').panel({
-						href:'<%=basePath%>qb/getProductLineData?startTime='+startDate+'&endTime='+endDate
-					});
-				}
-			}
-		})
+		
 		$('#openQb').click(function(){
+			var days=$('#timecc').combobox('getValue');
+			console.log(days);
 			$('#qbDig').panel({
 						href:'<%=basePath%>qb/initQbShow'
 					});
 			$('#qbDig').dialog('open');
-			<%-- $.ajax({
-				type:'post',
-				data:{
-					plList:JSON.stringify($("#productLineList").val())
-				},
-				url:'<%=basePath%>qb/getOpenQb'
-			}) --%>
-			//console.log($("#productLineList").val());
 		})
 	})
 	function getTeil(plId,plName){
@@ -104,6 +72,29 @@
 			var accSelected = $('#qbAcc').accordion('getPanel',0);
 			accSelected.panel('setTitle', '产线(产线名：'+plName+')');
 			$('#qbAcc').accordion('select',1); 
+  		}
+  		function searchByTime(record){
+  			var days=record.value;
+				var now=new Date();
+				if(days=='0'){
+					$('#plAcc').panel('refresh','<%=basePath%>qb/getProductLineData?searchTimeStr='+days);
+				}else if(days=='1h'){
+					var searchTime=now.getTime()-3600000;
+					var ago=new Date(searchTime);
+					var startDate=ago.getFullYear()+"-"+(ago.getMonth()+1)+"-"+ago.getDate()+" "+ago.getHours()+":"+ago.getMinutes()+":"+ago.getSeconds();
+					var endDate=now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate()+" "+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
+					$('#plAcc').panel({
+						href:'<%=basePath%>qb/getProductLineData?startTime='+startDate+'&endTime='+endDate+'&searchTimeStr='+days
+					});
+				}else if(days=='1'|days=='7'|days=='30'){
+					var searchTime=now.getTime()-(days*86400000);
+					var ago=new Date(searchTime);
+					var startDate=ago.getFullYear()+"-"+(ago.getMonth()+1)+"-"+ago.getDate()+" "+ago.getHours()+":"+ago.getMinutes()+":"+ago.getSeconds();
+					var endDate=now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate()+" "+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
+					$('#plAcc').panel({
+						href:'<%=basePath%>qb/getProductLineData?startTime='+startDate+'&endTime='+endDate+'&searchTimeStr='+days
+					});
+				}
   		}
 	</script>
   </body>

@@ -28,8 +28,6 @@ public class QualityBoardController {
 	IQualityBoardService iqbs;
 	@RequestMapping("initQb")
 	public String initQbPage() {
-		//List<Map> list=iqbs.getProductLine(qb);
-		//model.addAttribute("plList",list);
 		return "bi/qb/qualityBoard";
 	}
 	
@@ -39,6 +37,7 @@ public class QualityBoardController {
 		User user=(User) session.getAttribute("user");
 		//List<Map> list=iqbs.getProductLine(qb);
 		List list =iqbs.getProductLineByUser(user,qb);
+		System.out.println("****************"+qb.getSearchTimeStr());
 		Map map=new HashMap<String, String>();
 		map.put("startTime", qb.getStartTime());
 		map.put("endTime", qb.getEndTime());

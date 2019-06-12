@@ -2,6 +2,7 @@
 <%@ include file="../base/meta.jsp"%>
 <html>
   <head>
+  <link href="<%=basePath %>resources/blueThemes/css/bi.css" rel="stylesheet" type="text/css" />
 	<script type="text/javascript">
 		$(function(){
 			var data = [{
@@ -34,6 +35,13 @@
 			})
 		
 		})
+		function logout(){
+			$.messager.confirm('提示信息', '确定登出用户？', function(r){
+				if (r){
+					window.location.href='<%=basePath%>main/logout';
+				}
+			});
+		}
 		/* function toggle(){
 			var opts = $('#sm').sidemenu('options');
 			$('#sm').sidemenu(opts.collapsed ? 'expand' : 'collapse');
@@ -49,8 +57,15 @@
     <div class="easyui-layout" fit="true"> 
     	<div data-options="region:'north',split:false,collapsible:false,border:false" style="background-color: #2dc3e8;height: 60px" >
 			<div style="float: left;margin-left: 20px;height: 100%"><small> <img src="<%=basePath%>resources/images/qdas-logo.png" alt="" /></small></div>
+			<!-- <div style="float: right;position:absolute;right:10;bottom:5;">
+			   	 <a onclick="logout()" style="cursor:pointer"><font size="3">退出登录</font></a>
+			</div> -->
+						    <div class="user">
+							    <span>${user.userName }</span>
+							    <i><a onclick="logout()" style="cursor:pointer">退出登录</a></i>
+						    </div>    
 		</div>
-	    <div data-options="region:'west',title:'菜单',split:true" style="background:#eee;width:150px;">
+	    <div data-options="region:'west',title:'菜单',split:false" style="background:#eee;width:150px;">
 	    	<div id="sm" style="width: 100%"></div>
 	    </div>
 	    <div id="centerDiv" data-options="region:'center'"></div>

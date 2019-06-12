@@ -12,6 +12,7 @@ public class QualityBoard extends BaseBean{
 	private String merkmalId;
 	private String startTime;
 	private String endTime;
+	private String searchTimeStr;
 	public String getProductLineName() {
 		return productLineName;
 	}
@@ -82,6 +83,14 @@ public class QualityBoard extends BaseBean{
 
 	public void setQualityLevel(String qualityLevel) {
 		this.qualityLevel = qualityLevel;
+	}
+
+	public String getSearchTimeStr() {
+		return searchTimeStr;
+	}
+
+	public void setSearchTimeStr(String searchTimeStr) {
+		this.searchTimeStr = searchTimeStr;
 	}
 	
 }

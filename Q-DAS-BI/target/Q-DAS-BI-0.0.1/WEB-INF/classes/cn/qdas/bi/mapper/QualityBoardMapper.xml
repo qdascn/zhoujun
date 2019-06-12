@@ -53,7 +53,7 @@
 		</if>
 	</select>
 	<select id="getWertevarChartData" parameterType="cn.qdas.bi.bean.QualityBoard" resultType="map">
-		select w.WVTEIL,w.WVMERKMAL,w.WVWERTNR,w.WVWERT,w.WVDATZEIT,m.MEUGW,m.MEOGW,m.MENENNMAS,m.MEARTOGW
+		select w.WVTEIL,w.WVMERKMAL,w.WVWERTNR,w.WVWERT,w.WVDATZEIT,m.MEUGW,m.MEOGW,m.MENENNMAS,m.MEMERKART
 		FROM WERTEVAR w
 		LEFT JOIN MERKMAL m ON w.WVTEIL=m.METEIL AND w.WVMERKMAL=m.MEMERKMAL
 		where WVMERKMAL=#{merkmalId} and WVTEIL=#{teilId}
@@ -160,14 +160,14 @@
 	</select>
 	<select id="getQbFormData" parameterType="java.lang.String" resultType="map">
 		SELECT t.TETEIL,t.TETEILNR,t.TEBEZEICH,t.TEERZEUGNIS,
-			m.MEMERKMAL,m.MEMERKBEZ,m.MENENNMAS,m.MEARTOGW,m.MEUGW,m.MEOGW
+			m.MEMERKMAL,m.MEMERKBEZ,m.MENENNMAS,m.MEMERKART,m.MEUGW,m.MEOGW
 			FROM TEIL t
 			LEFT JOIN MERKMAL m ON t.TETEIL=m.METEIL
 			WHERE t.TEERZEUGNIS IN 
 			<foreach collection="productLineNames" open="(" close=")" separator="," item="item" index="i">
 					#{item}
 			</foreach>
-			ORDER BY t.TEERZEUGNIS
+			ORDER BY t.TEERZEUGNIS,t.TETEIL,m.MEMERKMAL
 	
 	</select>
 	<select id="getQbTableData" parameterType="java.lang.String" resultType="map">

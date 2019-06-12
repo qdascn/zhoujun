@@ -62,7 +62,7 @@
 	            <div style="margin-top:15px">
 	                <input class="easyui-textbox" id="MEUGW" name="MEUGW" style="width:100%;padding-left: 20px" data-options="label:'下公差上限:',editable:false">
 	            </div>
-	            <input type="hidden" id="MEARTOGW" name="MEARTOGW">
+	            <input type="hidden" id="MEMERKART" name="MEMERKART">
 	        </form>
 	    </div>
 	    <div id="qbCharts" data-options="region:'center'"></div>
@@ -75,9 +75,6 @@
 		var auto;
 		var qbShowCharts;
 		getFormData();
-		$(window).resize(function() {
-	        qbShowCharts.resize();
-	    });
 		$("#jgtime").combobox({
 			editable:false,
 			onSelect:function(record){
@@ -103,7 +100,7 @@
 					enableRowContextMenu : false,
 					rowTooltip : false,
 					onLoadSuccess:function(data){
-						initChart(data,$('#MEARTOGW').val());
+						initChart(data,$('#MEMERKART').val());
 					},
 					rowStyler: function(index,row){
 						if(row.ALARM_EW=='1'|row.ALARM_EW=='2'|row.ALARM_EW=='65536'){
@@ -137,7 +134,7 @@
 		}
 		function initChart(data,lineBar){
 			var rows=data.rows;
-			if(lineBar=='1'){
+			if(lineBar=='0'){
 				var upLimit=$('#MEOGW').textbox('getValue');
 				var downLimit=$('#MEUGW').textbox('getValue');
 				var mData=$('#MENENNMAS').textbox('getValue');
@@ -148,7 +145,7 @@
 					yValue.push(rows[i].WVWERT);
 				}
 				qbShowCharts=initLineChart2('qbCharts',xValue,yValue,upLimit,downLimit,mData);
-			}else if(lineBar=='0'){
+			}else if(lineBar=='1'){
 				var xValues=new Array();
 						var yValues=new Array();
 						for(var i=0;i<rows.length;i++){

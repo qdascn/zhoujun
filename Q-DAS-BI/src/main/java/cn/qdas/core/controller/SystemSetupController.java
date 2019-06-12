@@ -4,8 +4,10 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -21,7 +23,9 @@ public class SystemSetupController {
 	@Resource
 	SystemSetupService sss;
 	@RequestMapping("initSetupPage")
-	public String initSetupPage() {
+	public String initSetupPage(HttpServletRequest req,Model model) {
+		User user=(User) req.getAttribute("user");
+		model.addAttribute("user", user);
 		return "systemSetup/systemSetup";
 	}
 	@RequestMapping("initUserSetup")
