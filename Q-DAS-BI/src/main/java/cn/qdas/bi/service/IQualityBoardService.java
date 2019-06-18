@@ -18,5 +18,7 @@ public interface IQualityBoardService {
 	
 	List<QbProductLine> getProductLineByUser(User user,QualityBoard qb);
 	
-	Map getQbFormData(List<Permission> list,Integer arrIndex);
+	Map getQbFormData(List<Permission> list,Integer arrIndex,QualityBoard qb);
+	Map getQbTeilsFormData(String[] plArr, Integer arrIndex, QualityBoard qb);
+	Map getQbTeilFormData(String teilId, Integer arrIndex, QualityBoard qb);
 }

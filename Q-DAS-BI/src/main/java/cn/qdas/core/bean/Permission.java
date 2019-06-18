@@ -8,7 +8,7 @@ public class Permission {
 	private String parentId;
 	private String available;
 	private String icon;
-	
+	private String availableStr;
 	public String getPermissionId() {
 		return permissionId;
 	}
@@ -50,6 +50,13 @@ public class Permission {
 	}
 	public void setIcon(String icon) {
 		this.icon = icon;
+	}
+	
+	public String getAvailableStr() {
+		return availableStr;
+	}
+	public void setAvailableStr(String availableStr) {
+		this.availableStr = availableStr;
 	}
 	@Override
 	public int hashCode() {

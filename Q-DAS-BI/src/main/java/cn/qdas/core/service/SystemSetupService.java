@@ -107,12 +107,12 @@ public class SystemSetupService {
 	 * @return
 	 */
 	public List getAllProductLine() {
-		List<Map<String, Object>> list=ssm.getAllProductLine();
+		List<Permission> list=ssm.getAllProductLine();
 		for(int i=0;i<list.size();i++) {
-			if("0".equals(list.get(i).get("available"))) {
-				list.get(i).put("availableStr", "可用");
+			if("0".equals(list.get(i).getAvailable())) {
+				list.get(i).setAvailableStr("可用");
 			}else {
-				list.get(i).put("availableStr", "不可用");
+				list.get(i).setAvailableStr("不可用");
 			}
 		}
 		return list;

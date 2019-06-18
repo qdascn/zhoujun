@@ -8,7 +8,7 @@
  <body>
     <div id="cc" class="easyui-layout" style="width:100%;height:100%;">
 	    <div data-options="region:'north',collapsible:false" style="height:7%;padding: 0">
-	    	<div style="float: left;width: 30%;height: 80%">
+	    	<div style="float: left;width: 40%;height: 80%">
 	    		<span style="margin-left: 20px">轮播间隔：</span>
 		    	<select id="jgtime" style="width:150px;padding-left: 20px">
 				    <option value="10">10秒</option>
@@ -17,11 +17,19 @@
 				    <option value="60">1分钟</option>
 				     <option value="1">1秒</option>
 				</select>
+				轮播：<select class="easyui-combobox" id="qbSearchInterval" name="qbSearchInterval" style="width:200px;" 
+		        			data-options="editable:false">
+									    <option value="0">全部数据</option>
+									    <option value="1h">近一小时的数据</option>
+									    <option value="1">近一天的数据</option>
+									    <option value="7">近一周的数据</option>
+									    <option value="30">近一个月(30)的数据</option>
+									</select >
 	    	</div>
-			<form id="titleForm" style="float: left;width: 70%;height: 70%">
-				<input class="easyui-textbox" name="TEERZEUGNIS" style="width:30%;padding-left: 20px" data-options="label:'产线名:',editable:false">
-				<input class="easyui-textbox" name="TETEILNR" style="width:30%;padding-left: 20px" data-options="label:'零件号:',editable:false">
-				<input class="easyui-textbox" name="TEBEZEICH" style="width:30%;padding-left: 20px" data-options="label:'零件名:',editable:false">
+			<form id="titleForm" style="float: left;width: 60%;height: 70%">
+				<input class="easyui-textbox" name="TEERZEUGNIS" style="width:30%;padding-left: 20px;" data-options="label:'<font color=red>产线名:</font>',editable:false">
+				<input class="easyui-textbox" name="TETEILNR" style="width:30%;padding-left: 20px" data-options="label:'<font color=red>零件号:</font>',editable:false">
+				<input class="easyui-textbox" name="TEBEZEICH" style="width:30%;padding-left: 20px" data-options="label:'<font color=red>零件名:</font>',editable:false">
 			</form>
 	    </div>
 	    <div  data-options="region:'south',title:'测量值',collapsible:true" style="height:50%;">
@@ -64,6 +72,9 @@
 	            </div>
 	            <input type="hidden" id="MEMERKART" name="MEMERKART">
 	        </form>
+	        <input type="hidden" id="index" name="index" value="${index }">
+	        <input type="hidden" id="productLineName" name="productLineName" value="${productLineName }">
+	        <input type="hidden" id="teilId" name="teilId" value="${teilId }">
 	    </div>
 	    <div id="qbCharts" data-options="region:'center'"></div>
 	</div>
@@ -74,6 +85,7 @@
 		var autotime;
 		var auto;
 		var qbShowCharts;
+		var qbStartTime,qbEndTime;
 		getFormData();
 		$("#jgtime").combobox({
 			editable:false,
@@ -110,12 +122,18 @@
 						}
 					}
 				});
-		
 		function getFormData(){
+			var days=$('#qbSearchInterval').val();
+			qbSearchTime(days)
 			$.ajax({
 				type:'post',
 				data:{
-					arrIndex:index
+					arrIndex:index,
+					startTime:qbStartTime,
+					endTime:qbEndTime,
+					teilId:$('#teilId').val(),
+					productLineName:$('#productLineName').val(),
+					index:$('#index').val()
 				},
 				url:'<%=basePath%>qb/getQbForm',
 				success:function(data){
@@ -133,6 +151,9 @@
 			})
 		}
 		function initChart(data,lineBar){
+			if(data.total==0){
+				qbShowCharts.clear();
+			}
 			var rows=data.rows;
 			if(lineBar=='0'){
 				var upLimit=$('#MEOGW').textbox('getValue');
@@ -174,6 +195,27 @@
 						qbShowCharts=initBarAndPie('qbCharts',xData,yValues,pieArr);	
 			}
 		}
+		function qbSearchTime(days){
+				var now=new Date();
+				if(days=='0'){
+					qbStartTime='';
+					qbEndTime='';
+				}else if(days=='1h'){
+					var searchTime=now.getTime()-3600000;
+					var ago=new Date(searchTime);
+					var startDate=ago.getFullYear()+"-"+(ago.getMonth()+1)+"-"+ago.getDate()+" "+ago.getHours()+":"+ago.getMinutes()+":"+ago.getSeconds();
+					var endDate=now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate()+" "+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
+					qbStartTime=startDate;
+					qbEndTime=endDate;
+				}else if(days=='1'|days=='7'|days=='30'){
+					var searchTime=now.getTime()-(days*86400000);
+					var ago=new Date(searchTime);
+					var startDate=ago.getFullYear()+"-"+(ago.getMonth()+1)+"-"+ago.getDate()+" "+ago.getHours()+":"+ago.getMinutes()+":"+ago.getSeconds();
+					var endDate=now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate()+" "+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
+					qbStartTime=startDate;
+					qbEndTime=endDate;
+				}
+		} 
 	</script>
 </body>
 </html>

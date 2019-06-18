@@ -64,7 +64,7 @@
 			(#{userId},${item})
 		</foreach>
 	</insert>
-	<select id="getAllProductLine" resultType="map">
+	<select id="getAllProductLine" resultMap="permissionMap">
 		select permission_id,permission_name,type,available from system_permission
 		where type='pl'
 	</select>

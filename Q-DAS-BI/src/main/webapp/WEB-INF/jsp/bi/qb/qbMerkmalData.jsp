@@ -12,11 +12,12 @@
 			<input id="teilIdVal" type="hidden" value="${paramMap.teilId }">
 			参数名：<input id="merkmalName" name="merkmalName" class="easyui-textbox" data-options="" style="width:200px">
 			<a id="merkmalSearchbtn" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a>
-			<a id="showDetailsBtn" class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="float: right;">查看详情</a>
+			<a id="showDetailsBtn" class="easyui-linkbutton c4" data-options="iconCls:'icon-search'" style="float: right;">查看详情</a>
+			<a id="openMerkmalQb" class="easyui-linkbutton c3" data-options="iconCls:'icon-search'" style="float: right">打开轮播看板</a>
 			<input type="hidden" id="elmSearchStartTime" name="elmSearchStartTime" value="${paramMap.startTime}">
 			<input type="hidden" id="elmSearchEndTime" name="elmSearchEndTime" value="${paramMap.endTime}">
 		</div>
-		<div id="merkmalbox" data-options="region:'center'" style="padding:5px;background:#eee;">
+		<div id="merkmalbox" data-options="region:'west',split:true" style="padding:5px;background:#eee;width:350px;">
 			<c:forEach items="${paramMap.merkmalList}" var="map">
 				<c:choose>
 					<c:when test="${map.qualityLevel==\"0\"}">
@@ -34,10 +35,10 @@
 				</c:choose>
 			</c:forEach>						
 		</div> 
-		<div id="charts" data-options="region:'east',split:true" style="padding:5px;background:#eee;width:50%;"></div>
+		<div id="charts" data-options="region:'center',onResize:function(){chartResize()}" style="padding:5px;background:#eee;"></div>
 	</div>
 	<div id="dataWin" class="easyui-dialog" data-options="title:'数据详情',resizable:true,maximizable:true,modal:true,closed:true">
-		<table id="wertevarTable" style="width: 100%;height: 100%">
+		<table id="wertevarDetailsTable" style="width: 100%;height: 100%">
 			<thead>
 				<tr>
 					<th data-options="field:'WVWERT',width:80,align:'center',sortable:true">测量值</th>
@@ -77,7 +78,7 @@
 		$(function(){
 			$('#dataWin').height(window.innerHeight-200);
 			$('#dataWin').width(window.innerWidth-200);
-			$('#wertevarTable').datagrid({
+			$('#wertevarDetailsTable').datagrid({
 				url:'<%=basePath%>qb/getWertevarData',
 				toolbar:'#wertevarTb',
 				border : false,
@@ -96,11 +97,6 @@
 				enableRowContextMenu : false,
 				rowTooltip : false,
 			})
-			window.onresize=function(){
-				if(lineChart!=null&lineChart!=''){
-					lineChart.resize();
-				}
-			}
 			$('#merkmalbox > a').eq(0).linkbutton({
 			    iconCls: 'icon-large-gou'
 			});
@@ -113,12 +109,11 @@
 			merkmalId='${paramMap.merkmalList[0].MEMERKMAL}';
 			getChartData('${paramMap.merkmalList[0].MEMERKMAL}','${paramMap.merkmalList[0].METEIL}');
 			$('#showDetailsBtn').click(function(){
-				$('#wertevarTable').datagrid('reload',{
+				$('#dataWin').dialog('open');
+				  	$('#wertevarDetailsTable').datagrid('reload',{
 						teilId:teilId,
 						merkmalId:merkmalId
-					});
-				$('#dataWin').dialog('open');
-			
+					}); 
 			})
 			$('#wseBtn').click(function(){
 				var startTime=$("#startTime").datebox('getValue');
@@ -129,7 +124,7 @@
 				if(startTime!=''&startTime!=null&endTime!=''&endTime!=null&startTime>endTime){
 					$ .messager.alert('错误','起始时间必须结束时间之前！','info');
 				}
-				$('#wertevarTable').datagrid('reload',{
+				$('#wertevarDetailsTable').datagrid('reload',{
 												teilId:teilId,
 												merkmalId:merkmalId,
 												startTime:startTime,
@@ -145,12 +140,18 @@
 				var ago=new Date(searchTime);
 				var startDate=ago.getFullYear()+"-"+(ago.getMonth()+1)+"-"+ago.getDate()+" "+ago.getHours()+":"+ago.getMinutes()+":"+ago.getSeconds();
 				var endDate=now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate()+" "+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
-				$('#wertevarTable').datagrid('reload',{
+				$('#wertevarDetailsTable').datagrid('reload',{
 												teilId:teilId,
 												merkmalId:merkmalId,
 												startTime:startDate,
 												endTime:endDate});
 			})
+			$('#openMerkmalQb').click(function(){
+	  			$('#qbDig').panel({
+								href:'<%=basePath%>qb/initQbShow?index='+'3&teilId='+teilId
+							});
+					$('#qbDig').dialog('open');
+	  		})
 		})
 		function showChart(mId,tId,name){
 			teilId=tId;
@@ -217,6 +218,11 @@
 					
 				}
 			});
+		}
+		function chartResize(){
+			if(lineChart!=null&lineChart!=''){
+				lineChart.resize();
+			}
 		}
 	</script>
   </body>

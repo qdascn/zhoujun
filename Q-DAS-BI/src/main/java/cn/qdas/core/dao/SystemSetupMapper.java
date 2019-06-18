@@ -46,7 +46,7 @@ public interface SystemSetupMapper {
 	 * 获取所有产线权限
 	 * @return
 	 */
-	List getAllProductLine();
+	List<Permission> getAllProductLine();
 	/**
 	 * 添加产线权限
 	 * @param pl

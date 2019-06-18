@@ -9,8 +9,8 @@
      <table id="plTable" style="width: 100%;height: 100%">
 	    <thead>
 	        <tr>
-	            <th data-options="field:'permission_id',width:50,align:'center'">产线ID</th>
-	            <th data-options="field:'permission_name',width:80,align:'center'">产线名</th>
+	            <th data-options="field:'permissionId',width:50,align:'center'">产线ID</th>
+	            <th data-options="field:'permissionName',width:80,align:'center'">产线名</th>
 	            <th data-options="field:'availableStr',width:180,align:'center'">状态</th>
 	        </tr>
 	    </thead>
@@ -75,7 +75,7 @@
   					return false;
   				}
   				$('#plAddForm').form('load',{
-  					productLineName:row.permission_name,
+  					productLineName:row.permissionName,
   					available:row.available
   				})
   			}
@@ -87,7 +87,7 @@
   			if(addoredit=="2"){
   				var row=$('#plTable').datagrid('getSelected');
   				if(row!=null|row!=''){
-	  				id=row.permission_id;
+	  				id=row.permissionId;
 	  			}
   			}
   			$.messager.progress();
@@ -133,7 +133,7 @@
 		  				type:'post',
 		  				url:'<%=basePath%>system/delProductLine',
 		  				data:{
-		  					id:row.permission_id
+		  					id:row.permissionId
 		  				},
 		  				success:function(data){
 		  					if(data.success==0){

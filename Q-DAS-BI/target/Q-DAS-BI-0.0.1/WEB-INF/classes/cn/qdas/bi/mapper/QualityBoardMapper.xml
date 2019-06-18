@@ -14,10 +14,10 @@
 		<if test="productLineName !='' and productLineName !=null">
 			and TEERZEUGNIS like concat ('%',#{productLineName},'%')
 		</if>
-		<if test="startTime !='' and startTime!=null">
+		<if test="startTime !='' and startTime!=null and startTime !='undefined'">
 			and a.ALARM_DATETIME &gt; #{startTime}
 		</if>
-		<if test="endTime !='' and endTime!=null">
+		<if test="endTime !='' and endTime!=null and endTime !='undefined'">
 			and a.ALARM_DATETIME &lt; #{endTime}
 		</if>
 	</select>
@@ -31,24 +31,24 @@
 		<if test="teilName !='' and teilName !=null">
 			and TEBEZEICH like concat ('%',#{teilName},'%')
 		</if>
-		<if test="startTime !='' and startTime!=null">
+		<if test="startTime !='' and startTime!=null and startTime !='undefined'">
 			and a.ALARM_DATETIME &gt; #{startTime}
 		</if>
-		<if test="endTime !='' and endTime!=null">
+		<if test="endTime !='' and endTime!=null and endTime !='undefined'">
 			and a.ALARM_DATETIME &lt; #{endTime}
 		</if>
 	</select>
 	<select id="getMerkmalData" parameterType="cn.qdas.bi.bean.QualityBoard" resultType="map">
 		SELECT m.METEIL,m.MEMERKMAL,m.MEMERKBEZ,a.ALARM_EW,a.ALARM_DATETIME FROM MERKMAL m
-		LEFT JOIN ALARM_VALUES a ON m.METEIL= a.K1000 
+		LEFT JOIN ALARM_VALUES a ON m.METEIL= a.K1000 AND m.MEMERKMAL=a.K2000
 		where m.METEIL=#{teilId}
 		<if test="merkmalName !='' and merkmalName !=null">
 			and MEMERKBEZ like concat ('%',#{merkmalName},'%')
 		</if>
-		<if test="startTime !='' and startTime!=null">
+		<if test="startTime !='' and startTime!=null and startTime !='undefined'">
 			and a.ALARM_DATETIME &gt; #{startTime}
 		</if>
-		<if test="endTime !='' and endTime!=null">
+		<if test="endTime !='' and endTime!=null and endTime !='undefined'">
 			and a.ALARM_DATETIME &lt; #{endTime}
 		</if>
 	</select>
@@ -57,10 +57,10 @@
 		FROM WERTEVAR w
 		LEFT JOIN MERKMAL m ON w.WVTEIL=m.METEIL AND w.WVMERKMAL=m.MEMERKMAL
 		where WVMERKMAL=#{merkmalId} and WVTEIL=#{teilId}
-		<if test="startTime !='' and startTime!=null">
+		<if test="startTime !='' and startTime!=null and startTime !='undefined'">
 			and w.WVDATZEIT &gt; #{startTime}
 		</if>
-		<if test="endTime !='' and endTime!=null">
+		<if test="endTime !='' and endTime!=null and endTime !='undefined'">
 			and w.WVDATZEIT &lt; #{endTime}
 		</if>
 	</select>
@@ -75,11 +75,11 @@
 		LEFT JOIN PRUEFMIT r ON w.WVPRUEFMIT = r.PMPRUEFMIT
 		LEFT JOIN MERKMAL m ON W.WVTEIL=m.METEIL AND w.WVMERKMAL=m.MEMERKMAL
 		where WVMERKMAL=#{merkmalId} and WVTEIL=#{teilId}
-		<if test="startTime !='' and startTime!=null">
-			and WVDATZEIT &gt; #{startTime}
+		<if test="startTime !='' and startTime!=null and startTime !='undefined'">
+			and w.WVDATZEIT &gt; #{startTime}
 		</if>
-		<if test="endTime !='' and endTime!=null">
-			and WVDATZEIT &lt; #{endTime}
+		<if test="endTime !='' and endTime!=null and endTime !='undefined'">
+			and w.WVDATZEIT &lt; #{endTime}
 		</if>
 		<if test="sort !='' and sort!=null">
 			order by ${sort} ${order}
@@ -151,22 +151,49 @@
 					#{item}
 		</foreach>
 		and p.available='0' and p.type='pl'
-		<if test="startTime !='' and startTime!=null">
+		<if test="startTime !='' and startTime!=null and startTime !='undefined'">
 			and a.ALARM_DATETIME &gt; #{startTime}
 		</if>
-		<if test="endTime !='' and endTime!=null">
+		<if test="endTime !='' and endTime!=null and endTime !='undefined'">
 			and a.ALARM_DATETIME &lt; #{endTime}
 		</if>
 	</select>
 	<select id="getQbFormData" parameterType="java.lang.String" resultType="map">
 		SELECT t.TETEIL,t.TETEILNR,t.TEBEZEICH,t.TEERZEUGNIS,
-			m.MEMERKMAL,m.MEMERKBEZ,m.MENENNMAS,m.MEMERKART,m.MEUGW,m.MEOGW
+			m.MEMERKMAL,m.MEMERKBEZ,m.MENENNMAS,m.MEMERKART,m.MEUGW,m.MEOGW,
+			COUNT (w.WVDATZEIT) AS wercount
 			FROM TEIL t
 			LEFT JOIN MERKMAL m ON t.TETEIL=m.METEIL
+			LEFT JOIN WERTEVAR w ON t.TETEIL = w.WVTEIL AND m.MEMERKMAL = w.WVMERKMAL
 			WHERE t.TEERZEUGNIS IN 
 			<foreach collection="productLineNames" open="(" close=")" separator="," item="item" index="i">
 					#{item}
 			</foreach>
+			<if test="startTime !='' and startTime!=null and startTime !='undefined'">
+				and w.WVDATZEIT &gt; #{startTime}
+			</if>
+			<if test="endTime !='' and endTime!=null and endTime !='undefined'">
+				and w.WVDATZEIT &lt; #{endTime}
+			</if>
+			GROUP BY t.TETEIL,t.TETEILNR,t.TEBEZEICH,t.TEERZEUGNIS,m.MEMERKMAL,m.MEMERKBEZ,m.MENENNMAS,m.MEMERKART,m.MEUGW,m.MEOGW
+			ORDER BY t.TEERZEUGNIS,t.TETEIL,m.MEMERKMAL
+	
+	</select>
+	<select id="getQbTeilFormData" parameterType="java.lang.String" resultType="map">
+		SELECT t.TETEIL,t.TETEILNR,t.TEBEZEICH,t.TEERZEUGNIS,
+			m.MEMERKMAL,m.MEMERKBEZ,m.MENENNMAS,m.MEMERKART,m.MEUGW,m.MEOGW,
+			COUNT (w.WVDATZEIT) AS wercount
+			FROM TEIL t
+			LEFT JOIN MERKMAL m ON t.TETEIL=m.METEIL
+			LEFT JOIN WERTEVAR w ON t.TETEIL = w.WVTEIL AND m.MEMERKMAL = w.WVMERKMAL
+			WHERE t.TETEIL=#{teilId}
+			<if test="startTime !='' and startTime!=null and startTime !='undefined'">
+				and w.WVDATZEIT &gt; #{startTime}
+			</if>
+			<if test="endTime !='' and endTime!=null and endTime !='undefined'">
+				and w.WVDATZEIT &lt; #{endTime}
+			</if>
+			GROUP BY t.TETEIL,t.TETEILNR,t.TEBEZEICH,t.TEERZEUGNIS,m.MEMERKMAL,m.MEMERKBEZ,m.MENENNMAS,m.MEMERKART,m.MEUGW,m.MEOGW
 			ORDER BY t.TEERZEUGNIS,t.TETEIL,m.MEMERKMAL
 	
 	</select>

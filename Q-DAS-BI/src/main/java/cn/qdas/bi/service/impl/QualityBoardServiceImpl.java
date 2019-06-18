@@ -183,7 +183,7 @@ public class QualityBoardServiceImpl implements IQualityBoardService{
 			boolean flag=false;
 			String qualityLevel=Globals.NO_ALARM;
 			for(int j=0;j<alarmList.size();j++) {
-				if(plList.get(i).getProductLineName().equals(alarmList.get(j).get("permission_name"))) {
+				if(plList.get(i).getProductLineName().equals(alarmList.get(j).get("PERMISSION_NAME"))) {
 					flag=true;
 					if(Globals.UPPER_LIMIT.equals(String.valueOf(alarmList.get(j).get("ALARM_EW")))||Globals.DOWN_LIMIT.equals(String.valueOf(alarmList.get(j).get("ALARM_EW")))||Globals.DING_ALARM.equals(String.valueOf(alarmList.get(j).get("ALARM_EW")))) {
 						qualityLevel="2";
@@ -203,7 +203,7 @@ public class QualityBoardServiceImpl implements IQualityBoardService{
 		return plList;
 	}
 	@Override
-	public Map getQbFormData(List<Permission> list,Integer arrIndex) {
+	public Map getQbFormData(List<Permission> list,Integer arrIndex,QualityBoard qb) {
 		for(int i=0;i<list.size();i++) {
 			if(!"pl".equals(list.get(i).getType())) {
 				list.remove(i);
@@ -213,20 +213,82 @@ public class QualityBoardServiceImpl implements IQualityBoardService{
 		for(int i=0;i<list.size();i++) {
 			plArr[i]=list.get(i).getPermissionName();
 		}
-		List<Map> formlist=qbm.getQbFormData(plArr);
-		List<Map> tableList=qbm.getQbTableData(formlist.get(arrIndex).get("TETEIL").toString(), formlist.get(arrIndex).get("MEMERKMAL").toString());
+		List<Map> formlist=qbm.getQbFormData(plArr,qb.getStartTime(),qb.getEndTime());
+		List<Map> tableList=new ArrayList<Map>();
 		Map reMap=new HashMap<String, Object>();
-		if(arrIndex==(formlist.size()-1)) {
-			reMap.put("arrAlarm", "1");
+		Map formMap=new HashMap<String, Object>();
+		if(formlist.size()>0) {
+			tableList=qbm.getQbTableData(formlist.get(arrIndex).get("TETEIL").toString(), formlist.get(arrIndex).get("MEMERKMAL").toString());
+			if(arrIndex==(formlist.size()-1)) {
+				reMap.put("arrAlarm", "1");
+			}else {
+				reMap.put("arrAlarm", "0");
+			}
+			for(int i=0;i<tableList.size();i++) {
+				tableList.get(i).put("WVDATZEIT", String.valueOf(tableList.get(i).get("WVDATZEIT")).substring(0, 19));
+			}
+			formMap=formlist.get(arrIndex);
+			reMap.put("formList", formMap);
 		}else {
-			reMap.put("arrAlarm", "0");
+			reMap.put("arrAlarm", "1");
 		}
-		for(int i=0;i<tableList.size();i++) {
-			tableList.get(i).put("WVDATZEIT", String.valueOf(tableList.get(i).get("WVDATZEIT")).substring(0, 19));
-		}
-		reMap.put("formList", formlist.get(arrIndex));
+		reMap.put("formList", formMap);
 		reMap.put("tableList", tableList);
 		return reMap;
 	}
-	
+	/**
+	 * 获取单个产线所有数据
+	 */
+	public Map getQbTeilsFormData(String [] plArr,Integer arrIndex,QualityBoard qb) {
+		List<Map> formlist=qbm.getQbFormData(plArr,qb.getStartTime(),qb.getEndTime());
+		List<Map> tableList=new ArrayList<Map>();
+		Map reMap=new HashMap<String, Object>();
+		Map formMap=new HashMap<String, Object>();
+		if(formlist.size()>0) {
+			tableList=qbm.getQbTableData(formlist.get(arrIndex).get("TETEIL").toString(), formlist.get(arrIndex).get("MEMERKMAL").toString());
+			if(arrIndex==(formlist.size()-1)) {
+				reMap.put("arrAlarm", "1");
+			}else {
+				reMap.put("arrAlarm", "0");
+			}
+			for(int i=0;i<tableList.size();i++) {
+				tableList.get(i).put("WVDATZEIT", String.valueOf(tableList.get(i).get("WVDATZEIT")).substring(0, 19));
+			}
+			formMap=formlist.get(arrIndex);
+			reMap.put("formList", formMap);
+		}else {
+			reMap.put("arrAlarm", "1");
+		}
+		reMap.put("formList", formMap);
+		reMap.put("tableList", tableList);
+		return reMap;
+	}
+	/**
+	 * 获取单个零件所有数据
+	 * @return
+	 */
+	public Map getQbTeilFormData(String teilId,Integer arrIndex,QualityBoard qb) {
+		List<Map> formlist=qbm.getQbTeilFormData(teilId,qb.getStartTime(),qb.getEndTime());
+		List<Map> tableList=new ArrayList<Map>();
+		Map reMap=new HashMap<String, Object>();
+		Map formMap=new HashMap<String, Object>();
+		if(formlist.size()>0) {
+			tableList=qbm.getQbTableData(formlist.get(arrIndex).get("TETEIL").toString(), formlist.get(arrIndex).get("MEMERKMAL").toString());
+			if(arrIndex==(formlist.size()-1)) {
+				reMap.put("arrAlarm", "1");
+			}else {
+				reMap.put("arrAlarm", "0");
+			}
+			for(int i=0;i<tableList.size();i++) {
+				tableList.get(i).put("WVDATZEIT", String.valueOf(tableList.get(i).get("WVDATZEIT")).substring(0, 19));
+			}
+			formMap=formlist.get(arrIndex);
+			reMap.put("formList", formMap);
+		}else {
+			reMap.put("arrAlarm", "1");
+		}
+		reMap.put("formList", formMap);
+		reMap.put("tableList", tableList);
+		return reMap;
+	}
 }

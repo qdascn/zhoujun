@@ -1,9 +1,0 @@
-cn\qdas\bi\controller\TeilDataController.class
-cn\qdas\core\bean\BaseBean.class
-cn\qdas\core\bean\Filter.class
-cn\qdas\core\bean\Page.class
-cn\qdas\bi\dao\TeilDataMapper.class
-cn\qdas\bi\bean\Teil.class
-cn\qdas\core\controller\MainPageController.class
-cn\qdas\bi\service\impl\TeilDataServiceImpl.class
-cn\qdas\bi\service\ITeilDataService.class

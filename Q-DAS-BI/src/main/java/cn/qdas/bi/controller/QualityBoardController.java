@@ -1,5 +1,6 @@
 package cn.qdas.bi.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,13 +11,10 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import cn.qdas.bi.bean.QbProductLine;
 import cn.qdas.bi.bean.QualityBoard;
-import cn.qdas.bi.bean.Teil;
 import cn.qdas.bi.service.IQualityBoardService;
 import cn.qdas.core.bean.Permission;
 import cn.qdas.core.bean.User;
@@ -37,7 +35,6 @@ public class QualityBoardController {
 		User user=(User) session.getAttribute("user");
 		//List<Map> list=iqbs.getProductLine(qb);
 		List list =iqbs.getProductLineByUser(user,qb);
-		System.out.println("****************"+qb.getSearchTimeStr());
 		Map map=new HashMap<String, String>();
 		map.put("startTime", qb.getStartTime());
 		map.put("endTime", qb.getEndTime());
@@ -81,17 +78,39 @@ public class QualityBoardController {
 		List list = iqbs.getWertevarDate(qb);
 		return list;
 	}
+	/**
+	 * 
+	 * @param index 1:所有产线的数据  2：单个产线的数据 3：单个零件的数据
+	 * @param productLineName
+	 * @return
+	 */
 	@RequestMapping("initQbShow")
-	public String initQbShowPage() {
+	public String initQbShowPage(Model model,String index,String productLineName,String teilId) {
+		model.addAttribute("index", index);
+		model.addAttribute("productLineName", productLineName);
+		model.addAttribute("teilId", teilId);
 		return "bi/qb/qbShow";
 	}
 	@RequestMapping("getQbForm")
 	@ResponseBody
-	public Map getQbFormData(HttpServletRequest request,Integer arrIndex) {
-		HttpSession session=request.getSession();
-		User user=(User) session.getAttribute("user");
-		List<Permission> list=user.getPermissionList();
-		Map map=iqbs.getQbFormData(list,arrIndex);
+	public Map getQbFormData(HttpServletRequest request,Integer arrIndex,QualityBoard qb,String teilId,String productLineName,String index) {
+		List<Permission> list=new ArrayList<Permission>();
+		Map map=new HashMap<String,Object>();
+		switch (index) {
+			case "1":
+				HttpSession session=request.getSession();
+				User user=(User) session.getAttribute("user");
+				list=user.getPermissionList();
+				map=iqbs.getQbFormData(list,arrIndex,qb);
+				break;
+			case "2":
+				String [] plArr= {productLineName};
+				map=iqbs.getQbTeilsFormData(plArr,arrIndex,qb);
+				break;
+			case "3":
+				map=iqbs.getQbTeilFormData(teilId,arrIndex,qb);
+				break;
+		}
 		return map;
 	}
 }

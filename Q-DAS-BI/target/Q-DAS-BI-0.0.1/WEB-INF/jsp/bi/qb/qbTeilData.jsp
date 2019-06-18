@@ -12,8 +12,10 @@
 			零件号：<input id="teilNum" name="teilNum" class="easyui-textbox" data-options="" style="width:200px">
 			零件名：<input id="teilName" name="teilName" class="easyui-textbox" data-options="" style="width:200px">
 			<a id="teilSearchbtn" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="searchTeil('${paramMap.plId }');">查询</a>
+			<a id="openTeilQb" class="easyui-linkbutton c3" data-options="iconCls:'icon-search'" style="float: right">打开轮播看板</a>
 			<input type="hidden" id="elTeilSearchStartTime" name="elTeilSearchStartTime" value="${paramMap.startTime}">
 			<input type="hidden" id="elTeilSearchEndTime" name="elTeilSearchEndTime" value="${paramMap.endTime}">
+			<input type="hidden" id="elTeilProductLineName" name="elTeilProductLineName" value="${paramMap.plId }">
 		</div>
 		<div id="teilbox" data-options="region:'center'" style="padding:5px;background:#eee;">
 			<c:forEach items="${paramMap.teilList}" var="map">
@@ -54,6 +56,12 @@
 			accSelected.panel('setTitle', '零件(零件号：'+teilNum+' / 零件名：'+teilName+')');
 			$('#qbAcc').accordion('select',2); 
   		}
+  		$('#openTeilQb').click(function(){
+  			$('#qbDig').panel({
+							href:'<%=basePath%>qb/initQbShow?index='+'2&productLineName='+$('#elTeilProductLineName').val()
+						});
+				$('#qbDig').dialog('open');
+  		})
 	</script>
   </body>
 </html>
