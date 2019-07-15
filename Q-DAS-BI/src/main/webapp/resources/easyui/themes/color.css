@@ -1,4 +1,4 @@
-.c1,.c1:hover,.c1>.panel-header{
+/* .c1,.c1:hover,.c1>.panel-header{
 	color: #fff;
 	border-color: #3c8b3c;
 	background: #4cae4c;
@@ -7,9 +7,20 @@
 	background: -o-linear-gradient(top,#4cae4c 0,#449d44 100%);
 	background: linear-gradient(to bottom,#4cae4c 0,#449d44 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#4cae4c,endColorstr=#449d44,GradientType=0);
+} */
+.c1,.c1:hover,.c1>.panel-header{
+	color: #333;
+	font-weight:bold ;
+	border-color: #3c8b3c;
+	background: #00FA00;
+	background: -webkit-linear-gradient(top,#00FA00 0,#00FA00 100%);
+	background: -moz-linear-gradient(top,#00FA00 0,#00FA00 100%);
+	background: -o-linear-gradient(top,#00FA00 0,#00FA00 100%);
+	background: linear-gradient(to bottom,#00FA00 0,#00FA00 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#00FA00,endColorstr=#00FA00,GradientType=0);
 }
 a.c1:hover{
-	background: #449d44;
+	background: #00CD00;
 	filter: none;
 }
 .c1>.panel-body{
@@ -22,6 +33,7 @@ a.c1:hover{
 .c1>.dialog-button{
 	border-bottom-color: #3c8b3c;
 }
+
 .c2,.c2:hover,.c2>.panel-header{
 	color: #fff;
 	border-color: #5f5f5f;
@@ -94,7 +106,7 @@ a.c4:hover{
 .c4>.dialog-button{
 	border-bottom-color: #52d689;
 }
-.c5,.c5:hover,.c5>.panel-header{
+/* .c5,.c5:hover,.c5>.panel-header{
 	color: #fff;
 	border-color: #b52b27;
 	background: #d84f4b;
@@ -103,6 +115,17 @@ a.c4:hover{
 	background: -o-linear-gradient(top,#d84f4b 0,#c9302c 100%);
 	background: linear-gradient(to bottom,#d84f4b 0,#c9302c 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#d84f4b,endColorstr=#c9302c,GradientType=0);
+} */
+.c5,.c5:hover,.c5>.panel-header{
+	color: #fff;
+	font-weight:bold ;
+	border-color: #b52b27;
+	background: #FA0000;
+	background: -webkit-linear-gradient(top,#FA0000 0,#FA0000 100%);
+	background: -moz-linear-gradient(top,#FA0000 0,#FA0000 100%);
+	background: -o-linear-gradient(top,#FA0000 0,#FA0000 100%);
+	background: linear-gradient(to bottom,#FA0000 0,#FA0000 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#FA0000,endColorstr=#FA0000,GradientType=0);
 }
 a.c5:hover{
 	background: #c9302c;
@@ -118,7 +141,7 @@ a.c5:hover{
 .c5>.dialog-button{
 	border-bottom-color: #b52b27;
 }
-.c6,.c6:hover,.c6>.panel-header{
+/* .c6,.c6:hover,.c6>.panel-header{
 	color: #fff;
 	border-color: #1f637b;
 	background: #2984a4;
@@ -127,9 +150,20 @@ a.c5:hover{
 	background: -o-linear-gradient(top,#2984a4 0,#24748f 100%);
 	background: linear-gradient(to bottom,#2984a4 0,#24748f 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#2984a4,endColorstr=#24748f,GradientType=0);
+} */
+.c6,.c6:hover,.c6>.panel-header{
+	color: #fff;
+	font-weight:bold ;
+	border-color: #1f637b;
+	background: #0000FF;
+	background: -webkit-linear-gradient(top,#0000FF 0,#0000EE 100%);
+	background: -moz-linear-gradient(top,#0000FF 0,#0000EE 100%);
+	background: -o-linear-gradient(top,#0000FF 0,#0000EE 100%);
+	background: linear-gradient(to bottom,#0000FF 0,#0000EE 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#0000FF,endColorstr=#0000EE,GradientType=0);
 }
 a.c6:hover{
-	background: #24748f;
+	background: #0000CD;
 	filter: none;
 }
 .c6>.panel-body{
@@ -142,7 +176,7 @@ a.c6:hover{
 .c6>.dialog-button{
 	border-bottom-color: #1f637b;
 }
-.c7,.c7:hover,.c7>.panel-header{
+/* .c7,.c7:hover,.c7>.panel-header{
 	color: #333;
 	border-color: #e68900;
 	background: #ffab2e;
@@ -151,6 +185,17 @@ a.c6:hover{
 	background: -o-linear-gradient(top,#ffab2e 0,#ff9900 100%);
 	background: linear-gradient(to bottom,#ffab2e 0,#ff9900 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#ffab2e,endColorstr=#ff9900,GradientType=0);
+} */
+.c7,.c7:hover,.c7>.panel-header{
+	color: #333;
+	font-weight:bold ;
+	border-color: #e68900;
+	background: #FFFF00;
+	background: -webkit-linear-gradient(top,#FFFF00 0,#FFFF00 100%);
+	background: -moz-linear-gradient(top,#FFFF00 0,#FFFF00 100%);
+	background: -o-linear-gradient(top,#FFFF00 0,#FFFF00 100%);
+	background: linear-gradient(to bottom,#FFFF00 0,#FFFF00 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#FFFF00,endColorstr=#FFFF00,GradientType=0);
 }
 a.c7:hover{
 	background: #ff9900;

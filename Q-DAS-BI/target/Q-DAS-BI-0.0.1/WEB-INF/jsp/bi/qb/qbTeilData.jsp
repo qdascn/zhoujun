@@ -3,44 +3,45 @@
 <%@ include file="../../base/meta.jsp"%>
 <html>
   <head>
-	
   </head>
-  
   <body>
   	<div class="easyui-layout" fit="true" style="width: 100%;height: 100%">
-		<div data-options="region:'north',split:false,collapsible:false" style="height:42px;background:#eee;padding: 5px">
-			零件号：<input id="teilNum" name="teilNum" class="easyui-textbox" data-options="" style="width:200px">
-			零件名：<input id="teilName" name="teilName" class="easyui-textbox" data-options="" style="width:200px">
-			<a id="teilSearchbtn" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="searchTeil('${paramMap.plId }');">查询</a>
-			<a id="openTeilQb" class="easyui-linkbutton c3" data-options="iconCls:'icon-search'" style="float: right">打开轮播看板</a>
-			<input type="hidden" id="elTeilSearchStartTime" name="elTeilSearchStartTime" value="${paramMap.startTime}">
-			<input type="hidden" id="elTeilSearchEndTime" name="elTeilSearchEndTime" value="${paramMap.endTime}">
-			<input type="hidden" id="elTeilProductLineName" name="elTeilProductLineName" value="${paramMap.plId }">
-		</div>
+  		<input type="hidden" id="elTeilProductLineName" name="elTeilProductLineName" value="${paramMap.plId }">
+  		<input type="hidden" id="TeilTotalrows" name="TeilTotalrows" value="${paramMap.totalRows }">
 		<div id="teilbox" data-options="region:'center'" style="padding:5px;background:#eee;">
 			<c:forEach items="${paramMap.teilList}" var="map">
 				<c:choose>
 					<c:when test="${map.qualityLevel==\"0\"}">
-						<a id="teil${map.TETEIL }" class="easyui-linkbutton c1" data-options="size:'large'" style="width:300px;height: 100px;margin-top: 5px" onclick="getMerkmal('${map.TETEIL }','${map.TETEILNR }','${map.TEBEZEICH }');"><font size="4" style="line-height: 100%">零件号：${map.TETEILNR }<br>零件名称：${map.TEBEZEICH }</font></a>
+						<a id="teil${map.TETEIL }" class="easyui-linkbutton c1" data-options="size:'large'" style="width:19%;height: 15.5%;margin-top: 5px" onclick="getMerkmal('${map.TETEIL }','${map.TETEILNR }','${map.TEBEZEICH }');"><font size="4" style="line-height: 100%">${map.TETEILNR }<br>${map.TEBEZEICH }</font></a>
 					</c:when>
 					<c:when test="${map.qualityLevel==\"1\"}">
-						<a id="teil${map.TETEIL }" class="easyui-linkbutton c7" data-options="size:'large'" style="width:300px;height: 100px;margin-top: 5px" onclick="getMerkmal('${map.TETEIL }','${map.TETEILNR }','${map.TEBEZEICH }');"><font size="4" style="line-height: 100%">零件号：${map.TETEILNR }<br>零件名称：${map.TEBEZEICH }</font></a>
+						<a id="teil${map.TETEIL }" class="easyui-linkbutton c7" data-options="size:'large'" style="width:19%;height: 15.5%;margin-top: 5px" onclick="getMerkmal('${map.TETEIL }','${map.TETEILNR }','${map.TEBEZEICH }');"><font size="4" style="line-height: 100%">${map.TETEILNR }<br>${map.TEBEZEICH }</font></a>
 					</c:when>
 					<c:when test="${map.qualityLevel==\"2\"}">
-						<a id="teil${map.TETEIL }" class="easyui-linkbutton c5" data-options="size:'large'" style="width:300px;height: 100px;margin-top: 5px" onclick="getMerkmal('${map.TETEIL }','${map.TETEILNR }','${map.TEBEZEICH }');"><font size="4" style="line-height: 100%">零件号：${map.TETEILNR }<br>零件名称：${map.TEBEZEICH }</font></a>
+						<a id="teil${map.TETEIL }" class="easyui-linkbutton c5" data-options="size:'large'" style="width:19%;height: 15.5%;margin-top: 5px" onclick="getMerkmal('${map.TETEIL }','${map.TETEILNR }','${map.TEBEZEICH }');"><font size="4" style="line-height: 100%">${map.TETEILNR }<br>${map.TEBEZEICH }</font></a>
 					</c:when>
 					<c:when test="${map.qualityLevel==\"3\"}">
-						<a id="teil${map.TETEIL }" class="easyui-linkbutton c6" data-options="size:'large'" style="width:300px;height: 100px;margin-top: 5px" onclick="getMerkmal('${map.TETEIL }','${map.TETEILNR }','${map.TEBEZEICH }');"><font size="4" style="line-height: 100%">零件号：${map.TETEILNR }<br>零件名称：${map.TEBEZEICH }</font></a>
+						<a id="teil${map.TETEIL }" class="easyui-linkbutton c6" data-options="size:'large'" style="width:19%;height: 15.5%;margin-top: 5px" onclick="getMerkmal('${map.TETEIL }','${map.TETEILNR }','${map.TEBEZEICH }');"><font size="4" style="line-height: 100%">${map.TETEILNR }<br>${map.TEBEZEICH }</font></a>
 					</c:when>
 				</c:choose>
 			</c:forEach>						
 		</div> 
 	</div>
 	<script type="text/javascript">
-		function searchTeil(plId){
-			$('#teilAcc').panel({
-				href:'<%=basePath%>qb/initTeilData?productLineName='+plId+'&teilNum='+$('#teilNum').textbox('getValue')+'&teilName='+$('#teilName').textbox('getValue')+'&startTime='+$('#elTeilSearchStartTime').val()+'&endTime='+$('#elTeilSearchEndTime').val()
-			});
+		$(function(){
+			$('#autoTeilSpan').html(autoTeilPageNum+"/"+Math.ceil(parseInt($('#TeilTotalrows').val())/30));
+		}) 
+		function searchTeil(){
+			if($('#qbSearchTimeType1').radiobutton('options').checked==true){
+				$('#teilAcc').panel({
+					href:'<%=basePath%>qb/initTeilData?productLineName='+$('#elTeilProductLineName').val()+'&teilNum='+$('#teilNum').textbox('getValue')+'&teilName='+$('#teilName').textbox('getValue')+'&startTime='+$('#qbStartTime').datetimebox('getValue')+'&endTime='+$('#qbEndTime').datetimebox('getValue')
+				});
+			}else{
+				var searchByTeilName=searchTimeInterval($('#timecc').combobox('getValue'));
+				$('#teilAcc').panel({
+					href:'<%=basePath%>qb/initTeilData?productLineName='+$('#elTeilProductLineName').val()+'&teilNum='+$('#teilNum').textbox('getValue')+'&teilName='+$('#teilName').textbox('getValue')+'&startTime='+searchByTeilName.startTime+'&endTime='+searchByTeilName.endTime
+				});
+			}
 		}
 		function getMerkmal(teilId,teilNum,teilName){
   			$('#teilbox > a').linkbutton({
@@ -49,9 +50,18 @@
 			$('#teil'+teilId).linkbutton({
 			    iconCls: 'icon-large-gou'
 			});
-			$('#merkmalAcc').panel({
-				href:'<%=basePath%>qb/initMerkmalData?teilId='+teilId+'&startTime='+$('#elTeilSearchStartTime').val()+'&endTime='+$('#elTeilSearchEndTime').val()
-			});
+			if($('#qbSearchTimeType1').radiobutton('options').checked==true){
+				$('#merkmalAcc').panel({
+					href:'<%=basePath%>qb/initMerkmalData?teilId='+teilId+'&startTime='+$('#qbStartTime').datetimebox('getValue')+'&endTime='+$('#qbEndTime').datetimebox('getValue')
+				});
+			}else {
+				var searchTeilMerkmalRealTime=searchTimeInterval($('#timecc').combobox('getValue'));
+				$('#merkmalAcc').panel({
+					href:'<%=basePath%>qb/initMerkmalData?teilId='+teilId+'&startTime='+searchTeilMerkmalRealTime.startTime+'&endTime='+searchTeilMerkmalRealTime.endTime
+				});
+			}
+			
+			
 			var accSelected = $('#qbAcc').accordion('getPanel',1);
 			accSelected.panel('setTitle', '零件(零件号：'+teilNum+' / 零件名：'+teilName+')');
 			$('#qbAcc').accordion('select',2); 
@@ -62,6 +72,37 @@
 						});
 				$('#qbDig').dialog('open');
   		})
+  		function pageModel(checked){
+  			if(checked==true){
+				 //autoTeilPageTime=setInterval(autoTeilPage, $('#autoTeilPageSelect').combobox('getValue')*1000);
+				 autoTeilPageTime=setInterval(autoTeilPage, 5*1000);
+  			}else{
+  				clearInterval(autoTeilPageTime);
+  				if($('#qbSearchTimeType1').radiobutton('options').checked==true){
+  					$('#teilAcc').panel('refresh','<%=basePath%>qb/initTeilData?productLineName='+$('#elTeilProductLineName').val()+'&startTime='+$('#qbStartTime').datetimebox('getValue')+'&endTime='+$('#qbEndTime').datetimebox('getValue'));
+  				}else{
+  					var searchByTeilName=searchTimeInterval($('#timecc').combobox('getValue'));
+  					$('#teilAcc').panel('refresh','<%=basePath%>qb/initTeilData?productLineName='+$('#elTeilProductLineName').val()+'&startTime='+searchByTeilName.startTime+'&endTime='+searchByTeilName.endTime);
+  				}
+  				
+  			}
+  		}
+  		function autoTeilPage(){
+  			if(parseInt($('#TeilTotalrows').val())>0){
+  				if(autoTeilPageNum>=Math.ceil(parseInt($('#TeilTotalrows').val())/30)){
+  					autoTeilPageNum=1;
+  				}else{
+  					autoTeilPageNum += 1;
+  				}
+  			}
+  			if($('#qbSearchTimeType1').radiobutton('options').checked==true){
+  				$('#teilAcc').panel('refresh','<%=basePath%>qb/initTeilDataByPage?productLineName='+$('#elTeilProductLineName').val()+'&startTime='+$('#qbStartTime').datetimebox('getValue')+'&endTime='+$('#qbEndTime').datetimebox('getValue')+'&page='+autoTeilPageNum+'&rows='+'30');
+  			}else{
+  				var searchByTeilName=searchTimeInterval($('#timecc').combobox('getValue'));
+  				$('#teilAcc').panel('refresh','<%=basePath%>qb/initTeilDataByPage?productLineName='+$('#elTeilProductLineName').val()+'&startTime='+searchByTeilName.startTime+'&endTime='+searchByTeilName.endTime+'&page='+autoTeilPageNum+'&rows='+'30');
+  			}
+  			
+  		}
 	</script>
   </body>
 </html>

@@ -1,61 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.qdas.bi.dao.QualityBoardMapper">
-	<select id="getProductLine" parameterType="cn.qdas.bi.bean.QualityBoard" resultType="map">
-		SELECT DISTINCT TEERZEUGNIS FROM TEIL where 1=1
-		<if test="productLineName !='' and productLineName !=null">
-			and TEERZEUGNIS like concat ('%',#{productLineName},'%')
-		</if>
-	</select>
-	<select id="getProductLineWithColor" parameterType="cn.qdas.bi.bean.QualityBoard" resultType="map">
-		SELECT t.TETEIL,t.TEERZEUGNIS,a.ALARM_EW,a.ALARM_DATETIME FROM TEIL t 
-		LEFT JOIN ALARM_VALUES a ON t.TETEIL= a.K1000 
-		where 1=1
-		<if test="productLineName !='' and productLineName !=null">
-			and TEERZEUGNIS like concat ('%',#{productLineName},'%')
-		</if>
+	<sql id="alarmTimeSearch">
 		<if test="startTime !='' and startTime!=null and startTime !='undefined'">
-			and a.ALARM_DATETIME &gt; #{startTime}
+			and ALARM_DATETIME &gt; #{startTime}
 		</if>
 		<if test="endTime !='' and endTime!=null and endTime !='undefined'">
-			and a.ALARM_DATETIME &lt; #{endTime}
+			and ALARM_DATETIME &lt; #{endTime}
 		</if>
-	</select>
-	<select id="getTeilData" parameterType="cn.qdas.bi.bean.QualityBoard" resultType="map">
-		select t.TETEIL,t.TETEILNR,t.TEBEZEICH,a.ALARM_EW,a.ALARM_DATETIME from TEIL t
-		LEFT JOIN ALARM_VALUES a ON t.TETEIL= a.K1000 
-		where 1=1 and TEERZEUGNIS = #{productLineName}
+	</sql>
+	<sql id="wvTimeSearch">
+		<if test="startTime !='' and startTime!=null and startTime !='undefined'">
+			and WVDATZEIT &gt; #{startTime}
+		</if>
+		<if test="endTime !='' and endTime!=null and endTime !='undefined'">
+			and WVDATZEIT &lt; #{endTime}
+		</if>
+	</sql>
+	<select id="getTeilAlarmCountData" parameterType="cn.qdas.bi.bean.QualityBoard" resultType="map">
+		SELECT
+		DISTINCT t.TETEIL, t.TETEILNR, t.TEBEZEICH,
+		(SELECT COUNT(*) FROM WERTEVAR WHERE WVTEIL = t.TETEIL <include refid="wvTimeSearch"/>) AS wvCount, 
+		(SELECT COUNT(ALARM_EW) FROM ALARM_VALUES WHERE ALARM_EW=0 AND t.TETEIL = K1000 <include refid="alarmTimeSearch"/>) AS alarmCount0,
+		(SELECT COUNT(ALARM_EW) FROM ALARM_VALUES WHERE ALARM_EW=1 AND t.TETEIL = K1000 <include refid="alarmTimeSearch"/>) AS alarmCount1,
+		(SELECT COUNT(ALARM_EW) FROM ALARM_VALUES WHERE ALARM_EW=2 AND t.TETEIL = K1000 <include refid="alarmTimeSearch"/>) AS alarmCount2,
+		(SELECT COUNT(ALARM_EW) FROM ALARM_VALUES WHERE ALARM_EW=16 AND t.TETEIL = K1000 <include refid="alarmTimeSearch"/>) AS alarmCount16,
+		(SELECT COUNT(ALARM_EW) FROM ALARM_VALUES WHERE ALARM_EW=32 AND t.TETEIL = K1000 <include refid="alarmTimeSearch"/>) AS alarmCount32,
+		(SELECT COUNT(ALARM_EW) FROM ALARM_VALUES WHERE ALARM_EW=65536 AND t.TETEIL = K1000 <include refid="alarmTimeSearch"/>) AS alarmCount65536
+		FROM TEIL t
+		LEFT JOIN ALARM_VALUES a ON t.TETEIL = a.K1000
+		WHERE 1 = 1 AND TEERZEUGNIS = #{productLineName}
 		<if test="teilNum !='' and teilNum !=null">
 			and TETEILNR like concat ('%',#{teilNum},'%')
 		</if>
 		<if test="teilName !='' and teilName !=null">
 			and TEBEZEICH like concat ('%',#{teilName},'%')
 		</if>
-		<if test="startTime !='' and startTime!=null and startTime !='undefined'">
-			and a.ALARM_DATETIME &gt; #{startTime}
-		</if>
-		<if test="endTime !='' and endTime!=null and endTime !='undefined'">
-			and a.ALARM_DATETIME &lt; #{endTime}
-		</if>
+		GROUP BY t.TETEIL, t.TETEILNR, t.TEBEZEICH
+		ORDER BY t.TETEIL
 	</select>
-	<select id="getMerkmalData" parameterType="cn.qdas.bi.bean.QualityBoard" resultType="map">
-		SELECT m.METEIL,m.MEMERKMAL,m.MEMERKBEZ,a.ALARM_EW,a.ALARM_DATETIME FROM MERKMAL m
-		LEFT JOIN ALARM_VALUES a ON m.METEIL= a.K1000 AND m.MEMERKMAL=a.K2000
-		where m.METEIL=#{teilId}
+	<select id="getMerkmalAlarmCountData" parameterType="cn.qdas.bi.bean.QualityBoard" resultType="map">
+		SELECT
+		DISTINCT m.MEMERKMAL,M.METEIL,m.MEMERKBEZ,MEMERKNR,
+		(SELECT COUNT(*) FROM WERTEVAR WHERE WVTEIL =#{teilId} AND WVMERKMAL=m.MEMERKMAL <include refid="wvTimeSearch"/>) AS wvCount,
+		(SELECT COUNT(ALARM_EW) FROM ALARM_VALUES WHERE ALARM_EW=0 AND m.METEIL = K1000 AND m.MEMERKMAL=K2000
+		<include refid="alarmTimeSearch"/>
+		) AS alarmCount0,
+		(SELECT COUNT(ALARM_EW) FROM ALARM_VALUES WHERE ALARM_EW=1 AND m.METEIL = K1000 AND m.MEMERKMAL=K2000
+		<include refid="alarmTimeSearch"/>
+		 ) AS alarmCount1,
+		(SELECT COUNT(ALARM_EW) FROM ALARM_VALUES WHERE ALARM_EW=2 AND m.METEIL = K1000 AND m.MEMERKMAL=K2000
+		<include refid="alarmTimeSearch"/>
+		 ) AS alarmCount2,
+		(SELECT COUNT(ALARM_EW) FROM ALARM_VALUES WHERE ALARM_EW=16 AND m.METEIL = K1000 AND m.MEMERKMAL=K2000
+		<include refid="alarmTimeSearch"/>
+		 ) AS alarmCount16,
+		(SELECT COUNT(ALARM_EW) FROM ALARM_VALUES WHERE ALARM_EW=32 AND m.METEIL = K1000 AND m.MEMERKMAL=K2000
+		<include refid="alarmTimeSearch"/>
+		 ) AS alarmCount32,
+		(SELECT COUNT(ALARM_EW) FROM ALARM_VALUES WHERE ALARM_EW=65536 AND m.METEIL = K1000 AND m.MEMERKMAL=K2000
+		<include refid="alarmTimeSearch"/>
+		 ) AS alarmCount65536
+		FROM MERKMAL m
+		LEFT JOIN ALARM_VALUES a ON m.METEIL = a.K1000 AND m.MEMERKMAL = a.K2000
+		WHERE m.METEIL =#{teilId}
 		<if test="merkmalName !='' and merkmalName !=null">
 			and MEMERKBEZ like concat ('%',#{merkmalName},'%')
 		</if>
-		<if test="startTime !='' and startTime!=null and startTime !='undefined'">
-			and a.ALARM_DATETIME &gt; #{startTime}
-		</if>
-		<if test="endTime !='' and endTime!=null and endTime !='undefined'">
-			and a.ALARM_DATETIME &lt; #{endTime}
-		</if>
+		GROUP BY m.METEIL, m.MEMERKMAL, m.MEMERKBEZ,MEMERKNR
+		ORDER BY m.MEMERKMAL
 	</select>
 	<select id="getWertevarChartData" parameterType="cn.qdas.bi.bean.QualityBoard" resultType="map">
-		select w.WVTEIL,w.WVMERKMAL,w.WVWERTNR,w.WVWERT,w.WVDATZEIT,m.MEUGW,m.MEOGW,m.MENENNMAS,m.MEMERKART
+		select w.WVTEIL,w.WVMERKMAL,w.WVWERTNR,w.WVWERT,w.WVDATZEIT,m.MEUGW,m.MEOGW,m.MENENNMAS,m.MEMERKART,
+		p.PRVORNAME,
+		r.PMBEZ
 		FROM WERTEVAR w
 		LEFT JOIN MERKMAL m ON w.WVTEIL=m.METEIL AND w.WVMERKMAL=m.MEMERKMAL
+		LEFT JOIN PRUEFER p ON CONCAT(w.WVPRUEFER,'')=p.PRPRUEFER
+		LEFT JOIN PRUEFMIT r ON w.WVPRUEFMIT = r.PMPRUEFMIT
 		where WVMERKMAL=#{merkmalId} and WVTEIL=#{teilId}
 		<if test="startTime !='' and startTime!=null and startTime !='undefined'">
 			and w.WVDATZEIT &gt; #{startTime}
@@ -63,15 +85,16 @@
 		<if test="endTime !='' and endTime!=null and endTime !='undefined'">
 			and w.WVDATZEIT &lt; #{endTime}
 		</if>
+		ORDER BY w.WVWERTNR
 	</select>
 	
 	<select id="getWertevarDate" parameterType="cn.qdas.bi.bean.QualityBoard" resultType="map">
 		select w.WVTEIL,w.WVMERKMAL,w.WVWERTNR,w.WVWERT,w.WVPRUEFER,w.WVPRUEFMIT,w.WVMASCHINE,w.WVNEST,w.WVDATZEIT,
 		p.PRVORNAME,
 		r.PMNR,r.PMBEZ,
-		m.MEUGW,m.MEOGW
+		m.MEUGW,m.MEOGW,m.MENENNMAS,m.MEMERKART
 		from WERTEVAR w 
-		LEFT JOIN PRUEFER p ON CONCAT(w.WVPRUEFER,'')=p.PRNAME 
+		LEFT JOIN PRUEFER p ON CONCAT(w.WVPRUEFER,'')=p.PRPRUEFER 
 		LEFT JOIN PRUEFMIT r ON w.WVPRUEFMIT = r.PMPRUEFMIT
 		LEFT JOIN MERKMAL m ON W.WVTEIL=m.METEIL AND w.WVMERKMAL=m.MEMERKMAL
 		where WVMERKMAL=#{merkmalId} and WVTEIL=#{teilId}
@@ -127,36 +150,23 @@
 	<resultMap type="cn.qdas.bi.bean.QbTeil" id="teilAlarmsMap" extends="qbTeilMap">
 		<collection property="qbAlarmValuesList" resultMap="qbAlarmValuesMap"></collection>
 	</resultMap>
-	<select id="getProductLineByUser" parameterType="cn.qdas.core.bean.User" resultMap="userRoleListMap">
-		select u.user_id,u.user_name,u.user_account,u.password,u.locked,
-		r.role_id,r.role_name,r.available,
-		p.permission_id,p.permission_name,p.type
-		from [system_user] u
-		inner join system_user_role ur on u.user_id = ur.user_id 
-		inner join system_role r on ur.role_id=r.role_id
-		inner join system_role_permission rp on r.role_id=rp.role_id
-		inner join system_permission p on rp.permission_id=p.permission_id 
-		where u.user_account=#{userAccount}
-		and r.available='0' and p.available='0' and p.type='pl'
-	</select>
-	<select id="getAlarmValuesByProductLine" parameterType="java.lang.String" resultType="map">
-		select p.permission_id,p.permission_name,p.type,
-		t.TETEIL,t.TETEILNR,t.TEBEZEICH,t.TEERZEUGNIS,
-		a.ALARM_EW,a.ALARM_DATETIME
-		from system_permission p
-		LEFT JOIN Teil t ON t.TEERZEUGNIS=p.permission_name
-		LEFT JOIN ALARM_VALUES a ON t.TETEIL=a.K1000
-		where p.permission_name in
+	<select id="getAlarmCountByProductLine" parameterType="java.lang.String" resultType="map">
+		SELECT
+		DISTINCT t.TEERZEUGNIS,
+		(SELECT COUNT(*) FROM WERTEVAR WHERE WVTEIL IN (SELECT DISTINCT TETEIL FROM TEIL WHERE TEERZEUGNIS=t.TEERZEUGNIS) <include refid="wvTimeSearch"/> ) AS wvCount,
+		(SELECT COUNT(ALARM_EW) FROM ALARM_VALUES WHERE ALARM_EW=0 AND K1000 IN (SELECT DISTINCT TETEIL FROM TEIL WHERE TEERZEUGNIS=t.TEERZEUGNIS) <include refid="alarmTimeSearch"/>) AS alarmCount0,
+		(SELECT COUNT(ALARM_EW) FROM ALARM_VALUES WHERE ALARM_EW=1 AND K1000 IN (SELECT DISTINCT TETEIL FROM TEIL WHERE TEERZEUGNIS=t.TEERZEUGNIS) <include refid="alarmTimeSearch"/>) AS alarmCount1,
+		(SELECT COUNT(ALARM_EW) FROM ALARM_VALUES WHERE ALARM_EW=2 AND K1000 IN (SELECT DISTINCT TETEIL FROM TEIL WHERE TEERZEUGNIS=t.TEERZEUGNIS) <include refid="alarmTimeSearch"/>) AS alarmCount2,
+		(SELECT COUNT(ALARM_EW) FROM ALARM_VALUES WHERE ALARM_EW=16 AND K1000 IN (SELECT DISTINCT TETEIL FROM TEIL WHERE TEERZEUGNIS=t.TEERZEUGNIS) <include refid="alarmTimeSearch"/>) AS alarmCount16,
+		(SELECT COUNT(ALARM_EW) FROM ALARM_VALUES WHERE ALARM_EW=32 AND K1000 IN (SELECT DISTINCT TETEIL FROM TEIL WHERE TEERZEUGNIS=t.TEERZEUGNIS) <include refid="alarmTimeSearch"/>) AS alarmCount32,
+		(SELECT COUNT(ALARM_EW) FROM ALARM_VALUES WHERE ALARM_EW=65536 AND K1000 IN (SELECT DISTINCT TETEIL FROM TEIL WHERE TEERZEUGNIS=t.TEERZEUGNIS) <include refid="alarmTimeSearch"/>) AS alarmCount65536
+		FROM TEIL t
+		where t.TEERZEUGNIS in
 		<foreach collection="productLineNames" open="(" close=")" separator="," item="item" index="i">
 					#{item}
 		</foreach>
-		and p.available='0' and p.type='pl'
-		<if test="startTime !='' and startTime!=null and startTime !='undefined'">
-			and a.ALARM_DATETIME &gt; #{startTime}
-		</if>
-		<if test="endTime !='' and endTime!=null and endTime !='undefined'">
-			and a.ALARM_DATETIME &lt; #{endTime}
-		</if>
+		GROUP BY t.TEERZEUGNIS,t.TETEIL
+		ORDER BY t.TEERZEUGNIS
 	</select>
 	<select id="getQbFormData" parameterType="java.lang.String" resultType="map">
 		SELECT t.TETEIL,t.TETEILNR,t.TEBEZEICH,t.TEERZEUGNIS,
@@ -204,9 +214,15 @@
 		a.ALARM_EW
 		from WERTEVAR w 
 		LEFT JOIN ALARM_VALUES a ON w.WVTEIL=a.K1000 AND w.WVMERKMAL=a.K2000 AND w.WVWERTNR=A.K0000
-		LEFT JOIN PRUEFER p ON CONCAT(w.WVPRUEFER,'')=p.PRNAME 
+		LEFT JOIN PRUEFER p ON CONCAT(w.WVPRUEFER,'')=p.PRPRUEFER
 		LEFT JOIN PRUEFMIT r ON w.WVPRUEFMIT = r.PMPRUEFMIT
 		where w.WVTEIL=#{teilId} AND w.WVMERKMAL=#{merkmalId}
-		ORDER BY w.WVDATZEIT DESC
+		<if test="startTime !='' and startTime!=null and startTime !='undefined'">
+				and w.WVDATZEIT &gt; #{startTime}
+			</if>
+			<if test="endTime !='' and endTime!=null and endTime !='undefined'">
+				and w.WVDATZEIT &lt; #{endTime}
+			</if>
+		ORDER BY w.WVWERTNR
 	</select>
 </mapper>

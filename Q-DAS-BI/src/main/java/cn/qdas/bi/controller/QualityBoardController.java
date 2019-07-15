@@ -33,12 +33,8 @@ public class QualityBoardController {
 	public String getProductLineData(HttpServletRequest request,Model model,QualityBoard qb) {
 		HttpSession session=request.getSession();
 		User user=(User) session.getAttribute("user");
-		//List<Map> list=iqbs.getProductLine(qb);
 		List list =iqbs.getProductLineByUser(user,qb);
 		Map map=new HashMap<String, String>();
-		map.put("startTime", qb.getStartTime());
-		map.put("endTime", qb.getEndTime());
-		map.put("plName", qb.getProductLineName());
 		map.put("plList", list);
 		model.addAttribute("paramMap", map);
 		return "bi/qb/qbProductLineData";
@@ -50,8 +46,16 @@ public class QualityBoardController {
 		Map map=new HashMap<String, String>();
 		map.put("plId", qb.getProductLineName());
 		map.put("teilList",teilList);
-		map.put("startTime", qb.getStartTime());
-		map.put("endTime", qb.getEndTime());
+		model.addAttribute("paramMap", map);
+		return "bi/qb/qbTeilData";
+	}
+	@RequestMapping("initTeilDataByPage")
+	public String initTeilDataByPage(Model model,QualityBoard qb) {
+		Map teilMap=iqbs.getTeilDataByPage(qb);
+		Map map=new HashMap<String, String>();
+		map.put("plId", qb.getProductLineName());
+		map.put("teilList",teilMap.get("rows"));
+		map.put("totalRows", teilMap.get("total"));
 		model.addAttribute("paramMap", map);
 		return "bi/qb/qbTeilData";
 	}
@@ -59,8 +63,6 @@ public class QualityBoardController {
 	public String initMerkmalData(Model model,QualityBoard qb) {
 		List list=iqbs.getMerkmalData(qb);
 		Map map=new HashMap<String, String>();
-		map.put("startTime", qb.getStartTime());
-		map.put("endTime", qb.getEndTime());
 		map.put("teilId", qb.getTeilId());
 		map.put("merkmalList", list);
 		model.addAttribute("paramMap", map);

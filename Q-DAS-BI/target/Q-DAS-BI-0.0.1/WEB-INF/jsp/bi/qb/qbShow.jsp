@@ -6,37 +6,50 @@
   </head>
   
  <body>
+ 	<style type="text/css">
+ 		.textbox .textbox-text {
+ 			font-size:18px;
+ 		} 
+ 		font{
+ 			font-size:18px;
+ 			font-weight:bold
+ 		}
+ 	</style>
     <div id="cc" class="easyui-layout" style="width:100%;height:100%;">
-	    <div data-options="region:'north',collapsible:false" style="height:7%;padding: 0">
-	    	<div style="float: left;width: 40%;height: 80%">
-	    		<span style="margin-left: 20px">轮播间隔：</span>
-		    	<select id="jgtime" style="width:150px;padding-left: 20px">
+	    <div data-options="region:'north',collapsible:false" style="height:56px;padding:5px;overflow: hidden">
+			<form id="titleForm" style="float: left;width: 50%;height: 100%">
+				<input class="easyui-textbox" name="TEERZEUGNIS" style="width:30%;" data-options="label:'<font>产线名:</font>',editable:false">
+				<input class="easyui-textbox" name="TETEILNR" style="width:30%;" data-options="label:'<font>零件号:</font>',editable:false">
+				<input class="easyui-textbox" name="TEBEZEICH" style="width:35%;" data-options="label:'<font>零件名:</font>',editable:false">
+			</form>
+			<form style="float: right;width: 50%;height: 100%">
+	    		<span style="margin-left: 20px"><font>轮播间隔：</font></span>
+		    	<select id="jgtime" style="width:80px;padding-left: 10px">
 				    <option value="10">10秒</option>
 				    <option value="20">20秒</option>
 				    <option value="30">30秒</option>
 				    <option value="60">1分钟</option>
 				     <option value="1">1秒</option>
 				</select>
-				轮播：<select class="easyui-combobox" id="qbSearchInterval" name="qbSearchInterval" style="width:200px;" 
-		        			data-options="editable:false">
+							<input id="qbShowSearchTimeType1" name="qbShowSearchTimeType" value="0">		
+							&nbsp;<input id="lbStartTime" name="lbStartTime" style="width:100px" >
+		        			<font>至</font>&nbsp;<input id="lbEndTime" name="lbEndTime" style="width:100px"> 
+		        			<input id="qbShowSearchTimeType2" name="qbShowSearchTimeType" value="1">
+		        			<select id="qbSearchInterval" name="qbSearchInterval" style="width:150px;">
 									    <option value="0">全部数据</option>
 									    <option value="1h">近一小时的数据</option>
 									    <option value="1">近一天的数据</option>
 									    <option value="7">近一周的数据</option>
 									    <option value="30">近一个月(30)的数据</option>
 									</select >
-	    	</div>
-			<form id="titleForm" style="float: left;width: 60%;height: 70%">
-				<input class="easyui-textbox" name="TEERZEUGNIS" style="width:30%;padding-left: 20px;" data-options="label:'<font color=red>产线名:</font>',editable:false">
-				<input class="easyui-textbox" name="TETEILNR" style="width:30%;padding-left: 20px" data-options="label:'<font color=red>零件号:</font>',editable:false">
-				<input class="easyui-textbox" name="TEBEZEICH" style="width:30%;padding-left: 20px" data-options="label:'<font color=red>零件名:</font>',editable:false">
-			</form>
+	    	</form>
+	    	
 	    </div>
-	    <div  data-options="region:'south',title:'测量值',collapsible:true" style="height:50%;">
+	    <div  data-options="region:'south',title:'测量值',collapsible:true,collapsed:true" style="height:50%;">
 	    	<table id="wertevarTable">
 				<thead>
 					<tr>
-						<th data-options="field:'WVWERT',width:80,align:'center'">测量值</th>
+						<th data-options="field:'WVWERT',width:80,align:'center',formatter:cellFormatter">测量值</th>
 						<th data-options="field:'PRVORNAME',width:50,align:'center'">测量人员</th>
 						<th data-options="field:'PMNR',width:100,align:'center'">机台编号</th>
 						<th data-options="field:'PMBEZ',width:100,align:'center'">机台名</th>
@@ -59,16 +72,16 @@
 	                <input class="easyui-textbox" name="TEBEZEICH" style="width:100%;padding-left: 20px" data-options="label:'零件名:',editable:false">
 	            </div> -->
 	            <div style="margin-top:15px">
-	                <input class="easyui-textbox" name="MEMERKBEZ" style="width:100%;padding-left: 20px" data-options="label:'参数:',editable:false">
+	                <input class="easyui-textbox textfont" name="MEMERKBEZ" style="width:100%;padding-left: 20px" data-options="label:'<font>参数:</font>',editable:false,labelWidth:120">
 	            </div>
 	            <div style="margin-top:15px">
-	                <input class="easyui-textbox" id="MENENNMAS" name="MENENNMAS" style="width:100%;padding-left: 20px" data-options="label:'名义值:',editable:false">
+	                <input class="easyui-textbox" id="MENENNMAS" name="MENENNMAS" style="width:100%;padding-left: 20px" data-options="label:'<font>名义值:</font>',editable:false,labelWidth:120">
 	            </div>
 	            <div style="margin-top:15px">
-	                <input class="easyui-textbox" id="MEOGW" name="MEOGW" style="width:100%;padding-left: 20px" data-options="label:'上公差上限:',editable:false">
+	                <input class="easyui-textbox" id="MEOGW" name="MEOGW" style="width:100%;padding-left: 20px" data-options="label:'<font>上公差上限:</font>',editable:false,labelWidth:120">
 	            </div>
 	            <div style="margin-top:15px">
-	                <input class="easyui-textbox" id="MEUGW" name="MEUGW" style="width:100%;padding-left: 20px" data-options="label:'下公差上限:',editable:false">
+	                <input class="easyui-textbox" id="MEUGW" name="MEUGW" style="width:100%;padding-left: 20px" data-options="label:'<font>下公差上限:</font>',editable:false,labelWidth:120">
 	            </div>
 	            <input type="hidden" id="MEMERKART" name="MEMERKART">
 	        </form>
@@ -76,7 +89,7 @@
 	        <input type="hidden" id="productLineName" name="productLineName" value="${productLineName }">
 	        <input type="hidden" id="teilId" name="teilId" value="${teilId }">
 	    </div>
-	    <div id="qbCharts" data-options="region:'center'"></div>
+	    <div id="qbCharts" data-options="region:'center'" style="padding:5px;background:#eee;"></div>
 	</div>
 	<script type="text/javascript" src="<%=basePath%>resources/js/echarts.min.js"></script>
 		<script type="text/javascript" src="<%=basePath%>resources/js/charts.js"></script>
@@ -85,7 +98,42 @@
 		var autotime;
 		var auto;
 		var qbShowCharts;
-		var qbStartTime,qbEndTime;
+		var qbRadioIndex=1;
+		$(function(){
+			$('#lbStartTime').datetimebox({
+				disabled:true,
+				editable:false
+			})
+			$('#lbEndTime').datetimebox({
+				disabled:true,
+				editable:false
+			})
+			$('#qbShowSearchTimeType1').radiobutton({
+				onChange:function(checked){
+					if(checked==true){
+						qbRadioIndex=0;
+						$('#qbSearchInterval').combobox('disable');
+						$('#lbEndTime').datetimebox('enable');
+						$('#lbStartTime').datetimebox('enable'); 
+					}
+				}
+			})
+			$('#qbShowSearchTimeType2').radiobutton({
+				checked:true,
+				onChange:function(checked){
+					if(checked==true){
+						qbRadioIndex=1;
+						$('#qbSearchInterval').combobox('enable');
+						$('#lbEndTime').datetimebox('clear').datetimebox('disable');
+						$('#lbStartTime').datetimebox('clear').datetimebox('disable'); 
+					}
+				}
+			})
+			$('#qbSearchInterval').combobox({
+				editable:false
+			})
+		})
+		//var qbStartTime,qbEndTime;
 		getFormData();
 		$("#jgtime").combobox({
 			editable:false,
@@ -123,14 +171,22 @@
 					}
 				});
 		function getFormData(){
-			var days=$('#qbSearchInterval').val();
-			qbSearchTime(days)
+			var startTime,endTime;
+			var qbSearch;
+			if(qbRadioIndex==0){
+				startTime=$('#lbStartTime').datetimebox('getValue');
+				endTime=$('#lbEndTime').datetimebox('getValue');
+			}else{
+				qbSearch=searchTimeInterval($('#qbSearchInterval').combobox('getValue'));
+				startTime=qbSearch.startTime;
+				endTime=qbSearch.endTime;
+			}
 			$.ajax({
 				type:'post',
 				data:{
 					arrIndex:index,
-					startTime:qbStartTime,
-					endTime:qbEndTime,
+					startTime:startTime,
+					endTime:endTime,
 					teilId:$('#teilId').val(),
 					productLineName:$('#productLineName').val(),
 					index:$('#index').val()
@@ -161,61 +217,81 @@
 				var mData=$('#MENENNMAS').textbox('getValue');
 				var xValue=[];
 				var yValue=[];
+				var tooltipTime=[];
+				var tooltipPRVORNAME=[];
+				var tooltipPMBEZ=[];
 				for(var i=0;i<rows.length;i++){
-					xValue.push(rows[i].WVDATZEIT);
+					xValue.push(rows[i].WVWERTNR);
 					yValue.push(rows[i].WVWERT);
+					tooltipTime.push(rows[i].WVDATZEIT);
+					tooltipPRVORNAME.push(rows[i].PRVORNAME);
+					tooltipPMBEZ.push(rows[i].PMBEZ);
 				}
-				qbShowCharts=initLineChart2('qbCharts',xValue,yValue,upLimit,downLimit,mData);
+				qbShowCharts=initLineChart2('qbCharts',xValue,yValue,upLimit,downLimit,mData,tooltipTime,tooltipPRVORNAME,tooltipPMBEZ);
 			}else if(lineBar=='1'){
-				var xValues=new Array();
-						var yValues=new Array();
-						for(var i=0;i<rows.length;i++){
-							xValues.push(rows[i].WVWERT);
+				var integerNum=rows[0].WVWERT+'';
+						if(integerNum.indexOf('.')!=-1){
+							integerNum=integerNum.substring(0, integerNum.indexOf('.'));
+							
 						}
-						var pieObj={};
+						var xData=['合格','不合格'];
+						var yData=[];
 						var pieArr=[];
-						var cc=[];
-						var xData=[];
-						for(var i=0; i<xValues.length; i++){
-						//通过把数组的val值赋给obj做为下标，通过下标来查找
-							if(!pieObj[xValues[i]]){
-								xData.push(xValues[i])
-								pieObj[xValues[i]]=1 //这里如果不给个值，那么obj还是为空。
-							}else{
-								pieObj[xValues[i]]++
+						var c=0;
+						var okCount=0;
+						var nokCount=0;
+						if(integerNum.length==4){
+							for(var i=0;i<rows.length;i++){
+								if(rows[i].WVWERT==1000){
+									okCount +=1;
+								}else{
+									nokCount +=1;
+								}
+							}
+						}else{
+							for(var i=0;i<rows.length;i++){
+								var strNum=rows[i].WVWERT+'';
+								if(strNum.indexOf('.')!=-1){
+									var frontNum=parseInt(strNum.substring(0, strNum.indexOf('.')))/1000;
+									var afterNum=parseFloat(strNum.substring(strNum.indexOf('.')-1))*1000000;
+									okCount += frontNum-afterNum;
+									nokCount += afterNum;
+								}else{
+									okCount += (parseInt(strNum)/1000);
+								}
 							}
 						}
-						for(var i=0;i<xData.length;i++){
-							var obj=new Object();
-							obj.name=xData[i];
-							obj.value=pieObj[xData[i]];
-							yValues[i]=pieObj[xData[i]];
-							pieArr.push(obj);
-						}
-						qbShowCharts=initBarAndPie('qbCharts',xData,yValues,pieArr);	
+						yData=[okCount,nokCount];
+						pieArr=[{name:'合格',value:okCount},{name:'不合格',value:nokCount}];
+						qbShowCharts=initBarAndPie('qbCharts',xData,yData,pieArr);
 			}
 		}
-		function qbSearchTime(days){
-				var now=new Date();
-				if(days=='0'){
-					qbStartTime='';
-					qbEndTime='';
-				}else if(days=='1h'){
-					var searchTime=now.getTime()-3600000;
-					var ago=new Date(searchTime);
-					var startDate=ago.getFullYear()+"-"+(ago.getMonth()+1)+"-"+ago.getDate()+" "+ago.getHours()+":"+ago.getMinutes()+":"+ago.getSeconds();
-					var endDate=now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate()+" "+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
-					qbStartTime=startDate;
-					qbEndTime=endDate;
-				}else if(days=='1'|days=='7'|days=='30'){
-					var searchTime=now.getTime()-(days*86400000);
-					var ago=new Date(searchTime);
-					var startDate=ago.getFullYear()+"-"+(ago.getMonth()+1)+"-"+ago.getDate()+" "+ago.getHours()+":"+ago.getMinutes()+":"+ago.getSeconds();
-					var endDate=now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate()+" "+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
-					qbStartTime=startDate;
-					qbEndTime=endDate;
+		function cellFormatter(value,row,index){
+			var strNum=value+'';
+			var result=value;
+			 if($('#MEMERKART').val()=='1'){
+				var integerNum=value+'';
+				if(integerNum.indexOf('.')!=-1){
+					integerNum=integerNum.substring(0, integerNum.indexOf('.'));
 				}
-		} 
+				if(integerNum.length==4){
+					if(value!=1000){
+						result="不合格";
+					}else{
+						result="合格";
+					}
+				}else{
+					if(strNum.indexOf('.')!=-1){
+						var frontNum=parseInt(strNum.substring(0, strNum.indexOf('.')))/1000;
+						var afterNum=parseFloat(strNum.substring(strNum.indexOf('.')-1))*1000000;
+						result=frontNum+'个样本缺陷率：'+(parseFloat(afterNum/frontNum).toFixed(4))*100+'%';
+					}else{
+						result=integerNum/1000+'个样本缺陷率：0%'
+					}
+				}
+			}
+			return result;
+		}
 	</script>
 </body>
 </html>

@@ -2,6 +2,7 @@
 <%@ include file="../base/meta.jsp"%>
 <html>
   <head>
+  <link rel="shortcut icon" href="<%=basePath%>resources/images/favicon.ico" type="image/x-icon">
   <link href="<%=basePath %>resources/blueThemes/css/bi.css" rel="stylesheet" type="text/css" />
 	<script type="text/javascript">
 		$(function(){

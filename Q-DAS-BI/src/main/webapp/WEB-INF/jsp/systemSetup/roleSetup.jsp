@@ -130,7 +130,7 @@
 									showType:'slide'
 								});
 		  					}else if(data.success==1){
-		  						$.messager.alert('提示信息','操作失败！！！  错误：'+data.error,'error');
+		  						$.messager.alert('提示信息','操作失败！！！  错误：'+data.error.message,'error');
 		  					}
 					$('#roleTable').datagrid('reload');
 				}
@@ -160,7 +160,7 @@
 									showType:'slide'
 								});
 		  					}else if(data.success==1){
-		  						$.messager.alert('提示信息','操作失败！！！  错误：'+data.error,'error');
+		  						$.messager.alert('提示信息','操作失败！！！  错误：'+data.error.message,'error');
 		  					}
 		  				}
 		  			});
@@ -209,7 +209,7 @@
 							showType:'slide'
 						});
   					}else if(data.success==1){
-  						$.messager.alert('提示信息','授权操作失败！！！  错误：'+data.error,'error');
+  						$.messager.alert('提示信息','授权操作失败！！！  错误：'+data.error.message,'error');
   					}
   				}
   			})

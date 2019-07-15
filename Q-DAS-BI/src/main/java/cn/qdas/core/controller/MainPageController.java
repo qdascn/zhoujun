@@ -16,13 +16,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import cn.qdas.core.bean.Permission;
 import cn.qdas.core.bean.User;
-import cn.qdas.core.service.MainPageService;
+import cn.qdas.core.service.IMainPageService;
 
 @Controller
 @RequestMapping("/main")
 public class MainPageController {
 	@Resource
-	MainPageService mps;
+	IMainPageService mps;
 	@RequestMapping("loginPage")
 	public String initLoginPage() {
 		return "base/loginPage";

@@ -14,23 +14,21 @@
 			<a id="merkmalSearchbtn" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a>
 			<a id="showDetailsBtn" class="easyui-linkbutton c4" data-options="iconCls:'icon-search'" style="float: right;">查看详情</a>
 			<a id="openMerkmalQb" class="easyui-linkbutton c3" data-options="iconCls:'icon-search'" style="float: right">打开轮播看板</a>
-			<input type="hidden" id="elmSearchStartTime" name="elmSearchStartTime" value="${paramMap.startTime}">
-			<input type="hidden" id="elmSearchEndTime" name="elmSearchEndTime" value="${paramMap.endTime}">
 		</div>
 		<div id="merkmalbox" data-options="region:'west',split:true" style="padding:5px;background:#eee;width:350px;">
 			<c:forEach items="${paramMap.merkmalList}" var="map">
 				<c:choose>
 					<c:when test="${map.qualityLevel==\"0\"}">
-						<a id="merkmal${map.MEMERKMAL }" class="easyui-linkbutton c1" data-options="size:'large'" style="width:300px;height: 100px;margin-top: 5px" onclick="showChart('${map.MEMERKMAL }','${map.METEIL }','${map.MEMERKBEZ }');"><font size="4">${map.MEMERKBEZ }</font></a>
+						<a id="merkmal${map.MEMERKMAL }" class="easyui-linkbutton c1" data-options="size:'large'" style="width:300px;height: 100px;margin-top: 5px" onclick="showChart('${map.MEMERKMAL }','${map.METEIL }','${map.MEMERKBEZ }');"><font size="4" style="line-height: 100%">${map.MEMERKNR }</br>${map.MEMERKBEZ }</font></a>
 					</c:when>
 					<c:when test="${map.qualityLevel==\"1\"}">
-						<a id="merkmal${map.MEMERKMAL }" class="easyui-linkbutton c7" data-options="size:'large'" style="width:300px;height: 100px;margin-top: 5px" onclick="showChart('${map.MEMERKMAL }','${map.METEIL }','${map.MEMERKBEZ }');"><font size="4">${map.MEMERKBEZ }</font></a>
+						<a id="merkmal${map.MEMERKMAL }" class="easyui-linkbutton c7" data-options="size:'large'" style="width:300px;height: 100px;margin-top: 5px" onclick="showChart('${map.MEMERKMAL }','${map.METEIL }','${map.MEMERKBEZ }');"><font size="4" style="line-height: 100%">${map.MEMERKNR }</br>${map.MEMERKBEZ }</font></a>
 					</c:when>
 					<c:when test="${map.qualityLevel==\"2\"}">
-						<a id="merkmal${map.MEMERKMAL }" class="easyui-linkbutton c5" data-options="size:'large'" style="width:300px;height: 100px;margin-top: 5px" onclick="showChart('${map.MEMERKMAL }','${map.METEIL }','${map.MEMERKBEZ }');"><font size="4">${map.MEMERKBEZ }</font></a>
+						<a id="merkmal${map.MEMERKMAL }" class="easyui-linkbutton c5" data-options="size:'large'" style="width:300px;height: 100px;margin-top: 5px" onclick="showChart('${map.MEMERKMAL }','${map.METEIL }','${map.MEMERKBEZ }');"><font size="4" style="line-height: 100%">${map.MEMERKNR }</br>${map.MEMERKBEZ }</font></a>
 					</c:when>
 					<c:when test="${map.qualityLevel==\"3\"}">
-						<a id="merkmal${map.MEMERKMAL }" class="easyui-linkbutton c6" data-options="size:'large'" style="width:300px;height: 100px;margin-top: 5px" onclick="showChart('${map.MEMERKMAL }','${map.METEIL }','${map.MEMERKBEZ }');"><font size="4">${map.MEMERKBEZ }</font></a>
+						<a id="merkmal${map.MEMERKMAL }" class="easyui-linkbutton c6" data-options="size:'large'" style="width:300px;height: 100px;margin-top: 5px" onclick="showChart('${map.MEMERKMAL }','${map.METEIL }','${map.MEMERKBEZ }');"><font size="4" style="line-height: 100%">${map.MEMERKNR }</br>${map.MEMERKBEZ }</font></a>
 					</c:when>
 				</c:choose>
 			</c:forEach>						
@@ -41,15 +39,14 @@
 		<table id="wertevarDetailsTable" style="width: 100%;height: 100%">
 			<thead>
 				<tr>
-					<th data-options="field:'WVWERT',width:80,align:'center',sortable:true">测量值</th>
+					<th data-options="field:'WVWERT',width:100,align:'center',sortable:true,formatter:clcellFormatter">测量值</th>
+					<th data-options="field:'MENENNMAS',width:50,align:'center'">名义值</th>
 					<th data-options="field:'MEUGW',width:50,align:'center'">上公差</th>
 					<th data-options="field:'MEOGW',width:50,align:'center'">下公差</th>
 					<th data-options="field:'PRVORNAME',width:50,align:'center'">测量人员</th>
-					<th data-options="field:'PMNR',width:100,align:'center'">PMNR</th>
-					<th data-options="field:'PMBEZ',width:100,align:'center'">PMBEZ</th>
-					<th data-options="field:'WVMASCHINE',width:50,align:'center'">WVMASCHINE</th>
-					<th data-options="field:'WVNEST',width:50,align:'center'">WVNEST</th>
-					<th data-options="field:'WVDATZEIT',width:120,align:'center',sortable:true">WVDATZEIT</th>
+					<th data-options="field:'PMNR',width:100,align:'center'">机台号</th>
+					<th data-options="field:'PMBEZ',width:100,align:'center'">机台名</th>
+					<th data-options="field:'WVDATZEIT',width:120,align:'center',sortable:true">测量日期</th>
 				</tr>
 			</thead>
 		</table>
@@ -101,8 +98,18 @@
 			    iconCls: 'icon-large-gou'
 			});
 			$('#merkmalSearchbtn').click(function(){
+				var startTime;
+				var endTime;
+				if($('#qbSearchTimeType1').radiobutton('options').checked==true){
+					startTime=$('#qbStartTime').datetimebox('getValue');
+					endTime=$('#qbEndTime').datetimebox('getValue');
+				}else{
+					var searchChartRealTime=searchTimeInterval($('#timecc').combobox('getValue'));
+					startTime=searchChartRealTime.startTime;
+					endTime=searchChartRealTime.endTime;
+				}
 				$('#merkmalAcc').panel({
-					href:"<%=basePath%>qb/initMerkmalData?teilId="+$('#teilIdVal').val()+"&merkmalName="+$('#merkmalName').textbox('getValue')
+					href:"<%=basePath%>qb/initMerkmalData?teilId="+$('#teilIdVal').val()+"&merkmalName="+$('#merkmalName').textbox('getValue')+'&startTime='+startTime+'&endTime='+endTime
 				});
 			});
 			teilId='${paramMap.merkmalList[0].METEIL}';
@@ -167,55 +174,86 @@
 			getChartData(mId,tId)
 		}
 		function getChartData(mId,tId){
+			var startTime;
+			var endTime;
+			if($('#qbSearchTimeType1').radiobutton('options').checked==true){
+				startTime=$('#qbStartTime').datetimebox('getValue');
+				endTime=$('#qbEndTime').datetimebox('getValue');
+			}else{
+				var searchChartRealTime=searchTimeInterval($('#timecc').combobox('getValue'));
+				startTime=searchChartRealTime.startTime;
+				endTime=searchChartRealTime.endTime;
+			}
+			
 			$.ajax({
 				type:'post',
 				url:'<%=basePath%>qb/initWertevarChart',
 				data:{
 					teilId:tId,
 					merkmalId:mId,
-					startTime:$('#elmSearchStartTime').val(),
-					endTime:$('#elmSearchEndTime').val()
+					startTime:startTime,
+					endTime:endTime
 				},
 				success:function(data){
-					if(data[0].MEMERKART=='0'){
-						var upLimit=data[0].MEOGW;
-						var downLimit=data[0].MEUGW;
-						var xValue=[];
-						var yValue=[];
-						for(var i=0;i<data.length;i++){
-							xValue.push(data[i].WVDATZEIT);
-							yValue.push(data[i].WVWERT)
-						}
-						lineChart=initLineChart2('charts',xValue,yValue,upLimit,downLimit,data[0].MENENNMAS);
-					}else{
-						var xValues=new Array();
-						var yValues=new Array();
-						for(var i=0;i<data.length;i++){
-							xValues.push(data[i].WVWERT);
-						}
-						var pieObj={};
-						var pieArr=[];
-						var cc=[];
-						var xData=[];
-						for(var i=0; i<xValues.length; i++){
-						//通过把数组的val值赋给obj做为下标，通过下标来查找
-							if(!pieObj[xValues[i]]){
-								xData.push(xValues[i])
-								pieObj[xValues[i]]=1 //这里如果不给个值，那么obj还是为空。
-							}else{
-								pieObj[xValues[i]]++
+					if(data.length>0){
+						if(data[0].MEMERKART=='0'){
+							var upLimit=data[0].MEOGW;
+							var downLimit=data[0].MEUGW;
+							var xValue=[];
+							var yValue=[];
+							var tooltipTime=[];
+								var tooltipPRVORNAME=[];
+								var tooltipPMBEZ=[];
+							for(var i=0;i<data.length;i++){
+								tooltipTime.push(data[i].WVDATZEIT);
+									tooltipPRVORNAME.push(data[i].PRVORNAME);
+									tooltipPMBEZ.push(data[i].PMBEZ);
+									xValue.push(data[i].WVWERTNR);
+									yValue.push(data[i].WVWERT)
 							}
+							lineChart=initLineChart2('charts',xValue,yValue,upLimit,downLimit,data[0].MENENNMAS,tooltipTime,tooltipPRVORNAME,tooltipPMBEZ);
+						}else{
+							var integerNum=data[0].WVWERT+'';
+							if(integerNum.indexOf('.')!=-1){
+								integerNum=integerNum.substring(0, integerNum.indexOf('.'));
+								
+							}
+							var xData=['合格','不合格'];
+							var yData=[];
+							var pieArr=[];
+							var c=0;
+							var okCount=0;
+							var nokCount=0;
+							if(integerNum.length==4){
+								for(var i=0;i<data.length;i++){
+									if(data[i].WVWERT==1000){
+										okCount +=1;
+									}else{
+										nokCount +=1;
+									}
+								}
+							}else{
+								for(var i=0;i<data.length;i++){
+									var strNum=data[i].WVWERT+'';
+									if(strNum.indexOf('.')!=-1){
+										var frontNum=parseInt(strNum.substring(0, strNum.indexOf('.')))/1000;
+										var afterNum=parseFloat(strNum.substring(strNum.indexOf('.')-1))*1000000;
+										okCount += frontNum-afterNum;
+										nokCount += afterNum;
+									}else{
+										okCount += (parseInt(strNum)/1000);
+									}
+								}
+							}
+							yData=[okCount,nokCount];
+							pieArr=[{name:'合格',value:okCount},{name:'不合格',value:nokCount}];
+							lineChart=initBarAndPie('charts',xData,yData,pieArr);	
 						}
-						for(var i=0;i<xData.length;i++){
-							var obj=new Object();
-							obj.name=xData[i];
-							obj.value=pieObj[xData[i]];
-							yValues[i]=pieObj[xData[i]];
-							pieArr.push(obj);
+					}else{
+						if(lineChart!=null){
+							lineChart.clear();
 						}
-						lineChart=initBarAndPie('charts',xData,yValues,pieArr);						
 					}
-					
 				}
 			});
 		}
@@ -223,6 +261,32 @@
 			if(lineChart!=null&lineChart!=''){
 				lineChart.resize();
 			}
+		}
+		function clcellFormatter(value,row,index){
+			var strNum=value+'';
+			var result=value;
+			 if(row.MEMERKART=='1'){
+				var integerNum=value+'';
+				if(integerNum.indexOf('.')!=-1){
+					integerNum=integerNum.substring(0, integerNum.indexOf('.'));
+				}
+				if(integerNum.length==4){
+					if(value!=1000){
+						result="不合格";
+					}else{
+						result="合格";
+					}
+				}else{
+					if(strNum.indexOf('.')!=-1){
+						var frontNum=parseInt(strNum.substring(0, strNum.indexOf('.')))/1000;
+						var afterNum=parseFloat(strNum.substring(strNum.indexOf('.')-1))*1000000;
+						result=frontNum+'个样本缺陷率：'+(parseFloat(afterNum/frontNum).toFixed(4))*100+'%';
+					}else{
+						result=integerNum/1000+'个样本缺陷率：0%'
+					}
+				}
+			}
+			return result;
 		}
 	</script>
   </body>

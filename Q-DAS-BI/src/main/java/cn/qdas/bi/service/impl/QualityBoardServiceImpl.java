@@ -12,6 +12,9 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+
 import cn.qdas.bi.bean.QbAlarmValues;
 import cn.qdas.bi.bean.QbProductLine;
 import cn.qdas.bi.bean.QbTeil;
@@ -27,125 +30,58 @@ public class QualityBoardServiceImpl implements IQualityBoardService{
 	@Resource
 	QualityBoardMapper qbm;
 	@Override
-	public List getProductLine(QualityBoard qb) {
-		/*List<Map> plList = qbm.getProductLine(qb);
-		for(int i=0;i<plList.size();i++) {
-			if(plList.get(i)==null) {
-				plList.remove(i);
+	public Map getTeilDataByPage(QualityBoard qb) {
+		Page page = PageHelper.startPage(qb.getPage(), qb.getRows(), true);
+		List<Map> list=qbm.getTeilAlarmCountData(qb);
+		for(int i=0;i<list.size();i++){
+			Map map=list.get(i);
+			if(Integer.parseInt(String.valueOf(map.get("wvCount")))==0) {
+				map.put("qualityLevel","3");
+			}else if(Integer.parseInt(String.valueOf(map.get("alarmCount1")))>0||Integer.parseInt(String.valueOf(map.get("alarmCount2")))>0||Integer.parseInt(String.valueOf(map.get("alarmCount65536")))>0){
+				map.put("qualityLevel","2");
+			}else if(Integer.parseInt(String.valueOf(map.get("alarmCount16")))>0||Integer.parseInt(String.valueOf(map.get("alarmCount32")))>0){
+				map.put("qualityLevel","1");
+			}else{
+				map.put("qualityLevel","0");
 			}
 		}
-		for(int i=0;i<plList.size();i++) {
-			Map map=plList.get(i);
-			map.put("plId","plId"+(i+1));
-		}
-		for(int i=0;i<plList.size();i++) {
-			String qualityLevel="1";
-			QualityBoard searchQb = new QualityBoard();
-			searchQb.setProductLineName(String.valueOf(plList.get(i).get("TEERZEUGNIS")));
-			List<Map> levelList=qbm.getProductLineWithColor(searchQb);
-			for(int j=0;j<levelList.size();j++) {
-				if("0".equals(String.valueOf(levelList.get(j).get("ALARM_EW")))&&!"2".equals(qualityLevel)&&!"3".equals(qualityLevel)) {
-					qualityLevel="1";
-				}else if(("16".equals(String.valueOf(levelList.get(j).get("ALARM_EW")))||"32".equals(String.valueOf(levelList.get(j).get("ALARM_EW"))))&&!"3".equals(qualityLevel)) {
-					qualityLevel="2";
-				}else if("65536".equals(String.valueOf(levelList.get(j).get("ALARM_EW")))) {
-					qualityLevel="3";
-				}
-			}
-			plList.get(i).put("qualityLevel", qualityLevel);
-			plList.get(i).put("plId","plId"+(i+1));
-		}*/
-		List<Map> plList = qbm.getProductLine(qb);
-		List<Map> allList=qbm.getProductLineWithColor(qb);
-		plList.removeAll(Collections.singleton(null));
-		List reList=new ArrayList<Map>();
-		for(int i=0;i<plList.size();i++) {
-			Map map=new HashMap();
-			String qualityLevel=Globals.NO_ALARM;
-			boolean falg=false;
-			map.put("TEERZEUGNIS", plList.get(i).get("TEERZEUGNIS"));
-			for(int j=0;j<allList.size();j++) {
-				if(plList.get(i).get("TEERZEUGNIS").equals(allList.get(j).get("TEERZEUGNIS"))) {
-					falg=true;
-					if(Globals.UPPER_LIMIT.equals(String.valueOf(allList.get(j).get("ALARM_EW")))||Globals.DOWN_LIMIT.equals(String.valueOf(allList.get(j).get("ALARM_EW")))||Globals.DING_ALARM.equals(String.valueOf(allList.get(j).get("ALARM_EW")))) {
-						qualityLevel="2";
-						break;
-					}else if(Globals.UPPER_ALARM.equals(String.valueOf(allList.get(j).get("ALARM_EW")))||Globals.DOWN_ALARM.equals(String.valueOf(allList.get(j).get("ALARM_EW")))) {
-						qualityLevel="1";
-					}
-				}
-			}
-			if(falg) {
-				map.put("qualityLevel", qualityLevel);
-			}else {
-				map.put("qualityLevel", "3");
-			}
-			map.put("plId","plId"+(i+1));
-			reList.add(map);
-		}
-		return reList;
+		Map reMap=new HashMap<String, Object>();
+		reMap.put("rows",list);
+		reMap.put("total",page.getTotal());
+		return reMap;
 	}
-	@Override
 	public List getTeilData(QualityBoard qb) {
-		List<Map> list=qbm.getTeilData(qb);
-		Set teilSet=new HashSet<Map>();        
-		for(int i=0;i<list.size();i++) {
-			Map setMap=new HashMap<String, String>();
-			setMap.put("TETEILNR", list.get(i).get("TETEILNR"));
-			setMap.put("TETEIL", list.get(i).get("TETEIL"));
-			setMap.put("TEBEZEICH", list.get(i).get("TEBEZEICH"));
-			teilSet.add(setMap);
-		}
-		List reList=new ArrayList<Map>();
-		Object [] teilArr=teilSet.toArray();
-		for(int i=0;i<teilArr.length;i++) {
-			Map map=(Map) teilArr[i];
-			String qualityLevel="0";
-			for(int j=0;j<list.size();j++) {
-				if(map.get("TETEIL").equals(list.get(j).get("TETEIL"))) {
-					if(Globals.UPPER_LIMIT.equals(String.valueOf(list.get(j).get("ALARM_EW")))||Globals.DOWN_LIMIT.equals(String.valueOf(list.get(j).get("ALARM_EW")))||Globals.DING_ALARM.equals(String.valueOf(list.get(j).get("ALARM_EW")))) {
-						qualityLevel="2";
-						break;
-					}else if(Globals.UPPER_ALARM.equals(String.valueOf(list.get(j).get("ALARM_EW")))||Globals.DOWN_ALARM.equals(String.valueOf(list.get(j).get("ALARM_EW")))) {
-						qualityLevel="1";
-					}
-				}
+		List<Map> list=qbm.getTeilAlarmCountData(qb);
+		for(int i=0;i<list.size();i++){
+			Map map=list.get(i);
+			if(Integer.parseInt(String.valueOf(map.get("wvCount")))==0) {
+				map.put("qualityLevel","3");
+			}else if(Integer.parseInt(String.valueOf(map.get("alarmCount1")))>0||Integer.parseInt(String.valueOf(map.get("alarmCount2")))>0||Integer.parseInt(String.valueOf(map.get("alarmCount65536")))>0){
+				map.put("qualityLevel","2");
+			}else if(Integer.parseInt(String.valueOf(map.get("alarmCount16")))>0||Integer.parseInt(String.valueOf(map.get("alarmCount32")))>0){
+				map.put("qualityLevel","1");
+			}else{
+				map.put("qualityLevel","0");
 			}
-			map.put("qualityLevel", qualityLevel);
-			reList.add(map);
 		}
-		return reList;
+		return list;
 	}
 	@Override
 	public List getMerkmalData(QualityBoard qb) {
-		List<Map> list=qbm.getMerkmalData(qb);
-		Set mset=new HashSet<Map>();
-		for(int i=0;i<list.size();i++) {
-			Map setMap=new HashMap<String, String>();
-			setMap.put("METEIL", list.get(i).get("METEIL"));
-			setMap.put("MEMERKMAL", list.get(i).get("MEMERKMAL"));
-			setMap.put("MEMERKBEZ", list.get(i).get("MEMERKBEZ"));
-			mset.add(setMap);
-		}
-		List reList=new ArrayList<Map>();
-		Object [] mArr=mset.toArray();
-		for(int i=0;i<mArr.length;i++) {
-			Map map=(Map) mArr[i];
-			String qualityLevel="0";
-			for(int j=0;j<list.size();j++) {
-				if(map.get("MEMERKMAL").equals(list.get(j).get("MEMERKMAL"))) {
-					if(Globals.UPPER_LIMIT.equals(String.valueOf(list.get(j).get("ALARM_EW")))||Globals.DOWN_LIMIT.equals(String.valueOf(list.get(j).get("ALARM_EW")))||Globals.DING_ALARM.equals(String.valueOf(list.get(j).get("ALARM_EW")))) {
-						qualityLevel="2";
-						break;
-					}else if(Globals.UPPER_ALARM.equals(String.valueOf(list.get(j).get("ALARM_EW")))||Globals.DOWN_ALARM.equals(String.valueOf(list.get(j).get("ALARM_EW")))) {
-						qualityLevel="1";
-					}
-				}
+		List<Map> list=qbm.getMerkmalAlarmCountData(qb);
+		for(int i=0;i<list.size();i++){
+			Map map=list.get(i);
+			if(Integer.parseInt(String.valueOf(map.get("wvCount")))==0) {
+				map.put("qualityLevel","3");
+			}else if(Integer.parseInt(String.valueOf(map.get("alarmCount1")))>0||Integer.parseInt(String.valueOf(map.get("alarmCount2")))>0||Integer.parseInt(String.valueOf(map.get("alarmCount65536")))>0){
+				map.put("qualityLevel","2");
+			}else if(Integer.parseInt(String.valueOf(map.get("alarmCount16")))>0||Integer.parseInt(String.valueOf(map.get("alarmCount32")))>0){
+				map.put("qualityLevel","1");
+			}else{
+				map.put("qualityLevel","0");
 			}
-			map.put("qualityLevel", qualityLevel);
-			reList.add(map);
 		}
-		return reList;
+		return list;
 	}
 	@Override
 	public List getWertevarChartData(QualityBoard qb) {
@@ -164,43 +100,38 @@ public class QualityBoardServiceImpl implements IQualityBoardService{
 		return list;
 	}
 	@Override
-	public List<QbProductLine> getProductLineByUser(User user,QualityBoard qb) {
-		User reUser=qbm.getProductLineByUser(user);
-		List<QbProductLine> plList=new ArrayList<QbProductLine>();
-		List<Role> roleList=reUser.getRoleList();
-		for(int i=0;i<roleList.size();i++) {
-			plList.addAll(roleList.get(i).getQbProductLineList());
+	public List<Map> getProductLineByUser(User user,QualityBoard qb) {
+		List<String> plList=new ArrayList<String>();
+		List<Permission> permissionList=user.getPermissionList();
+		for(int i=0;i<permissionList.size();i++) {
+			if("pl".equals(permissionList.get(i).getType())) {
+				plList.add(permissionList.get(i).getPermissionName());
+			}
 		}
-		HashSet plSet=new HashSet<QbProductLine>(plList);
-		plList.clear();
-		plList.addAll(plSet);
 		String[] plArr=new String[plList.size()];
 		for(int i=0;i<plList.size();i++) {
-			plArr[i]=plList.get(i).getProductLineName();
+			plArr[i]=plList.get(i);
 		}
-		List<Map> alarmList=qbm.getAlarmValuesByProductLine(plArr,qb.getStartTime(),qb.getEndTime());
-		for(int i=0;i<plList.size();i++) {
-			boolean flag=false;
-			String qualityLevel=Globals.NO_ALARM;
-			for(int j=0;j<alarmList.size();j++) {
-				if(plList.get(i).getProductLineName().equals(alarmList.get(j).get("PERMISSION_NAME"))) {
-					flag=true;
-					if(Globals.UPPER_LIMIT.equals(String.valueOf(alarmList.get(j).get("ALARM_EW")))||Globals.DOWN_LIMIT.equals(String.valueOf(alarmList.get(j).get("ALARM_EW")))||Globals.DING_ALARM.equals(String.valueOf(alarmList.get(j).get("ALARM_EW")))) {
-						qualityLevel="2";
-						break;
-					}else if(Globals.UPPER_ALARM.equals(String.valueOf(alarmList.get(j).get("ALARM_EW")))||Globals.DOWN_ALARM.equals(String.valueOf(alarmList.get(j).get("ALARM_EW")))) {
-						qualityLevel="1";
-					}
+		List<Map> list=qbm.getAlarmCountByProductLine(plArr, qb.getStartTime(),qb.getEndTime());
+		for(int i=0;i<list.size();i++){
+			Map map=list.get(i);
+			if(null==map.get("TEERZEUGNIS")||"".equals(map.get("TEERZEUGNIS"))){
+				list.remove(i);
+				i--;
+			}else{
+				if(Integer.parseInt(String.valueOf(map.get("wvCount")))==0){
+					map.put("qualityLevel","3");
+				}else if(Integer.parseInt(String.valueOf(map.get("alarmCount1")))>0||Integer.parseInt(String.valueOf(map.get("alarmCount2")))>0||Integer.parseInt(String.valueOf(map.get("alarmCount65536")))>0){
+					map.put("qualityLevel","2");
+				}else if(Integer.parseInt(String.valueOf(map.get("alarmCount16")))>0||Integer.parseInt(String.valueOf(map.get("alarmCount32")))>0){
+					map.put("qualityLevel","1");
+				}else{
+					map.put("qualityLevel","0");
 				}
-			}
-			plList.get(i).setButtonId("pl"+i);
-			if(flag) {
-				plList.get(i).setAlarmLevel(qualityLevel);
-			}else {
-				plList.get(i).setAlarmLevel("3");
+				map.put("buttonId",String.valueOf(map.get("TEERZEUGNIS")));
 			}
 		}
-		return plList;
+		return list;
 	}
 	@Override
 	public Map getQbFormData(List<Permission> list,Integer arrIndex,QualityBoard qb) {
@@ -218,7 +149,7 @@ public class QualityBoardServiceImpl implements IQualityBoardService{
 		Map reMap=new HashMap<String, Object>();
 		Map formMap=new HashMap<String, Object>();
 		if(formlist.size()>0) {
-			tableList=qbm.getQbTableData(formlist.get(arrIndex).get("TETEIL").toString(), formlist.get(arrIndex).get("MEMERKMAL").toString());
+			tableList=qbm.getQbTableData(formlist.get(arrIndex).get("TETEIL").toString(), formlist.get(arrIndex).get("MEMERKMAL").toString(),qb.getStartTime(),qb.getEndTime());
 			if(arrIndex==(formlist.size()-1)) {
 				reMap.put("arrAlarm", "1");
 			}else {
@@ -245,7 +176,7 @@ public class QualityBoardServiceImpl implements IQualityBoardService{
 		Map reMap=new HashMap<String, Object>();
 		Map formMap=new HashMap<String, Object>();
 		if(formlist.size()>0) {
-			tableList=qbm.getQbTableData(formlist.get(arrIndex).get("TETEIL").toString(), formlist.get(arrIndex).get("MEMERKMAL").toString());
+			tableList=qbm.getQbTableData(formlist.get(arrIndex).get("TETEIL").toString(), formlist.get(arrIndex).get("MEMERKMAL").toString(),qb.getStartTime(),qb.getEndTime());
 			if(arrIndex==(formlist.size()-1)) {
 				reMap.put("arrAlarm", "1");
 			}else {
@@ -273,7 +204,7 @@ public class QualityBoardServiceImpl implements IQualityBoardService{
 		Map reMap=new HashMap<String, Object>();
 		Map formMap=new HashMap<String, Object>();
 		if(formlist.size()>0) {
-			tableList=qbm.getQbTableData(formlist.get(arrIndex).get("TETEIL").toString(), formlist.get(arrIndex).get("MEMERKMAL").toString());
+			tableList=qbm.getQbTableData(formlist.get(arrIndex).get("TETEIL").toString(), formlist.get(arrIndex).get("MEMERKMAL").toString(),qb.getStartTime(),qb.getEndTime());
 			if(arrIndex==(formlist.size()-1)) {
 				reMap.put("arrAlarm", "1");
 			}else {

@@ -3,12 +3,33 @@
 <%@ include file="../../base/meta.jsp"%>
 <html>
   <head>
+  <title>质量看板</title>
   <link rel="shortcut icon" href="<%=basePath%>resources/images/favicon.ico" type="image/x-icon">
   <link href="<%=basePath %>resources/blueThemes/css/bi.css" rel="stylesheet" type="text/css" />
   	<script type="text/javascript">
-  		var qbStartTime,qbEndTime;
+  		var autoTeilPageTime;
+		var autoTeilPageNum=1;
   		$(function(){
-  		
+  			$('#autoTeilSpan').hide();
+  			$('#qbAcc').accordion({
+  				multiple:false,
+  				fit:true,
+			    animate:false,
+			    onSelect:function(title,index){
+			    	if(index==1){
+			    		if($('#autoTeilPage').switchbutton('options').checked==true){
+			    			autoTeilPageTime=setInterval(autoTeilPage, 5*1000);
+			    		}
+			    	}
+			    },
+			    onUnselect:function(title,index){
+			    	if(index==1){
+			    		if(autoTeilPageTime!=null&autoTeilPageTime!='undefined'){
+			    			clearInterval(autoTeilPageTime);
+			    		}
+			    	}
+			    }
+			});
 			$('#plCenterbox').panel({
 				href:'<%=basePath%>qb/getProductLineData'
 			});
@@ -30,37 +51,87 @@
 						});
 				$('#qbDig').dialog('open');
 			});
-		})
-		function logout(){
+			$('#timecc').combobox({
+				editable:false
+			})
+			$('#qbStartTime').datetimebox({
+				disabled:true,
+				onChange: function(newValue,oldValue){
+					<%-- if($('#qbEndTime').datetimebox('getValue')!=''&$('#qbEndTime').datetimebox('getValue')<$('#c').datetimebox('getValue')){
+						$.messager.alert('提示信息','结束时间必须大于起始时间!','info');
+						return false;
+					}else{
+						$('#plCenterbox').panel('refresh','<%=basePath%>qb/getProductLineData?startTime='+$('#qbStartTime').datetimebox('getValue')+'&endTime='+$('#qbEndTime').datetimebox('getValue'));
+					} --%>
+				}
+			})
+			$('#qbEndTime').datetimebox({
+				disabled:true,
+				onChange: function(newValue,oldValue){
+					<%-- if($('#qbStartTime').datetimebox('getValue')!=''&$('#qbEndTime').datetimebox('getValue')<$('#qbStartTime').datetimebox('getValue')){
+						$.messager.alert('提示信息','结束时间必须大于起始时间!','info');
+						return false;
+					}else{
+						$('#plCenterbox').panel('refresh','<%=basePath%>qb/getProductLineData?startTime='+$('#qbStartTime').datetimebox('getValue')+'&endTime='+$('#qbEndTime').datetimebox('getValue'));
+					} --%>
+				}
+			})
+			$('#qbSearchTimeType1').radiobutton({
+				onChange:function(checked){
+					if(checked==true){
+						$('#timecc').combobox('disable');
+						$('#qbEndTime').datetimebox('enable');
+						$('#qbStartTime').datetimebox('enable');
+					}
+				}
+			})
+			$('#qbSearchTimeType2').radiobutton({
+				checked:true,
+				onChange:function(checked){
+					if(checked==true){
+						$('#timecc').combobox('enable');
+						$('#qbEndTime').datetimebox('clear').datetimebox('disable');
+						$('#qbStartTime').datetimebox('clear').datetimebox('disable');
+					}
+				}
+			})
+			
+			$('#autoTeilPage').switchbutton({
+	            checked: false,
+	            onText:'自动翻页',
+	            offText:'无翻页',
+	            onChange: function(checked){
+	                if(checked==true){
+	                	$('#teilAcc').panel('refresh','<%=basePath%>qb/initTeilDataByPage?productLineName='+$('#elTeilProductLineName').val()+'&startTime='+$('#qbStartTime').datetimebox('getValue')+'&endTime='+$('#qbEndTime').datetimebox('getValue')+'&page='+1+'&rows='+'30');
+	                	$('#autoTeilSpan').show();
+	                }else{
+	                	$('#autoTeilSpan').hide();
+	                }
+	                pageModel(checked);
+	            }
+	        });
+	        $('#qbMainSearchBtn').click(function(){
+	        	if($('#qbSearchTimeType1').radiobutton('options').checked==true){
+	        		if($('#qbStartTime').datetimebox('getValue')==''|$('#qbEndTime').datetimebox('getValue')==''|$('#qbEndTime').datetimebox('getValue')<$('#qbStartTime').datetimebox('getValue')){
+						$.messager.alert('提示信息','时间不能为空，结束时间必须大于起始时间!','info');
+						return false;
+					}else{
+						$('#plCenterbox').panel('refresh','<%=basePath%>qb/getProductLineData?startTime='+$('#qbStartTime').datetimebox('getValue')+'&endTime='+$('#qbEndTime').datetimebox('getValue'));
+					}
+	        	}else{
+	        		var mainSearchTime=searchTimeInterval($('#timecc').combobox('getValue'));
+	        		$('#plCenterbox').panel('refresh','<%=basePath%>qb/getProductLineData?startTime='+mainSearchTime.startTime+'&endTime='+mainSearchTime.endTime);
+	        	}
+	        })
+	     })   
+	        
+	     function logout(){
 			$.messager.confirm('提示信息', '确定登出用户？', function(r){
 				if (r){
 					window.location.href='<%=basePath%>main/logout';
 				}
 			});
 		}
-		function searchByTime(record){
-  			var days=record.value;
-				var now=new Date();
-				if(days=='0'){
-					$('#plCenterbox').panel('refresh','<%=basePath%>qb/getProductLineData');
-				}else if(days=='1h'){
-					var searchTime=now.getTime()-3600000;
-					var ago=new Date(searchTime);
-					var startDate=ago.getFullYear()+"-"+(ago.getMonth()+1)+"-"+ago.getDate()+" "+ago.getHours()+":"+ago.getMinutes()+":"+ago.getSeconds();
-					var endDate=now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate()+" "+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
-					qbStartTime=startDate;
-					qbEndTime=endDate;
-					$('#plCenterbox').panel('refresh','<%=basePath%>qb/getProductLineData?startTime='+startDate+'&endTime='+endDate);
-				}else if(days=='1'|days=='7'|days=='30'){
-					var searchTime=now.getTime()-(days*86400000);
-					var ago=new Date(searchTime);
-					var startDate=ago.getFullYear()+"-"+(ago.getMonth()+1)+"-"+ago.getDate()+" "+ago.getHours()+":"+ago.getMinutes()+":"+ago.getSeconds();
-					var endDate=now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate()+" "+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
-					qbStartTime=startDate;
-					qbEndTime=endDate;
-					$('#plCenterbox').panel('refresh','<%=basePath%>qb/getProductLineData?startTime='+startDate+'&endTime='+endDate);
-				}
-  		}
   	</script>
   </head>
   
@@ -74,31 +145,47 @@
 						    </div>    
 		</div>
 	    <div data-options="region:'center',border:false" style="overflow: hidden;">
-	    	<div id="qbAcc" class="easyui-accordion" data-options="multiple:false,fit:true,animate:true" style="width:100%;height:100%;">
+	    	<div id="qbAcc" style="width:100%;height:100%;">
 		        <div id="plAcc" title="产线" style="overflow:auto;">
 		        	<div class="easyui-layout" fit="true" style="width: 100%;height: 100%">
-		        		<div data-options="region:'north',split:false,collapsible:false" style="height:42px;background:#eee;padding: 5px">
-		        			选择时间：<select class="easyui-combobox" id="timecc" name="searchDate" style="width:200px;" 
-		        			data-options="editable:false,onSelect:function(record){searchByTime(record);}">
-		        						<option>---选择时间---</option>
-									    <option value="0">显示全部数据</option>
-									    <option value="1h">显示最后一小时的数据</option>
-									    <option value="1">显示最后一天的数据</option>
-									    <option value="7">显示最后一周的数据</option>
-									    <option value="30">显示最后一个月(30)的数据</option>
-									</select >
-		        			<a id="openQb" class="easyui-linkbutton c3" data-options="iconCls:'icon-search'" style="float: right">打开轮播看板</a>
+		        		<div data-options="region:'north',split:false,collapsible:false" style="height:42px;background:#eee;padding: 5px;overflow: hidden">
+		        			<form>
+		        				<input id="qbSearchTimeType1" name="qbSearchTimeType">
+			        			&nbsp;<input id="qbStartTime" name="qbStartTime" style="width:180px" data-options="editable:false">
+			        			至&nbsp;<input id="qbEndTime" name="qbEndTime" style="width:180px" data-options="editable:false">
+			        			<input id="qbSearchTimeType2" name="qbSearchTimeType">
+			        			<select id="timecc" name="searchDate" style="width:200px;">
+			        						<!-- <option value="init">---选择时间---</option> -->
+										    <option value="0">显示全部数据</option>
+										    <option value="1h">显示最后一小时的数据</option>
+										    <option value="1">显示最后一天的数据</option>
+										    <option value="7">显示最后一周的数据</option>
+										    <option value="30">显示最后一个月(30)的数据</option>
+										</select >
+								<a id="qbMainSearchBtn" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a>
+			        			<a id="openQb" class="easyui-linkbutton c3" data-options="iconCls:'icon-search'" style="float: right">打开轮播看板</a>
+		        			</form>
 		        		</div>
 						<div id="plCenterbox" data-options="region:'center'"> </div>
 		        	</div> 
 		        </div>
-		        <div id="teilAcc" title="零件" style="padding:0px;">
-		        	<!-- <div class="easyui-layout" fit="true" style="width: 100%;height: 100%">
-		        		<div data-options="region:'north',split:false,title:'查询'" style="height:10%;"></div>
-						<div id="teilbox" data-options="region:'center'" style="padding:5px;background:#eee;">
-							
-						</div> 
-		        	</div>-->
+		        <div title="零件" style="padding:0px;">
+		        	<div class="easyui-layout" fit="true" style="width: 100%;height: 100%">
+		        		<div data-options="region:'north',split:false,collapsible:false" style="height:42px;background:#eee;padding: 5px">
+							零件号：<input id="teilNum" name="teilNum" class="easyui-textbox" data-options="" style="width:200px">
+							零件名：<input id="teilName" name="teilName" class="easyui-textbox" data-options="" style="width:200px">
+							<a id="teilSearchbtn" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="searchTeil();">查询</a>
+							&nbsp;&nbsp;&nbsp;<input id='autoTeilPage' style="width: 100;">
+							&nbsp;<span id="autoTeilSpan"></span>
+							<!-- <select class="easyui-combobox" id="autoTeilPageSelect" name="autoTeilPageSelect" style="width:100px;"data-options="editable:false">
+									    <option value="5">5秒</option>
+									    <option value="10">10秒</option>
+									    <option value="1">1秒</option>
+									</select > -->
+							<a id="openTeilQb" class="easyui-linkbutton c3" data-options="iconCls:'icon-search'" style="float: right">打开轮播看板</a>
+						</div>
+						<div id="teilAcc" data-options="region:'center'"></div>
+		        	</div>
 		        </div>
 		        <div id="merkmalAcc" title="测量参数">
 		        </div>

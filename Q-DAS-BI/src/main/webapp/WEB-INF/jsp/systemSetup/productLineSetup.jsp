@@ -115,7 +115,7 @@
 									showType:'slide'
 								});
 		  					}else if(JSON.parse(data).success==1){
-		  						$.messager.alert('提示信息','操作失败！！！  错误：'+data.error,'error');
+		  						$.messager.alert('提示信息','操作失败！！！  错误：'+data.error.message,'error');
 		  					}
 					$('#plTable').datagrid('reload');
 				}
@@ -144,7 +144,7 @@
 									showType:'slide'
 								});
 		  					}else if(data.success==1){
-		  						$.messager.alert('提示信息','操作失败！！！  错误：'+data.error,'error');
+		  						$.messager.alert('提示信息','操作失败！！！  错误：'+data.error.message,'error');
 		  					}
 		  					$('#plTable').datagrid('reload');
 		  				}

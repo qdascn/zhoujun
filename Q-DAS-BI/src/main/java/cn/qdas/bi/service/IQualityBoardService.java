@@ -9,16 +9,19 @@ import cn.qdas.core.bean.Permission;
 import cn.qdas.core.bean.User;
 
 public interface IQualityBoardService {
-	List getProductLine(QualityBoard qb) ;
+
+
 	List getTeilData(QualityBoard qb);
+	Map getTeilDataByPage(QualityBoard qb);
 	List getMerkmalData(QualityBoard qb);
+
 	List getWertevarChartData(QualityBoard qb);
+
+	List<Map> getProductLineByUser(User user, QualityBoard qb);
+
 	List getWertevarDate(QualityBoard qb);
-	
-	
-	List<QbProductLine> getProductLineByUser(User user,QualityBoard qb);
-	
-	Map getQbFormData(List<Permission> list,Integer arrIndex,QualityBoard qb);
-	Map getQbTeilsFormData(String[] plArr, Integer arrIndex, QualityBoard qb);
-	Map getQbTeilFormData(String teilId, Integer arrIndex, QualityBoard qb);
+
+	Map getQbFormData(List<Permission> list, Integer arrIndex, QualityBoard qb);
+	Map getQbTeilsFormData(String [] plArr,Integer arrIndex,QualityBoard qb);
+	Map getQbTeilFormData(String teilId,Integer arrIndex,QualityBoard qb);
 }

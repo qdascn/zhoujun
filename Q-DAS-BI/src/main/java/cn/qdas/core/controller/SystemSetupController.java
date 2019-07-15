@@ -15,13 +15,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import cn.qdas.core.bean.ProductLine;
 import cn.qdas.core.bean.Role;
 import cn.qdas.core.bean.User;
-import cn.qdas.core.service.SystemSetupService;
+import cn.qdas.core.service.ISystemSetupService;
 
 @Controller
 @RequestMapping("/system")
 public class SystemSetupController {
 	@Resource
-	SystemSetupService sss;
+	ISystemSetupService sss;
 	@RequestMapping("initSetupPage")
 	public String initSetupPage(HttpServletRequest req,Model model) {
 		User user=(User) req.getAttribute("user");
